@@ -27,15 +27,29 @@
       line-height: 1.6;
     }
 
-    /* First image styled like landing page */
-    .cover-style {
+    .image-container {
       max-width: 50%;
+      margin: 0 auto 40px;
+    }
+
+    .image-row {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .image-single img,
+    .image-row img {
+      width: 100%;
       height: auto;
       border: 1px solid #ccc;
-      display: block;
-      margin: 0 auto;
       cursor: pointer;
       transition: 0.2s ease;
+    }
+
+    .image-row .image-block {
+      flex: 1 1 0;
     }
 
     .caption {
@@ -43,33 +57,8 @@
       font-style: italic;
     }
 
-    .image-block {
-      margin-bottom: 30px;
-    }
-
-    .image-row {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      margin-bottom: 30px;
-      flex-wrap: wrap;
-    }
-
-    .image-row .image-block {
-      max-width: 45%;
-    }
-
-    .image-row img {
-      width: 100%;
-      max-height: 300px;
-      object-fit: cover;
-      border: 1px solid #ccc;
-      cursor: pointer;
-      transition: 0.2s ease;
-    }
-
-    .image-row img:hover,
-    .cover-style:hover {
+    .image-single img:hover,
+    .image-row img:hover {
       transform: scale(1.02);
     }
 
@@ -104,8 +93,9 @@
     </p>
   </div>
 
-  <div class="image-block">
-    <img src="IMG_2077.PNG" alt="Initial CH1 waveform issue" class="cover-style" onclick="openLightbox(this.src)">
+  <!-- Single Image in Container -->
+  <div class="image-container image-single">
+    <img src="IMG_2077.PNG" alt="Initial CH1 waveform issue" onclick="openLightbox(this.src)">
     <div class="caption">Initial waveform issue observed on CH1 using clean 1KHz square wave signal</div>
   </div>
 
@@ -117,30 +107,50 @@
     </p>
   </div>
 
-  <div class="image-row">
-    <div class="image-block">
-      <img src="IMG_2224.PNG" alt="Pinched wires" onclick="openLightbox(this.src)">
-      <div class="caption">Pinched wires</div>
-    </div>
-    <div class="image-block">
-      <img src="IMG_2094.png" alt="Fixed wires" onclick="openLightbox(this.src)">
-      <div class="caption">Repaired and heat shrunk wires</div>
+  <!-- Two Images in Container -->
+  <div class="image-container">
+    <div class="image-row">
+      <div class="image-block">
+        <img src="IMG_2224.PNG" alt="Pinched wires" onclick="openLightbox(this.src)">
+        <div class="caption">Pinched wires</div>
+      </div>
+      <div class="image-block">
+        <img src="IMG_2094.png" alt="Fixed wires" onclick="openLightbox(this.src)">
+        <div class="caption">Repaired and heat shrunk wires</div>
+      </div>
     </div>
   </div>
 
-  <!-- Lightbox container -->
+  <!-- Example: Add 3 images here in same box -->
+  <!--
+  <div class="image-container">
+    <div class="image-row">
+      <div class="image-block">
+        <img src="IMG_3001.PNG" onclick="openLightbox(this.src)">
+        <div class="caption">Step 1</div>
+      </div>
+      <div class="image-block">
+        <img src="IMG_3002.PNG" onclick="openLightbox(this.src)">
+        <div class="caption">Step 2</div>
+      </div>
+      <div class="image-block">
+        <img src="IMG_3003.PNG" onclick="openLightbox(this.src)">
+        <div class="caption">Step 3</div>
+      </div>
+    </div>
+  </div>
+  -->
+
+  <!-- Lightbox -->
   <div id="lightbox" class="lightbox-overlay" onclick="closeLightbox()">
     <img id="lightbox-img" src="" alt="">
   </div>
 
   <script>
     function openLightbox(src) {
-      const lightbox = document.getElementById('lightbox');
-      const img = document.getElementById('lightbox-img');
-      img.src = src;
-      lightbox.style.display = 'flex';
+      document.getElementById('lightbox-img').src = src;
+      document.getElementById('lightbox').style.display = 'flex';
     }
-
     function closeLightbox() {
       document.getElementById('lightbox').style.display = 'none';
     }
