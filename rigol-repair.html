@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Rigol DS1054Z Oscilloscope Repair </title>
+  <title>Rigol DS1054Z Repair Documentation</title>
   <style>
     body { font-family: sans-serif; padding: 20px; text-align: center; }
     a.back {
@@ -11,6 +11,8 @@
       text-decoration: none;
     }
     h1 { margin-bottom: 10px; }
+    h2 { margin-top: 40px; font-size: 24px; }
+
     .intro {
       max-width: 700px;
       margin: 0 auto 30px;
@@ -18,9 +20,11 @@
       font-size: 16px;
       line-height: 1.6;
     }
+
     .image-block {
       margin-bottom: 30px;
     }
+
     img {
       max-width: 50%;
       height: auto;
@@ -28,28 +32,68 @@
       display: block;
       margin: 0 auto;
     }
+
     .caption {
       margin-top: 5px;
       font-style: italic;
+    }
+
+    .image-row {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+
+    .image-row .image-block {
+      max-width: 45%;
+    }
+
+    .image-row img {
+      width: 100%;
+      height: auto;
+      border: 1px solid #ccc;
     }
   </style>
 </head>
 <body>
   <a class="back" href="index.html">← Back to Portfolio</a>
-  <h1>Rigol DS1054Z Oscilloscope Repair</h1>
+  <h1>Rigol DS1054Z Repair Documentation</h1>
 
   <div class="intro">
     <p>
-      This Rigol DS1054Z digital oscilloscope was displaying a fuzzy, distorted, and poorly attenuated waveform on all input channels
-      with known good probes. 
+      This project documents the diagnosis and repair of a Rigol DS1054Z digital oscilloscope that was displaying inaccurate and distorted waveforms on all input channels. 
+      Upon startup, the scope exhibited an attenuated and noisy waveform on CH1 even when a clean test signal was applied. Initial checks revealed an issue with the signal 
+      path near the input attenuator section. The following images and notes describe the fault symptoms, investigation process, and eventual restoration of proper function.
     </p>
   </div>
 
   <div class="image-block">
     <img src="IMG_2077.PNG" alt="Initial CH1 waveform issue">
-    <div class="caption">Initial waveform issue observed on CH1/div>
+    <div class="caption">Initial waveform issue observed on CH1 using probe compensation output</div>
   </div>
 
-  <!-- Add more image blocks below as needed -->
+  <h2>Findings During Investigation</h2>
+  <div class="intro">
+    <p>
+      Further inspection of the input stage revealed multiple resistors in the attenuator network had drifted out of spec. 
+      The waveform distortion was traced to one of the 85Ω termination resistors connected to the BNC input. 
+      Using a working scope as a reference confirmed signal attenuation well before reaching the AFE. Below are two comparison images:
+      the left shows exposed resistor pads after removal, and the right shows the reinstalled components.
+    </p>
+  </div>
+
+  <div class="image-row">
+    <div class="image-block">
+      <img src="IMG_2224.PNG" alt="Attenuator resistor removed">
+      <div class="caption">Pads exposed after removing attenuator resistors</div>
+    </div>
+    <div class="image-block">
+      <img src="IMG_2094.PNG" alt="Resistors replaced">
+      <div class="caption">Reinstalled resistors during repair</div>
+    </div>
+  </div>
+
 </body>
 </html>
