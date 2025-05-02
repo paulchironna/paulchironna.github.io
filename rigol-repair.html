@@ -56,7 +56,6 @@
       transform: scale(1.02);
     }
 
-    /* Apply cropping to both images */
     .crop-uniform {
       height: 300px !important;
       object-fit: cover !important;
@@ -99,7 +98,7 @@
     </p>
   </div>
 
-  <!-- Single image container -->
+  <!-- Single image section -->
   <div class="image-container image-single">
     <img src="IMG_2077.PNG" alt="Initial CH1 waveform issue" onclick="openLightbox(this.src)">
     <div class="caption">Initial waveform issue observed on CH1 using clean 1KHz square wave signal</div>
@@ -113,7 +112,6 @@
     </p>
   </div>
 
-  <!-- Two images side-by-side, both cropped to match height -->
   <div class="image-container">
     <div class="image-row">
       <div class="image-block">
@@ -123,6 +121,27 @@
       <div class="image-block">
         <img src="IMG_2094.png" alt="Fixed wires" class="crop-uniform" onclick="openLightbox(this.src)">
         <div class="caption">Repaired and heat shrunk wires</div>
+      </div>
+    </div>
+  </div>
+
+  <h2>Analog Board Inspection</h2>
+  <div class="intro">
+    <p>
+      Unfortunately, it wasn't that easy. The same waveform pictured above appeared. So my next step was to isolate the analog board, inject my 1KHz test signal,
+      and see if I could trace it from the center pin on the BNC jack, through the attenuation circuit, and beyond.
+    </p>
+  </div>
+
+  <div class="image-container">
+    <div class="image-row">
+      <div class="image-block">
+        <img src="IMG_8702EF5A-AD10-48AE-ADF3-023240ED44C6.jpeg" alt="Analog board overview" class="crop-uniform" onclick="openLightbox(this.src)">
+        <div class="caption">Analog input path with shielding removed</div>
+      </div>
+      <div class="image-block">
+        <img src="IMG_2137.png" alt="Solder joint detail" class="crop-uniform" onclick="openLightbox(this.src)">
+        <div class="caption">Close-up of my chosen test point</div>
       </div>
     </div>
   </div>
