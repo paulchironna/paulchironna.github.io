@@ -98,7 +98,6 @@
     </p>
   </div>
 
-  <!-- Single image section -->
   <div class="image-container image-single">
     <img src="IMG_2077.PNG" alt="Initial CH1 waveform issue" onclick="openLightbox(this.src)">
     <div class="caption">Initial waveform issue observed on CH1 using clean 1KHz square wave signal</div>
@@ -170,17 +169,53 @@
     </div>
   </div>
 
-  <h2>Soldering Replacements </h2>
+  <h2>Soldering</h2>
   <div class="intro">
     <p>
-      I ordered some replacements and began carefully desoldering each one. After recieving the new ones, I cleaned the surfaces thoroughly and soldered them in.
-      Time to reconnect everything and verify the repair.
+      With the failed resistors identified, I carefully desoldered and replaced them with matched-value parts using a fine-tip iron and temperature control.
+      This step was crucial in restoring the signal path for each input channel. I paid close attention to cleanliness and thermal management during the process.
     </p>
   </div>
 
-  <div class="image-container image-single">
-    <img src="IMG_2218.png" alt="Soldering replacement resistors" class="crop-uniform" onclick="openLightbox(this.src)">
-    <div class="caption">Replacement resistor soldered in for CH2</div>
+  <div class="image-container">
+    <div class="image-row">
+      <div class="image-block">
+        <img src="IMG_2218.png" alt="Soldering replacement resistors" class="crop-uniform" onclick="openLightbox(this.src)">
+        <div class="caption">Soldering new resistors into the input network</div>
+      </div>
+      <div class="image-block">
+        <img src="IMG_2204.png" alt="Another view of soldering" class="crop-uniform" onclick="openLightbox(this.src)">
+        <div class="caption">Another view of precision soldering work</div>
+      </div>
+    </div>
+  </div>
+
+  <h2>Success!</h2>
+  <div class="intro">
+    <p>
+      With the new resistors installed and connections verified, I powered the scope back on and ran test signals into all four channels. 
+      Each channel now properly displays a clean 1KHz square wave. Problem solved!
+    </p>
+  </div>
+
+  <div class="image-container">
+    <div class="image-row">
+      <div class="image-block">
+        <img src="IMG_2211.png" alt="CH1 square wave" class="crop-uniform" onclick="openLightbox(this.src)">
+      </div>
+      <div class="image-block">
+        <img src="IMG_2212.png" alt="CH2 square wave" class="crop-uniform" onclick="openLightbox(this.src)">
+      </div>
+    </div>
+    <div class="image-row">
+      <div class="image-block">
+        <img src="IMG_2213.png" alt="CH3 square wave" class="crop-uniform" onclick="openLightbox(this.src)">
+      </div>
+      <div class="image-block">
+        <img src="IMG_2214.png" alt="CH4 square wave" class="crop-uniform" onclick="openLightbox(this.src)">
+      </div>
+    </div>
+    <div class="caption">All 4 channels displaying a clean 1KHz square wave</div>
   </div>
 
   <!-- Lightbox -->
