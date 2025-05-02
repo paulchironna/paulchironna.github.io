@@ -56,8 +56,8 @@
       transform: scale(1.02);
     }
 
-    /* Force crop this image */
-    .crop-to-match {
+    /* Apply cropping to both images */
+    .crop-uniform {
       height: 300px !important;
       object-fit: cover !important;
       object-position: center center !important;
@@ -113,15 +113,15 @@
     </p>
   </div>
 
-  <!-- Two images side-by-side -->
+  <!-- Two images side-by-side, both cropped to match height -->
   <div class="image-container">
     <div class="image-row">
       <div class="image-block">
-        <img src="IMG_2224.PNG" alt="Pinched wires" class="crop-to-match" onclick="openLightbox(this.src)">
-        <div class="caption">Pinched powers and grounds</div>
+        <img src="IMG_2224.PNG" alt="Pinched wires" class="crop-uniform" onclick="openLightbox(this.src)">
+        <div class="caption">Pinched wires</div>
       </div>
       <div class="image-block">
-        <img src="IMG_2094.png" alt="Fixed wires" onclick="openLightbox(this.src)">
+        <img src="IMG_2094.png" alt="Fixed wires" class="crop-uniform" onclick="openLightbox(this.src)">
         <div class="caption">Repaired and heat shrunk wires</div>
       </div>
     </div>
