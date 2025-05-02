@@ -116,7 +116,7 @@
   <div class="intro">
     <p>
       Upon disassembling the oscilloscope, I immediately noticed pinched wires in the area where the main harness was fed through the power supply EMI shield.
-      Luckily, the insulation was still intact and the damaged power wires hadn't shorted to ground. Couldn't be that easy, right?
+      Luckily, the insulation was still intact and the damaged power wires hadn't shorted to ground.
     </p>
   </div>
 
@@ -136,9 +136,9 @@
   <h2>Analog Board Inspection</h2>
   <div class="intro">
     <p>
-      Unfortunately, it wasn't that easy. While this was still a necessary repair, the same waveform pictured above appeared when I retested. 
+      While this was still a critical repair, the same waveform pictured above appeared when I retested. 
       So my next step was to isolate the analog board, inject my 1KHz test signal, and see if I could trace it from the center pin on the BNC
-      jack through the attenuator circuit. However, I didn't get very far...
+      jack through the attenuator circuit.
     </p>
   </div>
 
@@ -146,7 +146,7 @@
     <div class="image-row">
       <div class="image-block">
         <img src="IMG_8702EF5A-AD10-48AE-ADF3-023240ED44C6.jpeg" alt="Analog board overview" class="crop-uniform" onclick="openLightbox(this.src)">
-        <div class="caption">Close-up of CH1 input path</div>
+        <div class="caption">Close-up of CH1 analog input path</div>
       </div>
       <div class="image-block">
         <img src="IMG_2137.png" alt="Solder joint detail" class="crop-uniform" onclick="openLightbox(this.src)">
@@ -158,10 +158,9 @@
   <h2>Burned-out Resistors</h2>
   <div class="intro">
     <p>
-      After injecting my signal and measuring right off the center pin, I captured the ugly waveform pictured below. The issue had to be right there!
-      The solder joints on the jack seemed okay, but something seemed off about the resistor that lays in series between the input and attenuator relay.
-      So I broke out my microscope to find that this resistor had clearly failed. I verified that the resistor was open with a multimeter
-      and repeated the process on all 4 channels with the same result. Bingo!
+      After injecting my signal and measuring right off the center pin, I captured what looked like a differentiated sawtooth waveform. This strongly indicated an open
+      or excess resistance within this input circuit. I immediately noticed that the series resistor directly after the BNC appeared to have catastrophic physical damage.
+      Upon measuring with a multimeter, I verified that the resistor was indeed failed open. I repeated with all 4 channels and recieved identical results.
     </p>
   </div>
 
@@ -181,8 +180,8 @@
   <h2>Soldering</h2>
   <div class="intro">
     <p>
-      With the failed resistors identified, I carefully desoldered them, cleaned the area thoroughly, and replaced them with matched-value parts. 
-      I then injected my test signal, grounded the board, and verified that my square wave was now making its way to the relay.
+      With the failed resistors identified, I carefully desoldered them, cleaned the area thoroughly, and replaced them with 82Ω 1% 1/10W SMD resistors. 
+      I then injected my test signal and verified that a good square wave was now present beyond the jack into the attenuator circuit.
   </div>
 
   <div class="image-container">
