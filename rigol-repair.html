@@ -46,26 +46,26 @@
     .image-single img,
     .image-row img {
       width: 100%;
-      height: auto;
       border: 1px solid #ccc;
       cursor: pointer;
       transition: 0.2s ease;
     }
 
+    .image-row img:hover,
+    .image-single img:hover {
+      transform: scale(1.02);
+    }
+
+    /* Force crop this image */
     .crop-to-match {
-      height: 300px;
-      object-fit: cover;
-      object-position: center;
+      height: 300px !important;
+      object-fit: cover !important;
+      object-position: center center !important;
     }
 
     .caption {
       margin-top: 5px;
       font-style: italic;
-    }
-
-    .image-single img:hover,
-    .image-row img:hover {
-      transform: scale(1.02);
     }
 
     /* Lightbox */
@@ -113,7 +113,7 @@
     </p>
   </div>
 
-  <!-- Two images side by side in fixed container -->
+  <!-- Two images side-by-side -->
   <div class="image-container">
     <div class="image-row">
       <div class="image-block">
@@ -127,7 +127,7 @@
     </div>
   </div>
 
-  <!-- Lightbox overlay -->
+  <!-- Lightbox -->
   <div id="lightbox" class="lightbox-overlay" onclick="closeLightbox()">
     <img id="lightbox-img" src="" alt="">
   </div>
@@ -137,6 +137,7 @@
       document.getElementById('lightbox-img').src = src;
       document.getElementById('lightbox').style.display = 'flex';
     }
+
     function closeLightbox() {
       document.getElementById('lightbox').style.display = 'none';
     }
