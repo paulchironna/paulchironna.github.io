@@ -107,7 +107,7 @@
   <h2>Initial Findings</h2>
   <div class="intro">
     <p>
-      Immediately upon disassembling the scope, I noticed badly pinched wires where the main harness fed through the power supplies EMI shield.
+      Upon disassembling the oscilloscope, I immediately noticed pinched wires in the area where the main harness was fed through the power supply EMI shield.
       Luckily, the insulation was still intact and the damaged power wires hadn't shorted to ground. Couldn't be that easy, right?
     </p>
   </div>
@@ -128,8 +128,9 @@
   <h2>Analog Board Inspection</h2>
   <div class="intro">
     <p>
-      Unfortunately, it wasn't that easy. While this was still a necessary repair, the same waveform pictured above appeared when I retested. So my next step was to isolate the analog board, inject my 1KHz test signal,
-      and see if I could trace it  from the center pin on the BNC jack through the attenuator circuit. However, I didn't get very far...
+      After verifying the input wiring and connector integrity, attention turned to the analog front-end circuitry. 
+      These photos show the top-down view of the analog board with shielding removed. Initial inspection revealed no obvious burnt components, 
+      but several solder joints near the input protection circuitry appeared dull and suspect.
     </p>
   </div>
 
@@ -137,11 +138,34 @@
     <div class="image-row">
       <div class="image-block">
         <img src="IMG_8702EF5A-AD10-48AE-ADF3-023240ED44C6.jpeg" alt="Analog board overview" class="crop-uniform" onclick="openLightbox(this.src)">
-        <div class="caption">CH1 input path with shielding removed</div>
+        <div class="caption">Analog board with shielding removed</div>
       </div>
       <div class="image-block">
         <img src="IMG_2137.png" alt="Solder joint detail" class="crop-uniform" onclick="openLightbox(this.src)">
-        <div class="caption">Close-up of my chosen test point for CH1</div>
+        <div class="caption">Close-up of input section solder joints</div>
+      </div>
+    </div>
+  </div>
+
+  <h2>Burned-out Resistors</h2>
+  <div class="intro">
+    <p>
+      After injecting my signal and measuring right off the center pin, I captured the ugly waveform pictured below. The issue had to be right there!
+      The solder joints on the jack seemed okay, but something seemed off about the resistor that lays in series between the input and attenuator relay.
+      So I broke out my microscope to find that this resistor had clearly failed. I verified that the resistor was open with a multimeter
+      and repeated the process on all 4 channels with the same result. Bingo!
+    </p>
+  </div>
+
+  <div class="image-container">
+    <div class="image-row">
+      <div class="image-block">
+        <img src="IMG_2138.png" alt="Burned resistor close-up" class="crop-uniform" onclick="openLightbox(this.src)">
+        <div class="caption"> Waveform captured right after the BNC input pin </div>
+      </div>
+      <div class="image-block">
+        <img src="IMG_2139.png" alt="Multiple failed resistors" class="crop-uniform" onclick="openLightbox(this.src)">
+        <div class="caption">Blown resistor on CH1 input path, likely due to overvoltage/current condition</div>
       </div>
     </div>
   </div>
