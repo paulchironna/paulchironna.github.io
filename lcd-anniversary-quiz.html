@@ -6,7 +6,7 @@
   <style>
     body { font-family: sans-serif; text-align: center; padding: 50px; }
 
-    /* Single media items (photos/videos/cover) – compact default */
+    /* Single media items (photos/videos/cover) */
     img.cover, .media img, .media video {
       width: 100%;
       max-width: 520px;
@@ -16,24 +16,24 @@
     }
 
     /* Triple image grid */
-    .triple {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 12px;
-      align-items: start;
-      justify-items: center;
-      margin: 14px 0;
+    .triple { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); 
+      gap: 12px; 
+      align-items: start; 
+      justify-items: center; 
+      margin: 14px 0; 
     }
-    /* Make all three FinalAssembly images the same visual size */
-    .triple img {
-      width: 100%;
-      height: 260px;          /* uniform height */
-      object-fit: cover;      /* crop to fit nicely */
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    /* Uniform height for final assembly images */
+    .triple img { 
+      width: 100%; 
+      height: 260px;
+      object-fit: cover;
+      border-radius: 8px; 
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2); 
     }
 
-    /* Mobile-friendly scaling */
+    /* Mobile scaling */
     @media (max-width: 600px) {
       .triple { grid-template-columns: 1fr; }
       img.cover, .media img, .media video { max-width: 100%; }
@@ -41,32 +41,29 @@
 
     /* Default video sizing */
     .media video {
-      aspect-ratio: 16 / 9;
-      max-height: 60vh;
+      aspect-ratio: 16 / 9;  
+      max-height: 60vh;      
       object-fit: cover;
     }
 
-    /* Make FinalProduct.mp4 larger so LCD/buttons are clearly visible */
+    /* Final product video matches photo box size */
     .media video#final-product {
-      max-width: 900px;   /* wider than default */
-      max-height: 80vh;   /* taller than default */
-    }
-    @media (max-width: 900px) {
-      .media video#final-product { max-width: 100%; }
+      max-width: 520px;
+      max-height: none;
+      object-fit: contain;
     }
 
-    /* Collapsible code block (iframe-based so you don't need to escape <> in HTML) */
-    details { max-width: 940px; margin: 0 auto 24px; text-align: left; }
+    /* Collapsible code block */
+    details { max-width: 940px; margin: 0 auto; text-align: left; }
     summary { cursor: pointer; font-weight: bold; margin-bottom: 10px; }
-    .code-frame {
-      width: 100%;
-      max-width: 940px;
-      height: 420px;                /* adjust if you want more/less code visible */
-      border: none;
-      background: #0d1117;          /* dark bg to match GitHub dark code feel */
+    pre.code {
+      background: #0d1117;
       color: #c9d1d9;
+      padding: 16px;
       border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      overflow-x: auto;
+      font-size: 14px;
+      line-height: 1.4;
     }
 
     h1 { margin-bottom: 10px; }
@@ -97,21 +94,61 @@
   <!-- Paragraph 3: Final assembly (3 images heading one paragraph) -->
   <p><strong>Final assembly.</strong> Board-level wiring, button placement, and LCD mounting on perfboard prior to enclosure.</p>
   <div class="triple">
-    <img id="fa1" src="FinalAssembly1.jpeg" alt="Final Assembly 1" loading="lazy">
-    <img id="fa2" src="FinalAssembly2.jpeg" alt="Final Assembly 2" loading="lazy">
-    <img id="fa3" src="FinalAssembly3.jpeg" alt="Final Assembly 3" loading="lazy">
+    <img src="FinalAssembly1.jpeg" alt="Final Assembly 1" loading="lazy">
+    <img src="FinalAssembly2.jpeg" alt="Final Assembly 2" loading="lazy">
+    <img src="FinalAssembly3.jpeg" alt="Final Assembly 3" loading="lazy">
   </div>
 
-  <!-- Source code BEFORE the final video -->
+  <!-- Source code BEFORE final video -->
   <hr>
   <h2>Source Code</h2>
   <p>
-    View inline below or <a href="code/quiz_game.ino" download>download quiz_game.ino</a>.
+    View inline below or <a href="code/quiz_game.txt" download>download quiz_game.txt</a>.
   </p>
   <details>
     <summary>Show Arduino Code</summary>
-    <!-- Loads your .ino directly; no need to escape angle brackets -->
-    <iframe class="code-frame" src="code/quiz_game.ino"></iframe>
+    <pre class="code"><code>
+#include &lt;Wire.h&gt;
+#include &lt;LiquidCrystal_I2C.h&gt;
+
+// I²C LCD: 20×4 display
+LiquidCrystal_I2C lcd(0x27, 20, 4);
+
+// Remapped button pins so A–D correspond to A3–A0 respectively
+const int BTN_A = A3;
+const int BTN_B = A2;
+const int BTN_C = A1;
+const int BTN_D = A0;
+
+// Shift-register pins for LED animation
+const int dataPin  = 8;
+const int latchPin = 12;
+const int clockPin = 9;
+
+// Game states
+enum GameState { WELCOME, QUIZ };
+GameState currentState = WELCOME;
+
+// Blinking variables
+unsigned long previousMillis = 0;
+bool textVisible = true;
+const int blinkInterval = 500;  // ms
+
+// Quiz variables
+int currentQuestion = 0;
+const int totalQuestions = 5;
+
+// Helper to clear all LEDs
+void clearLeds() {
+  digitalWrite(latchPin, LOW);
+  shiftOut(dataPin, clockPin, MSBFIRST, 0x00);
+  shiftOut(dataPin, clockPin, MSBFIRST, 0x00);
+  shiftOut(dataPin, clockPin, MSBFIRST, 0x00);
+  digitalWrite(latchPin, HIGH);
+}
+
+// ... rest of your code here ...
+    </code></pre>
   </details>
 
   <!-- Paragraph 4: Final product video -->
