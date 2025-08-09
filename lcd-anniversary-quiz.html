@@ -4,37 +4,49 @@
   <title>LCD Anniversary Quiz Game</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
-    body {
-      font-family: sans-serif;
-      text-align: center;
-      padding: 50px;
-    }
-    img.cover {
-      width: 100%;
-      max-width: 500px;
-      height: auto;
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    }
-    a.button {
-      display: inline-block;
-      margin-top: 20px;
-      padding: 10px 20px;
-      background-color: #0066cc;
-      color: white;
-      text-decoration: none;
-      border-radius: 5px;
-      font-size: 18px;
-    }
-    a.button:hover {
-      background-color: #004999;
-    }
+    body { font-family: sans-serif; text-align: center; padding: 50px; }
+    img.cover, .media img, .media video { width: 100%; max-width: 700px; height: auto; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+    h1 { margin-bottom: 10px; }
+    p { max-width: 800px; margin: 18px auto; line-height: 1.5; }
+    .button { display: inline-block; margin-top: 20px; padding: 10px 20px; background-color: #0066cc; color: white; text-decoration: none; border-radius: 5px; font-size: 18px; }
+    .button:hover { background-color: #004999; }
+    .triple { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; align-items: start; justify-items: center; margin: 14px 0; }
+    .triple img { width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+    .media { margin: 16px 0; }
   </style>
 </head>
 <body>
   <h1>LCD Anniversary Quiz Game</h1>
-  <img src="lcd-anniversary-quiz-cover.jpeg" alt="LCD Anniversary Quiz Game" class="cover">
-  <p>A 20×4 I²C LCD quiz game with 74HC595 LED heart animation, Arduino, and custom button matrix.</p>
+
+  <!-- Optional hero image (you can swap this filename later) -->
+  <img src="lcd-anniversary-quiz-cover.jpg" alt="LCD Anniversary Quiz Game" class="cover">
+
+  <!-- Paragraph 1: Schematic -->
+  <p><strong>Schematic.</strong> Arduino-based quiz game with a 20×4 I²C LCD, four answer buttons, and a 24-LED heart driven by three daisy-chained 74HC595 shift registers.</p>
+  <div class="media">
+    <img src="QuizGameSchematic.jpeg" alt="Quiz Game Schematic">
+  </div>
+
+  <!-- Paragraph 2: Shift register prototype video -->
+  <p><strong>Shift-register prototype.</strong> Early test of the 74HC595 chain verifying clock/latch/data timing and LED mapping before final assembly.</p>
+  <div class="media">
+    <video src="ShiftRegPrototype.mp4" controls playsinline></video>
+  </div>
+
+  <!-- Paragraph 3: Final assembly (3 images heading one paragraph) -->
+  <p><strong>Final assembly.</strong> Board-level wiring, button placement, and LCD mounting on perfboard prior to enclosure.</p>
+  <div class="triple">
+    <img src="FinalAssembly1.jpeg" alt="Final Assembly 1">
+    <img src="FinalAssembly2.jpeg" alt="Final Assembly 2">
+    <img src="FinalAssembly3.jpeg" alt="Final Assembly 3">
+  </div>
+
+  <!-- Paragraph 4: Final product video -->
+  <p><strong>Final product.</strong> Full quiz flow on the LCD; on completion, the LED heart runs the celebration sequence.</p>
+  <div class="media">
+    <video src="FinalProduct.mp4" controls playsinline></video>
+  </div>
+
   <a class="button" href="index.html">← Back to Portfolio</a>
 </body>
 </html>
