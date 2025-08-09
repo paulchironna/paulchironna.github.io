@@ -8,20 +8,62 @@
     /* Single media items (photos/videos/cover) – same width cap as the small grid images */
     img.cover, .media img, .media video {
       width: 100%;
-      max-width: 520px;       /* ≈ the size of each FinalAssembly image on desktop */
+      max-width: 520px;       
       height: auto;
       border-radius: 8px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     }
     /* Keep triple images looking the same */
-    .triple { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; align-items: start; justify-items: center; margin: 14px 0; }
-    .triple img { width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+    .triple { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); 
+      gap: 12px; 
+      align-items: start; 
+      justify-items: center; 
+      margin: 14px 0; 
+    }
+    .triple img { 
+      width: 100%; 
+      height: auto; 
+      border-radius: 8px; 
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2); 
+    }
+
+    /* Mobile-friendly scaling */
+    @media (max-width: 600px) {
+      .triple { grid-template-columns: 1fr; }
+      img.cover, .media img, .media video { max-width: 100%; }
+    }
 
     /* Make videos stay comfortably within one screen height */
     .media video {
-      aspect-ratio: 16 / 9;  /* keeps a clean rectangle */
-      max-height: 60vh;      /* never taller than 60% of viewport height */
+      aspect-ratio: 16 / 9;  
+      max-height: 60vh;      
       object-fit: cover;
+    }
+
+    /* Make FinalProduct.mp4 taller so LCD/buttons visible */
+    .media video#final-product {
+      max-height: 80vh; /* taller than the rest */
+    }
+
+    /* Force FinalAssembly1/2/3 to match in sizing */
+    img#fa1, img#fa2, img#fa3 {
+      max-width: 100%;
+      height: auto;
+    }
+
+    /* Collapsible code block */
+    details { max-width: 940px; margin: 0 auto; text-align: left; }
+    summary { cursor: pointer; font-weight: bold; margin-bottom: 10px; }
+    pre.code {
+      background: #0d1117;
+      color: #c9d1d9;
+      padding: 16px;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-size: 14px;
+      line-height: 1.4;
     }
 
     h1 { margin-bottom: 10px; }
@@ -52,16 +94,29 @@
   <!-- Paragraph 3: Final assembly (3 images heading one paragraph) -->
   <p><strong>Final assembly.</strong> Board-level wiring, button placement, and LCD mounting on perfboard prior to enclosure.</p>
   <div class="triple">
-    <img src="FinalAssembly1.jpeg" alt="Final Assembly 1" loading="lazy">
-    <img src="FinalAssembly2.jpeg" alt="Final Assembly 2" loading="lazy">
-    <img src="FinalAssembly3.jpeg" alt="Final Assembly 3" loading="lazy">
+    <img id="fa1" src="FinalAssembly1.jpeg" alt="Final Assembly 1" loading="lazy">
+    <img id="fa2" src="FinalAssembly2.jpeg" alt="Final Assembly 2" loading="lazy">
+    <img id="fa3" src="FinalAssembly3.jpeg" alt="Final Assembly 3" loading="lazy">
   </div>
 
   <!-- Paragraph 4: Final product video -->
   <p><strong>Final product.</strong> Full quiz flow on the LCD; on completion, the LED heart runs the celebration sequence.</p>
   <div class="media">
-    <video src="FinalProduct.mp4" controls playsinline preload="metadata"></video>
+    <video id="final-product" src="FinalProduct.mp4" controls playsinline preload="metadata"></video>
   </div>
+
+  <!-- Arduino code section -->
+  <hr>
+  <h2>Source Code</h2>
+  <p>
+    View inline below or <a href="code/quiz_game.ino" download>download quiz_game.ino</a>.
+  </p>
+  <details>
+    <summary>Show Arduino Code</summary>
+    <pre class="code"><code>
+// Paste your Arduino sketch here, or leave empty if you just want download link.
+    </code></pre>
+  </details>
 
   <a class="button" href="index.html">← Back to Portfolio</a>
 </body>
