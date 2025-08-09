@@ -107,25 +107,27 @@
 </head>
 <body>
   <h1>LCD Anniversary Quiz Game</h1>
-  <h2 class="subheader">An Arduino-based trivia game with LCD display and custom LED animations</h2>
+  <h2 class="subheader">Arduino-based quiz game with a 20×4 I²C LCD, four answer buttons, and a 24-LED heart driven by three daisy-chained 74HC595 shift registers made for my girlfriend</h2>
 
   <!-- Optional hero image -->
   <img src="lcd-anniversary-quiz-cover.jpeg" alt="LCD Anniversary Quiz Game" class="cover" loading="lazy" onclick="openModal(this.src)">
 
   <!-- Paragraph 1: Schematic -->
-  <p><strong>Schematic.</strong> Arduino-based quiz game with a 20×4 I²C LCD, four answer buttons, and a 24-LED heart driven by three daisy-chained 74HC595 shift registers.</p>
+  <p><strong>Schematic.</strong> The first step was to create a schematic to ensure that I could remain organized throughout building the circuit, due to the large amount of connections needed in such a small space.</p>
   <div class="media">
     <img src="QuizGameSchematic.JPG" alt="Quiz Game Schematic" loading="lazy" onclick="openModal(this.src)">
   </div>
 
   <!-- Paragraph 2: Shift register prototype video -->
-  <p><strong>Shift-register prototype.</strong> Early test of the 74HC595 chain verifying clock/latch/data timing and LED mapping before final assembly.</p>
+  <p><strong>Prototype.</strong> I first built the shift register circuit on a breadboard using multiple different colored LEDs I was considering using for the final product. I experimented with executing different patterns so that once I built the lights into a heart shape I could create an animation that is aesthetically appealing.</p>
   <div class="media">
     <video src="ShiftRegPrototype.mp4" controls playsinline preload="metadata"></video>
   </div>
 
   <!-- Paragraph 3: Final assembly (3 images heading one paragraph) -->
-  <p><strong>Final assembly.</strong> Board-level wiring, button placement, and LCD mounting on perfboard prior to enclosure.</p>
+  <p><strong>Assembly.</strong> With my design verified, I could now begin transferring the circuit to a perfboard. I carefully used 30awg wire to make all the connections
+    for the LED portion of the circuit and then 24awg for my powers, grounds, and I2C connections. Then added in a 9v battery socket and powered it up to make sure everything worked.
+  Once I confirmed this, I sealed all the connections with UV resin and covered all the connections up with foam so the board could be held comfortably.</p>
   <div class="triple">
     <img src="FinalAssembly1.jpeg" alt="Final Assembly 1" loading="lazy" onclick="openModal(this.src)">
     <img src="FinalAssembly2.jpeg" alt="Final Assembly 2" loading="lazy" onclick="openModal(this.src)">
@@ -136,13 +138,14 @@
   <hr>
   <h2>Source Code</h2>
   <p>
-    View inline below or <a href="code/quiz_game.txt" download>download quiz_game.txt</a>.
+    With all my connections made, it was time to create the code for the trivia quiz and make it so that the LED animation would run upon completion. 
+    I first created a generic version with plans to go back and personalize it at the very end of the process. View inline below or <a href="code/quiz_game.txt" download>download quiz_game.txt</a>.
   </p>
   <details>
     <summary>Show Arduino Code</summary>
     <pre class="code"><code>
-    #include <Wire.h>
-#include <LiquidCrystal_I2C.h>
+    #include <&lt;Wire.h&gt;>
+#include <&lt;LiquidCrystal_I2C.h&gt;>
 
 // I²C LCD: 20×4 display
 LiquidCrystal_I2C lcd(0x27, 20, 4);
@@ -526,7 +529,7 @@ void singleBlink() {
   </details>
 
   <!-- Paragraph 4: Final product video -->
-  <p><strong>Final product.</strong> Full quiz flow on the LCD; on completion, the LED heart runs the celebration sequence.</p>
+  <p><strong>Final product.</strong> Here is the generic version of the quiz played all the way through. This project was a challenge of many different skills, great learning experience, and made a great gift for my girlfriend!</p>
   <div class="media">
     <video id="final-product" src="FinalProduct.mp4" controls playsinline preload="metadata"></video>
   </div>
