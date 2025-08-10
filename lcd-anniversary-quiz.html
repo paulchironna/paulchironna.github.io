@@ -121,14 +121,14 @@
 </head>
 <body>
   <h1>LCD Anniversary Quiz Game</h1>
-  <h2 class="subheader">Arduino-based quiz game with a 20×4 I²C LCD, four answer buttons, and a 24-LED heart driven by three daisy-chained 74HC595 shift registers made for my girlfriend</h2>
+  <h2 class="subheader">Arduino-based quiz game with a 20×4 I²C LCD, four answer buttons, and a 24-LED heart driven by three daisy-chained 74HC595 shift registers made as a gift for my girlfriend</h2>
 
   <!-- Optional hero image -->
   <img src="lcd-anniversary-quiz-cover.jpeg" alt="LCD Anniversary Quiz Game" class="cover" loading="lazy" onclick="openModal(this.src)">
 
   <!-- Section 1: Schematic -->
   <h3>Schematic</h3>
-  <p>The first step was to create a schematic to ensure that I could remain organized throughout building the circuit, due to the large amount of connections needed in such a small space.</p>
+  <p>The first step was to create a schematic to remain organized while building the circuit, due to the large amount of connections needed in such a small space.</p>
   <div class="media">
     <img src="QuizGameSchematic.JPG" alt="Quiz Game Schematic" loading="lazy" onclick="openModal(this.src)">
   </div>
@@ -142,7 +142,7 @@
 
   <!-- Section 3: Assembly -->
   <h3>Assembly</h3>
-  <p>With my design verified, I could now begin transferring the circuit to a perfboard. I carefully used 30&nbsp;AWG wire to make all the connections for the LED portion of the circuit and then 24&nbsp;AWG for my powers, grounds, and I²C connections. Then I added a 9&nbsp;V battery socket and powered it up to make sure everything worked. Once I confirmed this, I sealed all the connections with UV resin and covered them with foam so the board could be held comfortably.</p>
+  <p>With my design verified, I could now begin transferring the circuit to a perfboard. I carefully used 30&nbsp;AWG wire to make all the connections for the LED portion of the circuit and then 24&nbsp;AWG for my powers, grounds, and I²C connections. Then I added a 9V battery socket and powered it up to make sure everything functioned correctly. Once I confirmed this, I sealed all the connections with UV resin and covered them with foam so the board could be held comfortably.</p>
   <div class="triple">
     <img src="FinalAssembly1.jpeg" alt="Final Assembly 1" loading="lazy" onclick="openModal(this.src)">
     <img src="FinalAssembly2.jpeg" alt="Final Assembly 2" loading="lazy" onclick="openModal(this.src)">
@@ -153,7 +153,7 @@
   <hr>
   <h2>Source Code</h2>
   <p>
-    With all my connections made, it was time to create the code for the trivia quiz and make it so that the LED animation would run upon completion. 
+    With all my connections made, it was time to create the code for the trivia quiz and integrate the LED animation to be triggered upon completion of the game. 
     I first created a generic version with plans to go back and personalize it at the very end of the process. View inline below or <a href="code/quiz_game.txt" download>download quiz_game.txt</a>.
   </p>
   <details>
@@ -325,7 +325,9 @@ void correctAnswerBlinks() {
 
   <!-- Section 4: Final product -->
   <h3>Final Product</h3>
-  <p>Here is the generic version of the quiz played all the way through. This project was a challenge of many different skills, great learning experience, and made a great gift for my girlfriend!</p>
+  <p>Here is the generic version of the quiz played all the way through. This project was a huge challenge and learning experience on multiple levels.
+ I had to use many resources to fill in the gaps within my programming knowledge to achieve the end product I wanted. My soldering skills were certainly tested and it took quite a bit of effort
+    to come up with a strategy to correctly wire up so many connections right on top of each other. I was able to push through to create the final product I envisioned and create a great gift for my girlfriend!</p>
   <div class="media">
     <video id="final-product" src="FinalProduct.mp4" controls playsinline preload="metadata"></video>
   </div>
