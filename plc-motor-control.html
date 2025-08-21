@@ -4,39 +4,57 @@
   <title>PLC Motor Control Project</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
-    body { font-family: sans-serif; text-align: center; padding: 50px; }
-
-    img.cover, .media img, .media video {
-      width: 100%;
-      max-width: 520px;
-      height: auto;
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-      cursor: pointer;
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      padding: 50px;
     }
 
-    .triple {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 12px;
+    img.media, video.media {
+      width: 100%;
+      max-width: 520px; /* keeps images/video large but not huge */
+      height: auto;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      margin: 20px 0;
+    }
+
+    p {
+      max-width: 700px;
+      margin: 0 auto 30px auto;
+      line-height: 1.5em;
+    }
+
+    a {
+      color: #0066cc;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
     }
   </style>
 </head>
 <body>
   <h1>PLC Motor Control Project</h1>
-  <p>Intro text goes here. You’ll describe what the project is, what you built, etc.</p>
 
-  <!-- Cover video -->
-  <video class="cover" controls>
+  <!-- Header photo -->
+  <img src="IMG_3137.jpeg" alt="PLC Motor Control Header" class="media">
+
+  <!-- Schematic -->
+  <img src="IMG_3136.jpeg" alt="Motor Control Schematic" class="media">
+  <p>This is the wiring schematic for the motor control project. [Write your explanation here about the design, wiring choices, and how it ties into the PLC.]</p>
+
+  <!-- Ladder diagram -->
+  <img src="MLD.JPG" alt="Ladder Diagram" class="media">
+  <p>This is the PLC ladder logic program. [Write your explanation here about how the rungs work, what the logic does, and how it protects/controls the motor.]</p>
+
+  <!-- Video -->
+  <video class="media" controls>
     <source src="IMG_3129.mp4" type="video/mp4">
     Your browser does not support the video tag.
   </video>
-
-  <!-- Triple image grid -->
-  <div class="triple">
-    <img src="IMG_3136.jpeg" alt="Motor Control Schematic">
-    <img src="MLD.JPG" alt="Ladder Diagram">
-  </div>
+  <p>Here is the motor control project in action. [Write your explanation here about what’s happening in the video and the final outcome.]</p>
 
   <p><a href="index.html">← Back to Home</a></p>
 </body>
