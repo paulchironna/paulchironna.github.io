@@ -1,1 +1,240 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>NAPA Battery Maintainer Repair</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+      text-align: center;
+    }
 
+    a.back {
+      display: inline-block;
+      margin-bottom: 20px;
+      color: #0066cc;
+      text-decoration: none;
+    }
+
+    h1 { margin-bottom: 10px; }
+    h2 { margin-top: 40px; font-size: 24px; }
+
+    .intro {
+      max-width: 700px;
+      margin: 0 auto 30px;
+      text-align: left;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    .image-container {
+      max-width: 50%;
+      margin: 0 auto 40px;
+    }
+
+    .image-row {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .image-row .image-block {
+      flex: 1 1 0;
+    }
+
+    .image-single img,
+    .image-row img {
+      width: 100%;
+      border: 1px solid #ccc;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .image-row img:hover,
+    .image-single img:hover {
+      transform: scale(1.02);
+    }
+
+    .crop-uniform {
+      height: 300px !important;
+      object-fit: cover !important;
+      object-position: center center !important;
+    }
+
+    .caption {
+      margin-top: 5px;
+      font-style: italic;
+    }
+
+    /* Lightbox */
+    .lightbox-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.85);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .lightbox-overlay img {
+      max-width: 90%;
+      max-height: 90%;
+      border: 4px solid white;
+      box-shadow: 0 0 20px black;
+    }
+  </style>
+</head>
+<body>
+  <a class="back" href="index.html">← Back to Portfolio</a>
+  <h1>NAPA Battery Maintainer Repair</h1>
+
+  <div class="intro">
+    <p>
+      This 1.5 amp battery maintainer came into the shop I work at on an Edco walk-behind saw. The customer complained that it was no longer functioning and that they were going through a new battery every few months. I replaced it with a new one at their request and decided to give reviving the old one a try before sending it to it's fate at the landfill.  
+    </p>
+  </div>
+
+ <div class="image-container">
+  <div class="image-row">
+    <div class="image-block">
+      <img src="IMG_3202.jpeg" class="crop-uniform" onclick="openLightbox(this.src)">
+    </div>
+  </div>
+</div>
+
+  <h2>Visual Inspection</h2>
+  <div class="intro">
+    <p>
+      I used my hot air soldering iron and a scalpel to carefully get the board and transformer out of the casing. 
+      With the board exposed, a couple obvious issues were immediately revealed. 
+    </p>
+  </div>
+
+  <div class="image-container">
+    <div class="image-row">
+      <div class="image-block">
+        <img src="IMG_2224.PNG" alt="Failed Resistor" class="crop-uniform" onclick="openLightbox(this.src)">
+        <div class="caption">Burnt up resistor coming off the positive rail</div>
+      </div>
+      <div class="image-block">
+        <img src="IMG_2094.png" alt="Corrosion" class="crop-uniform" onclick="openLightbox(this.src)">
+        <div class="caption">Lots of visible corrosion on the legs of the rectifier diodes</div>
+      </div>
+    </div>
+  </div>
+
+  <h2>Implications</h2>
+  <div class="intro">
+    <p>
+     The corrosion on the positive half of this rectifier and crispy resistor seemed to imply to me that 
+      excessive heat was present in this area of the circuit for a longer period of time. From this point,
+      I came up with a plan: isolate and test all the components that are fed directly off this rail,
+      especially those that branch off into the circuit fed by the failed resistor. 
+      I wanted to look for cracked or lifted solder joints, heat/scorching marks, or any other visibly failed components.  
+    </p>
+  </div>
+
+  <div class="image-container">
+    <div class="image-row">
+      <div class="image-block">
+        <img src=" " alt="Analog board overview" class="crop-uniform" onclick="openLightbox(this.src)">
+        <div class="caption">Close-up of CH1 analog input path</div>
+      </div>
+      <div class="image-block">
+        <img src="IMG_2137.png" alt="Solder joint detail" class="crop-uniform" onclick="openLightbox(this.src)">
+        <div class="caption">Probing BNC center pin</div>
+      </div>
+    </div>
+  </div>
+
+  <h2>Burned-out Resistors</h2>
+  <div class="intro">
+    <p>
+      Signal injection at the BNC center pin revealed a differentiated sawtooth waveform. This strongly indicated the presence of an open
+      or excess impedance condition within the input signal path. Closer examination of the series resistor directly after the BNC under a microscope revealed catastrophic 
+      physical damage. Upon measuring with a multimeter, I verified that the resistor was indeed failed open. I repeated this test across all 4 channels and recieved identical results.
+    </p>
+  </div>
+
+  <div class="image-container">
+    <div class="image-row">
+      <div class="image-block">
+        <img src="IMG_2138.png" alt="Burned resistor close-up" class="crop-uniform" onclick="openLightbox(this.src)">
+        <div class="caption">Waveform captured right after the BNC input pin</div>
+      </div>
+      <div class="image-block">
+        <img src="IMG_2139.png" alt="Multiple failed resistors" class="crop-uniform" onclick="openLightbox(this.src)">
+        <div class="caption">Blown resistor on CH1 input path, likely due to overvoltage/current condition</div>
+      </div>
+    </div>
+  </div>
+
+  <h2>Soldering</h2>
+  <div class="intro">
+    <p>
+      With the failed resistors identified, I carefully desoldered them, cleaned the area thoroughly, and replaced them with 82Ω 1% 1/10W SMD resistors. 
+      I then injected my test signal and verified that a good square wave was now present beyond the jack into the attenuator circuit.
+  </div>
+
+  <div class="image-container">
+    <div class="image-row">
+      <div class="image-block">
+        <img src="IMG_2218.png" alt="Soldering replacement resistors" class="crop-uniform" onclick="openLightbox(this.src)">
+        <div class="caption">New SMD resistor soldered onto CH2 input path</div>
+      </div>
+      <div class="image-block">
+        <img src="IMG_2204.png" alt="Another view of soldering" class="crop-uniform" onclick="openLightbox(this.src)">
+        <div class="caption">Test setup to verify repair</div>
+      </div>
+    </div>
+  </div>
+
+  <h2>Function Restored</h2>
+  <div class="intro">
+    <p>
+      With the new resistors installed and connections verified, I powered the scope back on and ran test signals into all four channels. 
+      Each channel properly displayed a clean 1KHz square wave. Problem solved!
+    </p>
+  </div>
+
+  <div class="image-container">
+    <div class="image-row">
+      <div class="image-block">
+        <img src="IMG_2211.png" alt="CH1 square wave" class="crop-uniform" onclick="openLightbox(this.src)">
+      </div>
+      <div class="image-block">
+        <img src="IMG_2212.png" alt="CH2 square wave" class="crop-uniform" onclick="openLightbox(this.src)">
+      </div>
+    </div>
+    <div class="image-row">
+      <div class="image-block">
+        <img src="IMG_2213.png" alt="CH3 square wave" class="crop-uniform" onclick="openLightbox(this.src)">
+      </div>
+      <div class="image-block">
+        <img src="IMG_2214.png" alt="CH4 square wave" class="crop-uniform" onclick="openLightbox(this.src)">
+      </div>
+    </div>
+    <div class="caption">All 4 channels displaying correct waveform</div>
+  </div>
+
+  <!-- Lightbox -->
+  <div id="lightbox" class="lightbox-overlay" onclick="closeLightbox()">
+    <img id="lightbox-img" src="" alt="">
+  </div>
+
+  <script>
+    function openLightbox(src) {
+      document.getElementById('lightbox-img').src = src;
+      document.getElementById('lightbox').style.display = 'flex';
+    }
+
+    function closeLightbox() {
+      document.getElementById('lightbox').style.display = 'none';
+    }
+  </script>
+</body>
+</html>
