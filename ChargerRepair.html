@@ -109,19 +109,19 @@
   <h2>Visual Inspection</h2>
   <div class="intro">
     <p>
-      I used my hot air soldering iron and a scalpel to carefully get the board and transformer out of the casing. 
-      With the board exposed, a couple obvious issues were immediately revealed. 
+      I used my hot air soldering iron and a scalpel to carefully separate the case and gain access to the circuit. 
+      With the board exposed, a couple issues became immediately obvious. 
     </p>
   </div>
 
   <div class="image-container">
     <div class="image-row">
       <div class="image-block">
-        <img src="IMG_2224.PNG" alt="Failed Resistor" class="crop-uniform" onclick="openLightbox(this.src)">
+        <img src="null.png" alt="Failed Resistor" class="crop-uniform" onclick="openLightbox(this.src)">
         <div class="caption">Burnt up resistor coming off the positive rail</div>
       </div>
       <div class="image-block">
-        <img src="IMG_2094.png" alt="Corrosion" class="crop-uniform" onclick="openLightbox(this.src)">
+        <img src="null.png" alt="Corrosion" class="crop-uniform" onclick="openLightbox(this.src)">
         <div class="caption">Lots of visible corrosion on the legs of the rectifier diodes</div>
       </div>
     </div>
@@ -141,22 +141,21 @@
   <div class="image-container">
     <div class="image-row">
       <div class="image-block">
-        <img src=" " alt="Analog board overview" class="crop-uniform" onclick="openLightbox(this.src)">
-        <div class="caption">Close-up of CH1 analog input path</div>
+        <img src="null.png" alt="Back of board" class="crop-uniform" onclick="openLightbox(this.src)">
       </div>
       <div class="image-block">
-        <img src="IMG_2137.png" alt="Solder joint detail" class="crop-uniform" onclick="openLightbox(this.src)">
+        <img src="null.png" alt="lifted pad video" class="crop-uniform" onclick="openLightbox(this.src)">
         <div class="caption">Probing BNC center pin</div>
       </div>
     </div>
   </div>
 
-  <h2>Burned-out Resistors</h2>
+  <h2>Schemaitc</h2>
   <div class="intro">
     <p>
-      Signal injection at the BNC center pin revealed a differentiated sawtooth waveform. This strongly indicated the presence of an open
-      or excess impedance condition within the input signal path. Closer examination of the series resistor directly after the BNC under a microscope revealed catastrophic 
-      physical damage. Upon measuring with a multimeter, I verified that the resistor was indeed failed open. I repeated this test across all 4 channels and recieved identical results.
+      I found the above captured lifted pad right away. All the corrosion needed to be cleaned, lifted pads needed repair, and the rest of the circuit needed to be assessed as well.
+      I decided to trace and measure everything on the board to get a full picture of how the maintainer operates, and then I'd be able to assess what other components I should evaluate
+      outside of the obvious.
     </p>
   </div>
 
