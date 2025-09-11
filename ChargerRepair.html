@@ -110,7 +110,7 @@
   <div class="intro">
     <p>
       I used my hot air soldering iron and a scalpel to carefully separate the case and gain access to the circuit. 
-      With the board exposed, a couple issues became immediately obvious. 
+      With the board exposed, I began a visual inspection to hopefully identify any obvious signs of failure. I quickly found a couple strong clues. 
     </p>
   </div>
 
@@ -134,7 +134,7 @@
       excessive heat was present in this area of the circuit for a longer period of time. From this point,
       I came up with a plan: isolate and test all the components that are fed directly off this rail,
       especially those that branch off into the circuit fed by the failed resistor. 
-      I wanted to look for cracked or lifted solder joints, heat/scorching marks, or any other visibly failed components.  
+      I wanted to look specifically for cracked solder joints and lifted pads.  
     </p>
   </div>
 
@@ -145,17 +145,32 @@
       </div>
       <div class="image-block">
         <img src="null.png" alt="lifted pad video" class="crop-uniform" onclick="openLightbox(this.src)">
-        <div class="caption">Probing BNC center pin</div>
+        <div class="caption">Test</div>
       </div>
     </div>
   </div>
 
-  <h2>Schemaitc</h2>
+  <h2>Schematic</h2>
   <div class="intro">
     <p>
-      I found the above captured lifted pad right away. All the corrosion needed to be cleaned, lifted pads needed repair, and the rest of the circuit needed to be assessed as well.
-      I decided to trace and measure everything on the board to get a full picture of how the maintainer operates, and then I'd be able to assess what other components I should evaluate
-      outside of the obvious.
+     I discovered the pad for the thru-hole resistor that had burnt up almost immediately. All the corrosion needed to be cleaned, lifted pads needed repair, and the rest of the circuit needed to be assessed as well. 
+      To start, I decided to trace and measure everything on the board to get a full picture of how the maintainer operates, and then I'd be able to assess what other components I should evaluate
+      outside of the obvious. With a schematic made and the rest of the components spec'd out, I could also begin to try to figure out what value replacement was needed for the burnt up resistor.
+    </p>
+    <div class="image-container">
+    <div class="image-row">
+      <div class="image-block">
+        <img src="null" alt="Schematic" class="crop-uniform" onclick="openLightbox(this.src)">
+      </div>
+    <p>
+      To calculate the resistor value, I had to evaluate what its role is. Its placed directly after a diode in series with the Vcc to the op-amp and biases the Zener diode as well.
+      Admittedly, I was lacking the knowledge of <i>why</i> you would choose <i>which</i> value series resistor for a Zener. After some research, I found that the specs of the Zener could be 
+      plugged into the equation R1=VS−VZ/IZT+IL. However, I could not identify the specific Zener used. To get a good approximation I had to think about what the goal of this circuit is: we're maintaining battery voltage at ~12VDC.
+      I measured 16VDC coming into the rail. The op-amp should draw only a few mA and most 12v Zeners I found had a knee current spec of 0.25. Leaving some room for other components downstream, I decided a 100 ohm
+      resistor would be best to use. I'd get roughly a 4 volt drop and enough current to properly bias my Zener so that it clamps properly, while also enough so as to not create a lot of heat and
+      power loss. 
+      
+      
     </p>
   </div>
 
