@@ -1,7 +1,279 @@
-<title>Test</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Generator Controller Repair</title>
   <style>
     body {
       font-family: sans-serif;
+      padding: 20px;
       text-align: center;
-      padding: 50px;
+    }
+
+    a.back {
+      display: inline-block;
+      margin-bottom: 20px;
+      color: #0066cc;
+      text-decoration: none;
+    }
+
+    h1 { margin-bottom: 10px; }
+    h2 { margin-top: 40px; font-size: 24px; }
+
+    .intro {
+      max-width: 700px;
+      margin: 0 auto 30px;
+      text-align: left;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    .image-container {
+      max-width: 50%;
+      margin: 0 auto 40px;
+    }
+
+    .image-row {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .image-row .image-block {
+      flex: 1 1 0;
+    }
+
+    .image-single img,
+    .image-row img,
+    .image-single video,
+    .image-row video {
+      width: 100%;
+      border: 1px solid #ccc;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .image-row img:hover,
+    .image-single img:hover,
+    .image-row video:hover,
+    .image-single video:hover {
+      transform: scale(1.02);
+    }
+
+    .crop-uniform {
+      height: 300px !important;
+      object-fit: cover !important;
+      object-position: center center !important;
+    }
+
+    .caption {
+      margin-top: 5px;
+      font-style: italic;
+    }
+
+    /* Lightbox */
+    .lightbox-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.85);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .lightbox-overlay img,
+    .lightbox-overlay video {
+      max-width: 90%;
+      max-height: 90%;
+      border: 4px solid white;
+      box-shadow: 0 0 20px black;
+    }
+  </style>
+</head>
+<body>
+  <a class="back" href="index.html">← Back to Portfolio</a>
+  <h1>Generator Controller Repair</h1>
+
+  <div class="intro">
+    <p>
+      A brand-new Wacker Neuson generator came into the shop with a no-crank no-start concern. It was found that there was no voltage present on the starter
+      output pin during a crank attempt. The controller was replaced under warranty, but I was fortunate enough to be able to keep the old one to bring home and try to fix! 
+    </p>
+  </div>
+
+ <div class="image-container">
+  <div class="image-row">
+    <div class="image-block">
+      <img src="DeepSeaFront.jpeg" class="crop-uniform" onclick="openLightbox(this.src)">
+    </div>
+  </div>
+</div>
+
+  <h2>Verification</h2>
+  <div class="intro">
+    <p>
+     To begin, I started with the cardinal first step of the diagnostic process: verify the complaint. If its an intermittent issue or a possible misdiagnosis, it is best to find that
+      out now rather than later when the device is completely disassembled. To do this, I just had to hook up 14-24VDC to the supply pins, and jumper out the E-Stop signal pin to B+ voltage.
+    </p>
+  </div>
+
+  <div class="image-container">
+    <div class="image-row">
+      <div class="image-block">
+        <img src="BurntResistor.jpeg" alt="Failed Resistor" class="crop-uniform" onclick="openLightbox(this.src)">
+        <div class="caption">Burnt up resistor coming off the positive rail</div>
+      </div>
+      <div class="image-block">
+        <img src="DiodeCorrosion.jpeg" alt="Corrosion" class="crop-uniform" onclick="openLightbox(this.src)">
+        <div class="caption">Lots of visible corrosion on the legs of the rectifier diodes</div>
+      </div>
+    </div>
+  </div>
+
+  <h2>Implications</h2>
+  <div class="intro">
+    <p>
+     The corrosion on the rectifier diodes and crispy resistor seemed to imply to me that 
+      excessive heat was present in this area of the circuit for a longer period of time. From this point,
+      I came up with a plan: isolate and test all the components that are fed directly off this rail,
+      especially those that branch off into the circuit fed by the failed resistor. 
+      Given the age of this device and evidence thus far, I wanted to look specifically for cracked solder joints and lifted pads.  
+    </p>
+  </div>
+
+  <div class="image-container">
+    <div class="image-row">
+      <div class="image-block">
+        <img src="BackOfBoard.jpeg" alt="Back of board" class="crop-uniform" onclick="openLightbox(this.src)">
+        <div class="caption">Visible corrosion at multiple points on the board</div>
+      </div>
+      <div class="image-block">
+        <video class="crop-uniform" controls onclick="openLightbox(this.currentSrc)">
+          <source src="LiftedPad.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+        <div class="caption">Lifted pad for the failed thru-hole resistor</div>
+      </div>
+    </div>
+  </div>
+
+  <h2>Schematic</h2>
+  <div class="intro">
+    <p>
+     I discovered the pad for the failed resistor had almost completely lifted off the board. All the corrosion needed to be cleaned, lifted pads needed repair, and the rest of the circuit needed to be assessed as well. 
+      To start, I decided to trace and measure everything on the board to get a full picture of how the device operates, and then I'd be able to assess what other components I should evaluate
+      outside of the obvious. With a schematic made and the rest of the components spec'd out, I could also begin to try to figure out what value replacement was needed for the burnt up resistor.
+    </p>
+    <div class="image-container">
+  <div class="image-row">
+    <div class="image-block">
+      <img src="Schematic.JPG" alt="Schematic" class="crop-uniform" onclick="openLightbox(this.src)">
+    </div>
+  </div> <!-- close .image-row -->
+</div>   <!-- close .image-container -->
+
+<p>
+  To figure out the correct replacement resistor value, I had to first evaluate what its role is. Its placed directly after a series diode, provides Vcc to the op-amp, and biases the Zener diode (Z3) as well.
+      Admittedly, I was lacking the knowledge of <i>why</i> you would choose <i>which</i> value series resistor for a Zener.
+      
+      After some research, I found that the specs of the Zener could be 
+      plugged into the equation R1=VS−VZ/IZT+IL in order to answer this question. 
+      </p>
+      <p>
+      However, I could not identify the specific Zener used. To get a good approximation I had to think about what the goal of this circuit is: we're maintaining battery voltage at ~12VDC.
+      I measured 16VDC coming into the rail. The op-amp should draw only a few mA and most 12v Zeners I found had a knee current spec of 0.25 mA. Leaving some room for other components downstream, I decided a 100 ohm
+      resistor would be best to use. With a 100 ohm, I'd get roughly a 4 volt drop and enough current to properly bias my Zener so that it clamps properly, while also not too much so as to not create a lot of heat and
+      power loss. 
+    </p>
+  </div>
+
+  <h2>Trace Repair</h2>
+<div class="intro">
+  <p>
+    There was quite a bit of damage along the path of the series resistor, so I used a small piece of jumper wire to bridge everything across the bad trace and
+    compensate for the destroyed pads. The series diode (D6) was shorted likely due to thermal runaway and op-amp supply filter (C5) measured out of spec, so I replaced these as well.  
+  </p>
+</div> <!-- ✅ close intro cleanly -->
+
+<div class="image-container">
+  <div class="image-row">
+    <div class="image-block">
+      <img src="TraceRepairs.jpeg" alt="Trace Repairs" class="crop-uniform" onclick="openLightbox(this.src)">
+    </div>
+  </div>
+</div>
+
+
+<h2>Testing</h2>
+  <div class="intro">
+    <p>
+    Now that I had all the new components installed, I could now hook it up to my bench supply for testing. 
+    Under proper operation, the charger should blink the LED as the battery approaches a full charge. 
+    So I hooked the leads up to my DC supply and adjusted the voltage
+    to replicate different charge levels.
+    Through this, I verified that the charger runs and stops at the correct voltages, meaning my calculations for the Zener series diode were more or less correct. If needed, 
+    I could adjust the VR pot that supplies the op-amp's V- input to get it perfect. 
+    </p>
+  
+ <div class="image-container">
+  <div class="image-row">
+    <div class="image-block">
+      <video class="crop-uniform" controls onclick="openLightbox(this.currentSrc)">
+        <source src="TestVideo.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+    </div>
+  </div> <!-- close .image-row -->
+</div>   <!-- close .image-container -->
+
+<p>
+  Repairing this board allowed me to go deeper into some components and
+  topics I hadn't come across yet. I was able to gain an understanding
+  of Zener diode characteristics in a DC circuit and some basic op-amp circuit design characteristics. The HA17741 is essentially just a comparator,
+  so it was very helpful for me conceptually to assess its function in the application of a battery charger.
+   We are sampling battery volts from the B+ rail into V- and tapping our V+ from the op-amp's output in order to
+ keep the voltage in the correct range. 
+
+</p>
+
+</div>
+
+
+
+  <!-- Lightbox -->
+  <div id="lightbox" class="lightbox-overlay" onclick="closeLightbox()">
+    <img id="lightbox-img" src="" alt="">
+    <video id="lightbox-video" controls style="display:none;"></video>
+  </div>
+
+  <script>
+    function openLightbox(src) {
+      const img = document.getElementById('lightbox-img');
+      const video = document.getElementById('lightbox-video');
+      const overlay = document.getElementById('lightbox');
+
+      if (src.endsWith('.mp4')) {
+        img.style.display = 'none';
+        video.style.display = 'block';
+        video.src = src;
+      } else {
+        video.style.display = 'none';
+        video.pause();
+        img.style.display = 'block';
+        img.src = src;
+      }
+      overlay.style.display = 'flex';
+    }
+
+    function closeLightbox() {
+      document.getElementById('lightbox').style.display = 'none';
+      const video = document.getElementById('lightbox-video');
+      video.pause();
+      video.src = "";
+    }
+  </script>
+</body>
+</html>
