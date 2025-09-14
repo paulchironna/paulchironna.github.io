@@ -44,7 +44,9 @@
     }
 
     .image-single img,
-    .image-row img {
+    .image-row img,
+    .image-single video,
+    .image-row video {
       width: 100%;
       border: 1px solid #ccc;
       cursor: pointer;
@@ -52,7 +54,9 @@
     }
 
     .image-row img:hover,
-    .image-single img:hover {
+    .image-single img:hover,
+    .image-row video:hover,
+    .image-single video:hover {
       transform: scale(1.02);
     }
 
@@ -80,7 +84,8 @@
       z-index: 1000;
     }
 
-    .lightbox-overlay img {
+    .lightbox-overlay img,
+    .lightbox-overlay video {
       max-width: 90%;
       max-height: 90%;
       border: 4px solid white;
@@ -109,7 +114,7 @@
   <h2>Visual Inspection</h2>
   <div class="intro">
     <p>
-      I used my hot air soldering iron and a scalpel to carefully separate the case and gain access to the circuit. 
+      I used my hot air soldering gun and a scalpel to carefully separate the case and gain access to the circuit. 
       With the board exposed, I began a visual inspection to hopefully identify any obvious signs of failure. I quickly found a couple strong clues. 
     </p>
   </div>
@@ -121,7 +126,7 @@
         <div class="caption">Burnt up resistor coming off the positive rail</div>
       </div>
       <div class="image-block">
-        <img src="DiodeCorrsosion.jpeg" alt="Corrosion" class="crop-uniform" onclick="openLightbox(this.src)">
+        <img src="DiodeCorrosion.jpeg" alt="Corrosion" class="crop-uniform" onclick="openLightbox(this.src)">
         <div class="caption">Lots of visible corrosion on the legs of the rectifier diodes</div>
       </div>
     </div>
@@ -141,11 +146,15 @@
   <div class="image-container">
     <div class="image-row">
       <div class="image-block">
-        <img src="null.png" alt="Back of board" class="crop-uniform" onclick="openLightbox(this.src)">
+        <img src="BackOfBoard.jpeg" alt="Back of board" class="crop-uniform" onclick="openLightbox(this.src)">
+        <div class="caption">Visible corrosion at multiple points on the board</div>
       </div>
       <div class="image-block">
-        <img src="null.png" alt="lifted pad video" class="crop-uniform" onclick="openLightbox(this.src)">
-        <div class="caption">Test</div>
+        <video class="crop-uniform" controls onclick="openLightbox(this.currentSrc)">
+          <source src="LiftedPad.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+        <div class="caption">Lifted pad for the failed thru-hole resistor</div>
       </div>
     </div>
   </div>
@@ -153,101 +162,116 @@
   <h2>Schematic</h2>
   <div class="intro">
     <p>
-     I discovered the pad for the thru-hole resistor that had burnt up almost immediately. All the corrosion needed to be cleaned, lifted pads needed repair, and the rest of the circuit needed to be assessed as well. 
-      To start, I decided to trace and measure everything on the board to get a full picture of how the maintainer operates, and then I'd be able to assess what other components I should evaluate
+     I discovered the pad for the failed resistor had almost completely lifted off the board. All the corrosion needed to be cleaned, lifted pads needed repair, and the rest of the circuit needed to be assessed as well. 
+      To start, I decided to trace and measure everything on the board to get a full picture of how the device operates, and then I'd be able to assess what other components I should evaluate
       outside of the obvious. With a schematic made and the rest of the components spec'd out, I could also begin to try to figure out what value replacement was needed for the burnt up resistor.
     </p>
     <div class="image-container">
-    <div class="image-row">
-      <div class="image-block">
-        <img src="null" alt="Schematic" class="crop-uniform" onclick="openLightbox(this.src)">
-      </div>
-    <p>
-      To calculate the resistor value, I had to evaluate what its role is. Its placed directly after a diode in series with the Vcc to the op-amp and biases the Zener diode as well.
-      Admittedly, I was lacking the knowledge of <i>why</i> you would choose <i>which</i> value series resistor for a Zener. After some research, I found that the specs of the Zener could be 
-      plugged into the equation R1=VS−VZ/IZT+IL. However, I could not identify the specific Zener used. To get a good approximation I had to think about what the goal of this circuit is: we're maintaining battery voltage at ~12VDC.
-      I measured 16VDC coming into the rail. The op-amp should draw only a few mA and most 12v Zeners I found had a knee current spec of 0.25. Leaving some room for other components downstream, I decided a 100 ohm
-      resistor would be best to use. I'd get roughly a 4 volt drop and enough current to properly bias my Zener so that it clamps properly, while also enough so as to not create a lot of heat and
+  <div class="image-row">
+    <div class="image-block">
+      <img src="Schematic.JPG" alt="Schematic" class="crop-uniform" onclick="openLightbox(this.src)">
+    </div>
+  </div> <!-- close .image-row -->
+</div>   <!-- close .image-container -->
+
+<p>
+  To figure out the correct replacement resistor value, I had to first evaluate what its role is. Its placed directly after a series diode, provides Vcc to the op-amp, and biases the Zener diode (Z3) as well.
+      Admittedly, I was lacking the knowledge of <i>why</i> you would choose <i>which</i> value series resistor for a Zener.
+      
+      After some research, I found that the specs of the Zener could be 
+      plugged into the equation R1=VS−VZ/IZT+IL in order to answer this question. 
+      </p>
+      <p>
+      However, I could not identify the specific Zener used. To get a good approximation I had to think about what the goal of this circuit is: we're maintaining battery voltage at ~12VDC.
+      I measured 16VDC coming into the rail. The op-amp should draw only a few mA and most 12v Zeners I found had a knee current spec of 0.25 mA. Leaving some room for other components downstream, I decided a 100 ohm
+      resistor would be best to use. With a 100 ohm, I'd get roughly a 4 volt drop and enough current to properly bias my Zener so that it clamps properly, while also not too much so as to not create a lot of heat and
       power loss. 
-      
-      
     </p>
   </div>
 
-  <div class="image-container">
-    <div class="image-row">
-      <div class="image-block">
-        <img src="IMG_2138.png" alt="Burned resistor close-up" class="crop-uniform" onclick="openLightbox(this.src)">
-        <div class="caption">Waveform captured right after the BNC input pin</div>
-      </div>
-      <div class="image-block">
-        <img src="IMG_2139.png" alt="Multiple failed resistors" class="crop-uniform" onclick="openLightbox(this.src)">
-        <div class="caption">Blown resistor on CH1 input path, likely due to overvoltage/current condition</div>
-      </div>
+  <h2>Trace Repair</h2>
+<div class="intro">
+  <p>
+    There was quite a bit of damage along the path of the series resistor, so I used a small piece of jumper wire to bridge everything across the bad trace and
+    compensate for the destroyed pads. The series diode (D6) was shorted likely due to thermal runaway and op-amp supply filter (C5) measured out of spec, so I replaced these as well.  
+  </p>
+</div> <!-- ✅ close intro cleanly -->
+
+<div class="image-container">
+  <div class="image-row">
+    <div class="image-block">
+      <img src="TraceRepairs.jpeg" alt="Trace Repairs" class="crop-uniform" onclick="openLightbox(this.src)">
     </div>
   </div>
+</div>
 
-  <h2>Soldering</h2>
+
+<h2>Testing</h2>
   <div class="intro">
     <p>
-      With the failed resistors identified, I carefully desoldered them, cleaned the area thoroughly, and replaced them with 82Ω 1% 1/10W SMD resistors. 
-      I then injected my test signal and verified that a good square wave was now present beyond the jack into the attenuator circuit.
-  </div>
-
-  <div class="image-container">
-    <div class="image-row">
-      <div class="image-block">
-        <img src="IMG_2218.png" alt="Soldering replacement resistors" class="crop-uniform" onclick="openLightbox(this.src)">
-        <div class="caption">New SMD resistor soldered onto CH2 input path</div>
-      </div>
-      <div class="image-block">
-        <img src="IMG_2204.png" alt="Another view of soldering" class="crop-uniform" onclick="openLightbox(this.src)">
-        <div class="caption">Test setup to verify repair</div>
-      </div>
-    </div>
-  </div>
-
-  <h2>Function Restored</h2>
-  <div class="intro">
-    <p>
-      With the new resistors installed and connections verified, I powered the scope back on and ran test signals into all four channels. 
-      Each channel properly displayed a clean 1KHz square wave. Problem solved!
+    Now that I had all the new components installed, I could now hook it up to my bench supply for testing. 
+    Under proper operation, the charger should blink the LED as the battery approaches a full charge. 
+    So I hooked the leads up to my DC supply and adjusted the voltage
+    to replicate different charge levels.
+    Through this, I verified that the charger runs and stops at the correct voltages, meaning my calculations for the Zener series diode were more or less correct. If needed, 
+    I could adjust the VR pot that supplies the op-amp's V- input to get it perfect. 
     </p>
-  </div>
+  
+ <div class="image-container">
+  <div class="image-row">
+    <div class="image-block">
+      <video class="crop-uniform" controls onclick="openLightbox(this.currentSrc)">
+        <source src="TestVideo.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+    </div>
+  </div> <!-- close .image-row -->
+</div>   <!-- close .image-container -->
 
-  <div class="image-container">
-    <div class="image-row">
-      <div class="image-block">
-        <img src="IMG_2211.png" alt="CH1 square wave" class="crop-uniform" onclick="openLightbox(this.src)">
-      </div>
-      <div class="image-block">
-        <img src="IMG_2212.png" alt="CH2 square wave" class="crop-uniform" onclick="openLightbox(this.src)">
-      </div>
-    </div>
-    <div class="image-row">
-      <div class="image-block">
-        <img src="IMG_2213.png" alt="CH3 square wave" class="crop-uniform" onclick="openLightbox(this.src)">
-      </div>
-      <div class="image-block">
-        <img src="IMG_2214.png" alt="CH4 square wave" class="crop-uniform" onclick="openLightbox(this.src)">
-      </div>
-    </div>
-    <div class="caption">All 4 channels displaying correct waveform</div>
-  </div>
+<p>
+  Repairing this board allowed me to go deeper into some components and
+  topics I hadn't come across yet. I was able to gain an understanding
+  of Zener diode characteristics in a DC circuit and some basic op-amp circuit design characteristics. The HA17741 is essentially just a comparator,
+  so it was very helpful for me conceptually to assess its function in the application of a battery charger.
+   We are sampling battery volts from the B+ rail into V- and tapping our V+ from the op-amp's output in order to
+ keep the voltage in the correct range. 
+
+</p>
+
+</div>
+
+
 
   <!-- Lightbox -->
   <div id="lightbox" class="lightbox-overlay" onclick="closeLightbox()">
     <img id="lightbox-img" src="" alt="">
+    <video id="lightbox-video" controls style="display:none;"></video>
   </div>
 
   <script>
     function openLightbox(src) {
-      document.getElementById('lightbox-img').src = src;
-      document.getElementById('lightbox').style.display = 'flex';
+      const img = document.getElementById('lightbox-img');
+      const video = document.getElementById('lightbox-video');
+      const overlay = document.getElementById('lightbox');
+
+      if (src.endsWith('.mp4')) {
+        img.style.display = 'none';
+        video.style.display = 'block';
+        video.src = src;
+      } else {
+        video.style.display = 'none';
+        video.pause();
+        img.style.display = 'block';
+        img.src = src;
+      }
+      overlay.style.display = 'flex';
     }
 
     function closeLightbox() {
       document.getElementById('lightbox').style.display = 'none';
+      const video = document.getElementById('lightbox-video');
+      video.pause();
+      video.src = "";
     }
   </script>
 </body>
