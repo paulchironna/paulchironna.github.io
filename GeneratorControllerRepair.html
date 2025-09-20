@@ -8,7 +8,38 @@
       padding: 20px;
       text-align: center;
     }
+.iphone-video-container {
+    width: 50%; /* Fill the full width of the image-block */
+    aspect-ratio: 16/9; /* Or whatever aspect ratio matches your other content */
+    margin: 0 auto;
+    background: #000;
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
+.iphone-video {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+.image-row {
+    display: flex;
+    gap: 20px; /* Adjust spacing between items */
+    align-items: flex-start;
+}
+
+.image-block {
+    flex: 1; /* Makes them equal width */
+}
+.iphone-video {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: contain;
+}
     a.back {
       display: inline-block;
       margin-bottom: 20px;
@@ -99,8 +130,8 @@
 
   <div class="intro">
     <p>
-      A brand-new Wacker Neuson generator came into the shop with a no-crank no-start concern. It was found that there was no voltage present on the starter
-      output pin during a crank attempt. The controller was replaced under warranty, but I was fortunate enough to be able to keep the old one to bring home and try to fix! 
+      A brand-new Wacker Neuson generator came into the shop with a no-crank no-start condition. It was found that there was no voltage present on the starter
+      output pin during crank attempts. The DSE 73110 Mk II controller was replaced under warranty, but I was fortunate enough to be able to keep the old one to bring home and try to fix! 
     </p>
   </div>
 
@@ -115,132 +146,105 @@
   <h2>Verification</h2>
   <div class="intro">
     <p>
-     To begin, I started with the cardinal first step of the diagnostic process: verify the complaint. If its an intermittent issue or a possible misdiagnosis, it is best to find that
-      out now rather than later when the device is completely disassembled. To do this, I just had to hook up 14-24VDC to the supply pins, and jumper out the E-Stop signal pin to B+ voltage.
+     To begin, I started with the cardinal first step of the diagnostic process: verify the complaint. To do this, I just had to get my hands on a schematic to verify pinout, hook up 14-24VDC to the supply pins, and jumper out the E-Stop signal pin to B+ voltage. 
+     The case was easy to get apart, so I exposed the board as I set up for testing so I could simultaneously do a visual inspection of the circuit as well. 
     </p>
   </div>
 
   <div class="image-container">
     <div class="image-row">
       <div class="image-block">
-        <img src="BurntResistor.jpeg" alt="Failed Resistor" class="crop-uniform" onclick="openLightbox(this.src)">
-        <div class="caption">Burnt up resistor coming off the positive rail</div>
+        <img src="DeepSeaDiagram.PNG" alt="Back" class="crop-uniform" onclick="openLightbox(this.src)">
+        <div class="caption">Controller Wiring Diagram</div>
       </div>
       <div class="image-block">
-        <img src="DiodeCorrosion.jpeg" alt="Corrosion" class="crop-uniform" onclick="openLightbox(this.src)">
-        <div class="caption">Lots of visible corrosion on the legs of the rectifier diodes</div>
+        <img src="TestSetup.JPG" alt="Setup" class="crop-uniform" onclick="openLightbox(this.src)">
+        <div class="caption">Power pins and E-Stop jumper installed</div>
       </div>
     </div>
   </div>
 
-  <h2>Implications</h2>
+  <h2>Testing Results</h2>
   <div class="intro">
     <p>
-     The corrosion on the rectifier diodes and crispy resistor seemed to imply to me that 
-      excessive heat was present in this area of the circuit for a longer period of time. From this point,
-      I came up with a plan: isolate and test all the components that are fed directly off this rail,
-      especially those that branch off into the circuit fed by the failed resistor. 
-      Given the age of this device and evidence thus far, I wanted to look specifically for cracked solder joints and lifted pads.  
+     With power applied and the E-Stop bypassed, I attempted to activate the starter output by 
+     following the startup sequence on the controller. As expected, the complaint was verified
+      - no voltage output present on the starter pin during crank attempts.
     </p>
   </div>
 
-  <div class="image-container">
-    <div class="image-row">
-      <div class="image-block">
-        <img src="BackOfBoard.jpeg" alt="Back of board" class="crop-uniform" onclick="openLightbox(this.src)">
-        <div class="caption">Visible corrosion at multiple points on the board</div>
-      </div>
-      <div class="image-block">
-        <video class="crop-uniform" controls onclick="openLightbox(this.currentSrc)">
-          <source src="LiftedPad.mp4" type="video/mp4">
-          Your browser does not support the video tag.
-        </video>
-        <div class="caption">Lifted pad for the failed thru-hole resistor</div>
-      </div>
-    </div>
-  </div>
-
-  <h2>Schematic</h2>
-  <div class="intro">
-    <p>
-     I discovered the pad for the failed resistor had almost completely lifted off the board. All the corrosion needed to be cleaned, lifted pads needed repair, and the rest of the circuit needed to be assessed as well. 
-      To start, I decided to trace and measure everything on the board to get a full picture of how the device operates, and then I'd be able to assess what other components I should evaluate
-      outside of the obvious. With a schematic made and the rest of the components spec'd out, I could also begin to try to figure out what value replacement was needed for the burnt up resistor.
-    </p>
-    <div class="image-container">
+   <div class="image-container">
   <div class="image-row">
     <div class="image-block">
-      <img src="Schematic.JPG" alt="Schematic" class="crop-uniform" onclick="openLightbox(this.src)">
+      <video class="crop-uniform" controls onclick="openLightbox(this.currentSrc)">
+        <source src="nooutput.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+        </video>
+        <div class="caption">Video taken during crank attempt with 0 output</div>
+      </div>
     </div>
-  </div> <!-- close .image-row -->
-</div>   <!-- close .image-container -->
-
-<p>
-  To figure out the correct replacement resistor value, I had to first evaluate what its role is. Its placed directly after a series diode, provides Vcc to the op-amp, and biases the Zener diode (Z3) as well.
-      Admittedly, I was lacking the knowledge of <i>why</i> you would choose <i>which</i> value series resistor for a Zener.
-      
-      After some research, I found that the specs of the Zener could be 
-      plugged into the equation R1=VS−VZ/IZT+IL in order to answer this question. 
-      </p>
-      <p>
-      However, I could not identify the specific Zener used. To get a good approximation I had to think about what the goal of this circuit is: we're maintaining battery voltage at ~12VDC.
-      I measured 16VDC coming into the rail. The op-amp should draw only a few mA and most 12v Zeners I found had a knee current spec of 0.25 mA. Leaving some room for other components downstream, I decided a 100 ohm
-      resistor would be best to use. With a 100 ohm, I'd get roughly a 4 volt drop and enough current to properly bias my Zener so that it clamps properly, while also not too much so as to not create a lot of heat and
-      power loss. 
-    </p>
   </div>
 
-  <h2>Trace Repair</h2>
-<div class="intro">
-  <p>
-    There was quite a bit of damage along the path of the series resistor, so I used a small piece of jumper wire to bridge everything across the bad trace and
-    compensate for the destroyed pads. The series diode (D6) was shorted likely due to thermal runaway and op-amp supply filter (C5) measured out of spec, so I replaced these as well.  
-  </p>
-</div> <!-- ✅ close intro cleanly -->
+  <h2>Diagnostic Strategy</h2>
+  <div class="intro">
+    <p>
+     Now that I had verified that there truly was no output present on pin 5, it was time to start following the output
+     path upstream. I noted that I could hear the relay contacts clicking, so I was not very worried about anything on the control side. Being that this was a brand new controller, I began to
+     heavily suspect that we had a cold solder joint either on the relay output pin itself or on the joint for the pin header. I couldn't yet rule out that possibly the power input to the contact side 
+     was missing but this could quickly be ruled out after taking some basic measurements.
+    </p>
+    </div>
+<h2>Findings</h2>
+  <div class="intro">
+    <p> Without a block diagram of the board, I had to physically feel for which relay was clicking when the starter was comamnded on. 
+      I verified that power was present on the contact side input, which only left testing for power on the output. This is when
+      something interesting happened: I had no output at first and wondered if I just didn't have good contact with my probe. So I 
+      scratched up the top of the solder joint with my fiber glass pen and remeasured. I still didn't get anything at first,
+      but when I pushed down a little harder with my probe I suddenly had 12 volts present. I repeated the startup procedure and retested at the pin header 
+      to find that I now had power here too! 
+    </p>
+  </div>
 
 <div class="image-container">
   <div class="image-row">
     <div class="image-block">
-      <img src="TraceRepairs.jpeg" alt="Trace Repairs" class="crop-uniform" onclick="openLightbox(this.src)">
+      <video class="crop-uniform" controls onclick="openLightbox(this.currentSrc)">
+        <source src="reretest.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+        </video>
+        <div class="caption">Measurements retaken at relay output and pin header</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="intro"><p>It seems as though there was a cold solder joint on the output pin of the relay, and just the pressure
+    from pushing on it with my meter probe recreated a connection. I quickly reflowed all the joints on that relay
+    to be thorough, and then decided I wanted to put the circuit under some load to verify the repair. To do this, I 
+    used a large 12V work light that draws ~3 amps. 3 amps is considerably less than the pull-in/holding current of
+    the starter solenoid but still enough that it would expose any additional poor connections or issues.
+  </p>
+</div>
+
+      <div class="iphone-video-container">
+        <video class="iphone-video" controls onclick="openLightbox(this.currentSrc)">
+          <source src="testlight.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      </div>
+      <div class="caption">Incandescent light wired into starter output</div>
     </div>
   </div>
 </div>
 
-
-<h2>Testing</h2>
-  <div class="intro">
-    <p>
-    Now that I had all the new components installed, I could now hook it up to my bench supply for testing. 
-    Under proper operation, the charger should blink the LED as the battery approaches a full charge. 
-    So I hooked the leads up to my DC supply and adjusted the voltage
-    to replicate different charge levels.
-    Through this, I verified that the charger runs and stops at the correct voltages, meaning my calculations for the Zener series diode were more or less correct. If needed, 
-    I could adjust the VR pot that supplies the op-amp's V- input to get it perfect. 
-    </p>
-  
- <div class="image-container">
-  <div class="image-row">
-    <div class="image-block">
-      <video class="crop-uniform" controls onclick="openLightbox(this.currentSrc)">
-        <source src="TestVideo.mp4" type="video/mp4">
-        Your browser does not support the video tag.
-      </video>
-    </div>
-  </div> <!-- close .image-row -->
-</div>   <!-- close .image-container -->
-
-<p>
-  Repairing this board allowed me to go deeper into some components and
-  topics I hadn't come across yet. I was able to gain an understanding
-  of Zener diode characteristics in a DC circuit and some basic op-amp circuit design characteristics. The HA17741 is essentially just a comparator,
-  so it was very helpful for me conceptually to assess its function in the application of a battery charger.
-   We are sampling battery volts from the B+ rail into V- and tapping our V+ from the op-amp's output in order to
- keep the voltage in the correct range. 
-
-</p>
-
-</div>
-
+<h2>Final Thoughts</h2>
+  <div class="intro"><p> This was the first time I had a brand new device with a board level issue.
+    Before I got to looking at it, I was concerned it would be some kind of software or firmware level
+    issue I wasn't equipped to properly diagnose. However, I decided not to think that hard into it
+    and just take it as far as I could with what I have. Sure enough, I was able to figure it out rather 
+    quickly! A good exercise in keeping things simple, I'm glad I got to get the controller
+    back into working order and reinforce some of the core troubleshooting skills I've developed
+    through my experience thus far.
+  </p>
 
 
   <!-- Lightbox -->
