@@ -8,48 +8,38 @@
       padding: 20px;
       text-align: center;
     }
-.iphone-video-container {
-    width: 50%; /* Fill the full width of the image-block */
-    aspect-ratio: 16/9; /* Or whatever aspect ratio matches your other content */
-    margin: 0 auto;
-    background: #000;
-    border-radius: 8px;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.iphone-video {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-}
-.image-row {
-    display: flex;
-    gap: 20px; /* Adjust spacing between items */
-    align-items: flex-start;
-}
-
-.image-block {
-    flex: 1; /* Makes them equal width */
-}
-.iphone-video {
-    width: 100%;
-    height: auto;
-    display: block;
-    object-fit: contain;
-}
+    .iphone-video-container {
+      width: 50%;
+      aspect-ratio: 16/9;
+      margin: 0 auto;
+      background: #000;
+      border-radius: 8px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .iphone-video, .iframe-video {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    .image-row {
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+    }
+    .image-block {
+      flex: 1;
+    }
     a.back {
       display: inline-block;
       margin-bottom: 20px;
       color: #0066cc;
       text-decoration: none;
     }
-
     h1 { margin-bottom: 10px; }
     h2 { margin-top: 40px; font-size: 24px; }
-
     .intro {
       max-width: 700px;
       margin: 0 auto 30px;
@@ -57,70 +47,40 @@
       font-size: 16px;
       line-height: 1.6;
     }
-
     .image-container {
       max-width: 50%;
       margin: 0 auto 40px;
     }
-
     .image-row {
       display: flex;
       justify-content: center;
       gap: 15px;
       flex-wrap: wrap;
     }
-
     .image-row .image-block {
       flex: 1 1 0;
     }
-
     .image-single img,
     .image-row img,
-    .image-single video,
-    .image-row video {
+    .image-row iframe {
       width: 100%;
       border: 1px solid #ccc;
       cursor: pointer;
       transition: 0.2s ease;
     }
-
     .image-row img:hover,
     .image-single img:hover,
-    .image-row video:hover,
-    .image-single video:hover {
+    .image-row iframe:hover {
       transform: scale(1.02);
     }
-
     .crop-uniform {
       height: 300px !important;
       object-fit: cover !important;
       object-position: center center !important;
     }
-
     .caption {
       margin-top: 5px;
       font-style: italic;
-    }
-
-    /* Lightbox */
-    .lightbox-overlay {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(0, 0, 0, 0.85);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-    }
-
-    .lightbox-overlay img,
-    .lightbox-overlay video {
-      max-width: 90%;
-      max-height: 90%;
-      border: 4px solid white;
-      box-shadow: 0 0 20px black;
     }
   </style>
 </head>
@@ -135,13 +95,13 @@
     </p>
   </div>
 
- <div class="image-container">
-  <div class="image-row">
-    <div class="image-block">
-      <img src="DeepSeaFront.jpeg" class="crop-uniform" onclick="openLightbox(this.src)">
+  <div class="image-container">
+    <div class="image-row">
+      <div class="image-block">
+        <img src="DeepSeaFront.jpeg" class="crop-uniform" onclick="openLightbox(this.src)">
+      </div>
     </div>
   </div>
-</div>
 
   <h2>Verification</h2>
   <div class="intro">
@@ -173,18 +133,14 @@
     </p>
   </div>
 
-   <div class="image-container">
-  <div class="image-row">
-    <div class="image-block">
-      <video class="crop-uniform" controls onclick="openLightbox(this.currentSrc)">
-        <source src="https://drive.google.com/uc?export=download&id=19WMA5tNbNarB_yXGEKVNqLmfXH0iDZiP" type="video/mp4">
-        Your browser does not support the video tag.
-      </video>
-      <div class="caption">Video taken during crank attempt with 0 output</div>
+  <div class="image-container">
+    <div class="image-row">
+      <div class="image-block">
+        <iframe class="iframe-video" src="https://drive.google.com/file/d/19WMA5tNbNarB_yXGEKVNqLmfXH0iDZiP/preview" allow="autoplay" allowfullscreen></iframe>
+        <div class="caption">Video taken during crank attempt with 0 output</div>
+      </div>
     </div>
   </div>
-</div>
-
 
   <h2>Diagnostic Strategy</h2>
   <div class="intro">
@@ -194,8 +150,9 @@
      heavily suspect that we had a cold solder joint either on the relay output pin itself or on the joint for the pin header. I couldn't yet rule out that possibly the power input to the contact side 
      was missing but this could quickly be ruled out after taking some basic measurements.
     </p>
-    </div>
-<h2>Findings</h2>
+  </div>
+
+  <h2>Findings</h2>
   <div class="intro">
     <p> Without a block diagram of the board, I had to physically feel for which relay was clicking when the starter was comamnded on. 
       I verified that power was present on the contact side input, which only left testing for power on the output. This is when
@@ -206,18 +163,14 @@
     </p>
   </div>
 
-<div class="image-container">
-  <div class="image-row">
-    <div class="image-block">
-      <video class="crop-uniform" controls onclick="openLightbox(this.currentSrc)">
-        <source src="https://drive.google.com/uc?export=download&id=1wtBed_1RI4H8gTZXJQH60XvLXtJEeEtL" type="video/mp4">
-        Your browser does not support the video tag.
-      </video>
-      <div class="caption">Measurements retaken at relay output and pin header</div>
+  <div class="image-container">
+    <div class="image-row">
+      <div class="image-block">
+        <iframe class="iframe-video" src="https://drive.google.com/file/d/1wtBed_1RI4H8gTZXJQH60XvLXtJEeEtL/preview" allow="autoplay" allowfullscreen></iframe>
+        <div class="caption">Measurements retaken at relay output and pin header</div>
+      </div>
     </div>
   </div>
-</div>
-
 
   <div class="intro"><p>It seems as though there was a cold solder joint on the output pin of the relay, and just the pressure
     from pushing on it with my meter probe recreated a connection. I quickly reflowed all the joints on that relay
@@ -225,18 +178,14 @@
     used a large 12V work light that draws ~3 amps. 3 amps is considerably less than the pull-in/holding current of
     the starter solenoid but still enough that it would expose any additional poor connections or issues.
   </p>
-</div>
+  </div>
 
-      <div class="iphone-video-container">
-  <video class="iphone-video" controls onclick="openLightbox(this.currentSrc)">
-    <source src="https://drive.google.com/uc?export=download&id=1JYa_aA95nM31TaAqak0DMaaJ4zB5nrhK" type="video/mp4">
-    Your browser does not support the video tag.
-  </video>
-</div>
-<div class="caption">Incandescent light wired into starter output</div>
+  <div class="iphone-video-container">
+    <iframe class="iframe-video" src="https://drive.google.com/file/d/1JYa_aA95nM31TaAqak0DMaaJ4zB5nrhK/preview" allow="autoplay" allowfullscreen></iframe>
+  </div>
+  <div class="caption">Incandescent light wired into starter output</div>
 
-
-<h2>Final Thoughts</h2>
+  <h2>Final Thoughts</h2>
   <div class="intro"><p> This was the first time I had a brand new device with a board level issue.
     Before I got to looking at it, I was concerned it would be some kind of software or firmware level
     issue I wasn't equipped to properly diagnose. However, I decided not to think that hard into it
@@ -245,39 +194,6 @@
     back into working order and reinforce some of the core troubleshooting skills I've developed
     through my experience thus far.
   </p>
-
-
-  <!-- Lightbox -->
-  <div id="lightbox" class="lightbox-overlay" onclick="closeLightbox()">
-    <img id="lightbox-img" src="" alt="">
-    <video id="lightbox-video" controls style="display:none;"></video>
   </div>
-
-  <script>
-    function openLightbox(src) {
-      const img = document.getElementById('lightbox-img');
-      const video = document.getElementById('lightbox-video');
-      const overlay = document.getElementById('lightbox');
-
-      if (src.endsWith('.mp4')) {
-        img.style.display = 'none';
-        video.style.display = 'block';
-        video.src = src;
-      } else {
-        video.style.display = 'none';
-        video.pause();
-        img.style.display = 'block';
-        img.src = src;
-      }
-      overlay.style.display = 'flex';
-    }
-
-    function closeLightbox() {
-      document.getElementById('lightbox').style.display = 'none';
-      const video = document.getElementById('lightbox-video');
-      video.pause();
-      video.src = "";
-    }
-  </script>
 </body>
 </html>
