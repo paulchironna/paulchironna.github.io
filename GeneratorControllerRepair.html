@@ -152,9 +152,9 @@
   <h2>Findings</h2>
   <div class="intro">
     <p> Without a block diagram of the board, I had to physically feel for which relay was clicking when the starter was comamnded on. 
-      I verified that power was present on the contact side input, which only left testing for power on the output. This is when
+      I verified that B+ voltage was present on the contact side input, which only left testing for 12 volts on the output. This is when
       something interesting happened: I had no output at first and wondered if I just didn't have good contact with my probe. So I 
-      scratched up the top of the solder joint with my fiber glass pen and remeasured. I still didn't get anything at first,
+      scratched up the top of the solder joint with my fiberglass pen and remeasured. I still didn't get anything at first,
       but when I pushed down a little harder with my probe I suddenly had 12 volts present. I repeated the startup procedure and retested at the pin header 
       to find that I now had power here too! 
     </p>
@@ -169,7 +169,9 @@
     from pushing on it with my meter probe recreated a connection. I quickly reflowed all the joints on that relay
     to be thorough, and then decided I wanted to put the circuit under some load to verify the repair. To do this, I 
     used a large 12V work light that draws ~3 amps. 3 amps is considerably less than the pull-in/holding current of
-    the starter solenoid but still enough that it would expose any additional poor connections or issues.
+    the starter solenoid but still enough that it would expose any additional poor connections or issues. I let the 
+    controller cycle through multiple crank attempts all the way through before deeming the device as good to go back
+    into service. It will become a shop spare now for our rental fleet in case one fails and a generator goes down.
   </p>
   </div>
 
