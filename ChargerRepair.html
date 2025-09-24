@@ -135,8 +135,8 @@
   <h2>Implications</h2>
   <div class="intro">
     <p>
-     The corrosion on the rectifier diodes and crispy resistor seemed to imply to me that 
-      excessive heat was present in this area of the circuit for a longer period of time. From this point,
+     The corrosion on the rectifier diodes and destroyed resistor seemed to imply to me that 
+      excessive heat was present on the rail for a longer period of time until something caused that resistor specifically to fail. From this point,
       I came up with a plan: isolate and test all the components that are fed directly off this rail,
       especially those that branch off into the circuit fed by the failed resistor. 
       Given the age of this device and evidence thus far, I wanted to look specifically for cracked solder joints and lifted pads.  
@@ -182,10 +182,11 @@
       plugged into the equation R1=VS−VZ/IZT+IL in order to answer this question. 
       </p>
       <p>
-      However, I could not identify the specific Zener used. To get a good approximation I had to think about what the goal of this circuit is: we're maintaining battery voltage at ~12VDC.
+      However, I could not identify the model of Zener diode used for Z3 as the physical markings were gone. To get a good approximation I had to think about what the goal of this circuit is: we're maintaining battery voltage at ~12VDC.
       I measured 16VDC coming into the rail. The op-amp should draw only a few mA and most 12v Zeners I found had a knee current spec of 0.25 mA. Leaving some room for other components downstream, I decided a 100 ohm
-      resistor would be best to use. With a 100 ohm, I'd get roughly a 4 volt drop and enough current to properly bias my Zener so that it clamps properly, while also not too much so as to not create a lot of heat and
-      power loss. 
+        resistor would be best to use. Since the circuit wasn't operational, I couldn't reasonably measure the draw of each component on this branch.
+        So, instead, I researched all the specs I could find for each part and estimated a total draw of ~40mA. Per Ohm's Law, a 100 ohm resistor would have roughly a 4 volt drop across it, with enough current flow to properly bias my Zener.
+      
     </p>
   </div>
 
