@@ -172,8 +172,8 @@
   </p>
   <details>
     <summary>Show Arduino Code</summary>
-    <pre class="code"><code>#include &lt;Wire.h&gt;
-#include &lt;LiquidCrystal_I2C.h&gt;
+    <pre class="code"><code>#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
 
 // I²C LCD: 20×4 display
 LiquidCrystal_I2C lcd(0x27, 20, 4);
@@ -259,28 +259,31 @@ void loop() {
 void showWelcomeSequence() {
   lcd.clear();
   clearLeds();              // ensure LEDs stay off at start
-  lcd.setCursor(5, 0);  lcd.print("Welcome!");
+  lcd.setCursor(4, 0);  lcd.print("Hey Claire!");
   
-  // LED fill animation during welcome message
-  for (int i = 0; i &lt; 24; i++) {
+  // LED fill animation during "Hey Claire!" message
+  for (int i = 0; i < 24; i++) {
     uint32_t mask = 0;
-    for (int j = 0; j &lt;= i; j++) {
-      mask |= ((uint32_t)1 &lt;&lt; j);
+    // Light up all LEDs from 0 to current position
+    for (int j = 0; j <= i; j++) {
+      mask |= ((uint32_t)1 << j);
     }
-    byte hb = (mask &gt;&gt; 16) &amp; 0xFF;
-    byte mb = (mask &gt;&gt; 8) &amp; 0xFF;
-    byte lb = mask &amp; 0xFF;
+    
+    byte hb = (mask >> 16) & 0xFF;
+    byte mb = (mask >> 8) & 0xFF;
+    byte lb = mask & 0xFF;
     digitalWrite(latchPin, LOW);
     shiftOut(dataPin, clockPin, MSBFIRST, hb);
     shiftOut(dataPin, clockPin, MSBFIRST, mb);
     shiftOut(dataPin, clockPin, MSBFIRST, lb);
     digitalWrite(latchPin, HIGH);
-    delay(80);
+    delay(80);  // ~2 seconds total for fill (24 * 80ms = 1920ms)
   }
   
+  // Pause with all LEDs on for 1 second
   delay(1000);
   lcd.clear();
-  clearLeds();
+  clearLeds();  // Turn off LEDs for quiz portion
   lcd.setCursor(4, 0);  lcd.print("Quiz time...");
   delay(2000);
   lcd.setCursor(3, 2);  lcd.print("Are you ready?");
@@ -289,6 +292,33 @@ void showWelcomeSequence() {
   lcd.setCursor(6, 0);  lcd.print("If so...");
   delay(1500);
   lcd.setCursor(2, 2);  lcd.print("Press any button");
+  
+  // Flash the "Press any button" message
+  unsigned long flashStart = millis();
+  bool buttonPressed = false;
+  while (!buttonPressed) {
+    if (millis() - flashStart >= 500) {  // Flash every 500ms
+      flashStart = millis();
+      textVisible = !textVisible;
+      if (textVisible) {
+        lcd.setCursor(2, 2);  lcd.print("Press any button");
+      } else {
+        lcd.setCursor(2, 2);  lcd.print("                ");  // Clear the line
+      }
+    }
+    
+    // Check for button press
+    if (!digitalRead(BTN_A) || !digitalRead(BTN_B) || 
+        !digitalRead(BTN_C) || !digitalRead(BTN_D)) {
+      buttonPressed = true;
+    }
+  }
+  lcd.clear();
+  lcd.setCursor(4, 0);  lcd.print("Let's Begin!");
+  delay(1500);
+
+  currentState = QUIZ;
+  showQuestion();
 }
 
 void handleWelcomeState() {
@@ -299,13 +329,49 @@ void showQuestion() {
   lcd.clear();
   switch (currentQuestion) {
     case 0:
-      lcd.setCursor(6,1);  lcd.print("Question");
+      lcd.setCursor(4,0);  lcd.print("When is our");
+      lcd.setCursor(4,2);  lcd.print("anniversary?");
       delay(2000);
       lcd.clear();
-      lcd.setCursor(1,0);  lcd.print("A) Answer B) Answer");
-      lcd.setCursor(1,2);  lcd.print("C) Answer D) Answer");
+      lcd.setCursor(1,0);  lcd.print("A) 2/20   B) 2/22");
+      lcd.setCursor(1,2);  lcd.print("C) 4/20   D) IDK");
       break;
-    // ... etc ...
+
+    case 1:
+      lcd.setCursor(5,0);  lcd.print("Where did we");
+      lcd.setCursor(5,2);  lcd.print("first meet?");
+      delay(2000);
+      lcd.clear();
+      lcd.setCursor(5,0);  lcd.print("A) Movegas");
+      lcd.setCursor(4,2);  lcd.print("B) Rochester");
+      break;
+
+    case 2:
+      lcd.setCursor(4,0);  lcd.print("What is my");
+      lcd.setCursor(4,2);  lcd.print("middle name?");
+      delay(2000);
+      lcd.clear();
+      lcd.setCursor(1,0);  lcd.print("A) Angus   B) Arty");
+      lcd.setCursor(1,2);  lcd.print("C) Andrew  D) Bob");
+      break;
+
+    case 3:
+      lcd.setCursor(4,0);  lcd.print("When is my");
+      lcd.setCursor(4,2);  lcd.print("birthday?");
+      delay(2000);
+      lcd.clear();
+      lcd.setCursor(1,0);  lcd.print("A) 9/17   B) 8/26");
+      lcd.setCursor(1,2);  lcd.print("C) 12/5   D) 9/27");
+      break;
+
+    case 4:
+      lcd.setCursor(2,0);  lcd.print("Who is the");
+      lcd.setCursor(2,2);  lcd.print("best gf ever?");
+      delay(2000);
+      lcd.clear();
+      lcd.setCursor(0,0);  lcd.print("A) Claire Holler");
+      lcd.setCursor(0,2);  lcd.print("B) Anyone else");
+      break;
   }
 }
 
@@ -317,22 +383,190 @@ void handleQuizState() {
 }
 
 void processAnswer(char answer) {
-  // ... your existing logic ...
+  lcd.clear();
+  lcd.setCursor(0,0);
+
+  switch (currentQuestion) {
+    case 0:
+      if (answer == 'B') {
+        lcd.print("Correct!");
+        correctAnswerBlinks();
+      } else {
+        lcd.print("Bruh");
+      }
+      break;
+    case 1:
+      if (answer == 'A') {
+        lcd.print("Hell yeah!");
+        correctAnswerBlinks();
+      } else {
+        lcd.print("Awkward...");
+      }
+      break;
+    case 2:
+      if (answer == 'C') {
+        lcd.print("Easy!");
+        correctAnswerBlinks();
+      } else {
+        lcd.print("Ma'am...");
+        lcd.setCursor(0,2);
+        lcd.print("Are you high?");
+      }
+      break;
+    case 3:
+      if (answer == 'D') {
+        lcd.print("Bingo!");
+        correctAnswerBlinks();
+        delay(1000);
+        lcd.setCursor(0,2);
+        lcd.print("You rock <3");
+      } else {
+        lcd.print("Nice... lol");
+      }
+      break;
+    case 4:
+      if (answer == 'A') {
+        lcd.print("YUP!");
+        correctAnswerBlinks();
+      } else {
+        lcd.print("Absolutely!");
+        singleBlink();  // Single blink for the fake-out
+        delay(1000);
+        lcd.clear();
+        lcd.print("Jk lol...");
+        lcd.setCursor(0,2);
+        lcd.print("Ur the best");
+      }
+      break;
+  }
+
+  delay(2000);
+  currentQuestion++;
+
+  if (currentQuestion < totalQuestions) {
+    showQuestion();
+  } else {
+    // Quiz complete
+    lcd.clear();
+    lcd.setCursor(0,0);
+    lcd.print("Quiz complete!");
+    delay(2000);
+    lcd.clear();
+    lcd.setCursor(3,1);
+    lcd.print("I love you");
+
+    // New animation sequence: 3 cycles of (circle + dancing)
+    for (int cycle = 0; cycle < 3; cycle++) {
+      // Circle animation (3 times)
+      for (int circleRound = 0; circleRound < 3; circleRound++) {
+        for (int i = 0; i < 24; i++) {
+          uint32_t mask = (uint32_t)1 << i;
+          byte hb = (mask >> 16) & 0xFF;
+          byte mb = (mask >> 8) & 0xFF;
+          byte lb = mask & 0xFF;
+          digitalWrite(latchPin, LOW);
+          shiftOut(dataPin, clockPin, MSBFIRST, hb);
+          shiftOut(dataPin, clockPin, MSBFIRST, mb);
+          shiftOut(dataPin, clockPin, MSBFIRST, lb);
+          digitalWrite(latchPin, HIGH);
+          delay(33);  // 50/1.5 ≈ 33ms for 1.5x speed
+        }
+      }
+      
+      // Dancing animation - alternating odds/evens (3 times)
+      for (int danceRound = 0; danceRound < 3; danceRound++) {
+        // Show odd LEDs (bits 0, 2, 4, 6, ...)
+        digitalWrite(latchPin, LOW);
+        shiftOut(dataPin, clockPin, MSBFIRST, 0xAA); // 10101010
+        shiftOut(dataPin, clockPin, MSBFIRST, 0xAA); // 10101010
+        shiftOut(dataPin, clockPin, MSBFIRST, 0xAA); // 10101010
+        digitalWrite(latchPin, HIGH);
+        delay(200);  // 300/1.5 = 200ms for 1.5x speed
+        
+        // Show even LEDs (bits 1, 3, 5, 7, ...)
+        digitalWrite(latchPin, LOW);
+        shiftOut(dataPin, clockPin, MSBFIRST, 0x55); // 01010101
+        shiftOut(dataPin, clockPin, MSBFIRST, 0x55); // 01010101
+        shiftOut(dataPin, clockPin, MSBFIRST, 0x55); // 01010101
+        digitalWrite(latchPin, HIGH);
+        delay(200);  // 300/1.5 = 200ms for 1.5x speed
+      }
+    }
+
+    // turn all LEDs off
+    clearLeds();
+    // prompt to play again with flashing text
+    lcd.clear();
+    lcd.setCursor((20-11)/2,0); lcd.print("Play again?");
+    
+    // Flash the "Press any button" message
+    unsigned long flashStart = millis();
+    bool buttonPressed = false;
+    textVisible = true;  // Reset text visibility
+    
+    while (!buttonPressed) {
+      if (millis() - flashStart >= 500) {  // Flash every 500ms
+        flashStart = millis();
+        textVisible = !textVisible;
+        if (textVisible) {
+          lcd.setCursor((20-16)/2,2); lcd.print("Press any button");
+        } else {
+          lcd.setCursor((20-16)/2,2); lcd.print("                ");  // Clear the line
+        }
+      }
+      
+      // Check for button press
+      if (!digitalRead(BTN_A) || !digitalRead(BTN_B) || 
+          !digitalRead(BTN_C) || !digitalRead(BTN_D)) {
+        buttonPressed = true;
+      }
+    }
+
+    // restart quiz
+    currentQuestion = 0;
+    currentState = WELCOME;
+    showWelcomeSequence();
+  }
 }
 
-void startupAnimation() { clearLeds(); delay(50); }
+void runLedAnimation() {
+  // unused
+}
+
+void startupAnimation() {
+  // Clear any random states immediately
+  clearLeds();
+  delay(50);
+}
 
 void correctAnswerBlinks() {
-  for (int blink = 0; blink &lt; 3; blink++) {
+  // 3 fast blinks on all LEDs
+  for (int blink = 0; blink < 3; blink++) {
+    // All LEDs on
     digitalWrite(latchPin, LOW);
     shiftOut(dataPin, clockPin, MSBFIRST, 0xFF);
     shiftOut(dataPin, clockPin, MSBFIRST, 0xFF);
     shiftOut(dataPin, clockPin, MSBFIRST, 0xFF);
     digitalWrite(latchPin, HIGH);
     delay(150);
+    
+    // All LEDs off
     clearLeds();
     delay(150);
   }
+}
+
+void singleBlink() {
+  // Single blink for fake-out correct answer
+  digitalWrite(latchPin, LOW);
+  shiftOut(dataPin, clockPin, MSBFIRST, 0xFF);
+  shiftOut(dataPin, clockPin, MSBFIRST, 0xFF);
+  shiftOut(dataPin, clockPin, MSBFIRST, 0xFF);
+  digitalWrite(latchPin, HIGH);
+  delay(150);
+  
+  clearLeds();
+  delay(150);
 }
 </code></pre>
   </details>
