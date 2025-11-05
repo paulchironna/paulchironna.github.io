@@ -132,11 +132,8 @@
 
   <div class="intro">
     <p>
-      I was able to snag this Agilent U1602B handheld oscilloscope from an eBay auction for extremely cheap.
-      It was labeled as 'for parts' so I messaged the seller to get more info on the issues they were experiencing. 
-      The seller noted that the two channels worked sometimes but would frequently become noisy and drop out. 
-      This seemed like an extremely repairable condition so I decided to put in a bid for it. I won the scope for about
-      $75 which is excellent given they usually run for $300+ used.  
+      I purchased this Agilent U1602B handheld oscilloscope listed as "for repair" for a significantly discounted price.
+      The seller noted that both channels would intermittently lose signal integrity to varying degrees.
     </p>
   </div>
 
@@ -151,15 +148,14 @@
   <h2>Verification</h2>
   <div class="intro">
     <p>
-     Per usual, my first step was to rig up a controlled test of the unit with a clean, comparable reference.
-     As I did with my Rigol oscilloscope repair, I used the Rigol's built-in probe compensation signal and a known-good probe.
+     I set up a controlled test of the unit with a clean, comparable reference.
+     I used my Rigol scope's built-in probe compensation signal and a known-good probe to evaluate the waveform on each of the channels.
      With this setup, I know to expect a noise-free 1 kHz square wave with ~3 volts peak-to-peak. 
     </p>
-    <p>Based on the sellers description of the issue, I immediately suspected the BNC jack and specifically
+    <p>Based on the sellers description of the issue, I suspected the BNC jack and specifically
         its solder joints. These jacks are subject to a lot of mechanical stress throughout their lifetime
-        and given the age of the unit it would not be surprising at all if they were worn out or in need of 
-        reflow. I hooked up each channel to the test signal and gave the jack a wiggle with varying amounts of
-        pressure to see this would induce or resolve the fault. 
+        and it is very common for them to need reflow. I hooked up each channel to the test signal and gave the jack a wiggle with varying amounts of
+        pressure to see if this would induce the fault. 
     </p>
   </div>
 
@@ -181,11 +177,16 @@
     <p>
      As seen in the videos, both channels had issues displaying the waveform. Channel 1 showed very obvious signs
      of cracked joints as it would jump from perfect to distorted with each movement. Channel 2, however, was consistently noisy with higher peaks on the rising edge of the square wave.
-     Still, a poor connection at the BNC will absolutely cause this condition just the same. This condition will effectively create an unwanted RLC circuit on our input, 
-     allowing common mode noise to linger in the attenuation stage of the circuit, throwing off the signal compensation. This will 
-     cause a noisy waveform and overshoot on rising edges - a perfect fit for what was displayed in this test. 
-    </p>
-    <p>From here, it was time to tear down the device and get a look at the condition of our BNC jack 
+     Still, a poor connection at the BNC will cause this condition just the same. 
+     </p>
+     <p> 
+      A poor connection will effectively create an unwanted 
+     RLC circuit on the input signal, 
+     allowing common mode noise to linger in the attenuation stage of the circuit, throwing off the signal 
+     compensation. This will 
+     cause a noisy waveform and overshoot on rising edges - a perfect fit for what was displayed in this
+      test. 
+     From here, it was time to tear down the device and get a look at the condition of our BNC jack 
         connections under a microscope.
     </p>
   </div>
@@ -209,9 +210,9 @@
   <h2>Soldering</h2>
   <div class="intro">
     <p>
-     Inspection under a microscope revealed visible cracks on the joints for both channels. With my suspicions verified, I decided to desolder all the joints on the BNC, clean them up, and resolder them.
-     A reflow might have sufficed but I plan on using this handheld scope at work so I wanted as reliable a repair as 
-     possible to eliminate any future misdiagnoses on account of the instrument. 
+     Inspection under a microscope revealed visible cracks on the joints for both channels. With my suspicions verified, 
+     I decided to desolder all the joints on the BNC, clean everything, and apply fresh solder.
+     A reflow might have sufficed but I wanted to evaluate the condition of the pads before I reassembled as well.
     </p>
     <div class="image-row">
       <div class="image-block">
@@ -237,19 +238,11 @@
     </div>
   </div>
 <div class="intro">
-  <p>After reassembling, I performed a calibration through the device's built-in software to minimize any other
-  factors that may affect signal integrity. From here, I performed the same wiggle test while tapped into the 1 kHz square wave from my
+  <p>After reassembling, I performed a calibration through the device's built-in software and adjusted the probes to minimize any other
+  factors that may affect signal integrity. From here, I performed the same wiggle test while measuring the 1 kHz square wave from my
   benchtop scope. Both channels now cleanly display a proper square wave and don't lose integrity with any mechanical stress.</p>
 </div>
 </div>
-
-<h2 class="centered">Final Analysis</h2>
-<div class="intro">
-  <p>Oscilloscopes are very beneficial pieces of equipment for me to learn from and work on.
-  While modern digital storage oscilloscopes have a lot more componentry, the issues I've come
-  across in my limited experience thus far really only required a basic understanding of impedance. Most failures happen before the ADC in the input stage, either in the attenuator path or the jack
-  itself. A basic working knowledge of how analog signals behave with resistors, inductors, and capacitors goes a
-  long way in identifying failure modes on a waveform.</p>
 
   <!-- Lightbox -->
   <div id="lightbox" class="lightbox-overlay" onclick="closeLightbox()">
