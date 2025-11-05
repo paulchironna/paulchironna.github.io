@@ -99,7 +99,7 @@
 
   <div class="intro">
     <p>
-      This 1.5 amp battery maintainer came into the shop I work at on an Edco walk-behind saw. The customer complained that it was no longer functioning and that they were going through a new battery every few months. I replaced it with a new one at their request and decided to give reviving the old one a try before sending it to it's fate at the landfill.  
+      This 1.5 amp NAPA 12V battery maintainer was taken off a piece of equipment as it was no longer powering up or charging whatsoever.  
     </p>
   </div>
 
@@ -114,8 +114,10 @@
   <h2>Visual Inspection</h2>
   <div class="intro">
     <p>
-      I used my hot air soldering gun and a scalpel to carefully separate the case and gain access to the circuit. 
-      With the board exposed, I began a visual inspection to hopefully identify any obvious signs of failure. I quickly found a couple strong clues. 
+      I used my hot air soldering gun and a scalpel to carefully separate the case and gain access to the board. 
+      With the board exposed, I began a visual inspection to hopefully identify any obvious signs of failure before
+      taking my measurements.
+       
     </p>
   </div>
 
@@ -127,7 +129,7 @@
       </div>
       <div class="image-block">
         <img src="DiodeCorrosion.jpeg" alt="Corrosion" class="crop-uniform" onclick="openLightbox(this.src)">
-        <div class="caption">Lots of visible corrosion on the legs of the rectifier diodes</div>
+        <div class="caption">Corroded diode leg</div>
       </div>
     </div>
   </div>
@@ -135,11 +137,11 @@
   <h2>Implications</h2>
   <div class="intro">
     <p>
-     The clues so far seemed to imply to me that 
-      excessive heat was present on the rail for a long period of time until this resistor failed. From this point,
-      I came up with a plan: isolate and test all the components that are fed directly off the B+ rail,
-      especially those that branch off into the circuit fed by the failed resistor. 
-      Given the age of this device and evidence thus far, I wanted to look specifically for cracked solder joints and lifted pads.  
+     Visual inspection revealed visible corrosion on the positive-half rectifier diodes and a catastrophically failed resistor.
+     There was no immediate evidence of a short circuit or excessive current passing through any other components fed off the same B+ rail.
+     I began to suspect a cracked solder joint or lifted pad created enough heat to slowly bake the resistor into failure. My next step
+     was to check the joint under a microscope and evaluate nearby components that may have also suffered thermal stress.
+    
     </p>
   </div>
 
@@ -162,39 +164,38 @@
   <h2>Schematic</h2>
   <div class="intro">
     <p>
-     I discovered the pad for the failed resistor had almost completely lifted off the board. All the corrosion needed to be cleaned, lifted pads needed repair, and the rest of the circuit needed to be assessed as well. 
-      To start, I decided to trace and measure everything on the board to get a full picture of how the device operates, and then I'd be able to assess what other components I should evaluate
-      outside of the obvious. With a schematic made and the rest of the components spec'd out, I could also begin to try to figure out what value replacement was needed for the burnt up resistor.
+     I discovered the pad for the failed resistor had almost completely lifted off the board. To properly determine its replacement value and
+     verify operation of the nearby components, I needed to create a schematic. I used a multimeter to carefully measure each component and trace
+     its path to get a full picture of the circuit.  
     </p>
     <div class="image-container">
   <div class="image-row">
     <div class="image-block">
       <img src="Schematic.JPG" alt="Schematic" class="crop-uniform" onclick="openLightbox(this.src)">
+      <div class="caption">Finished schematic updated after finding R11's value</div>
     </div>
   </div> <!-- close .image-row -->
 </div>   <!-- close .image-container -->
 
 <p>
-  To figure out the correct replacement resistor value, I had to first evaluate what its role is. Its placed directly after a series diode, provides Vcc to the op-amp, and biases the Zener diode (Z3) as well.
-      Admittedly, I was lacking the knowledge of <i>why</i> you would choose <i>which</i> value series resistor for a Zener.
-      
-      After some research, I found that the specs of the Zener could be 
-      plugged into the equation R1=VS−VZ/IZT+IL in order to answer this question. 
-      </p>
-      <p>
-      However, I could not identify the model of Zener diode used for Z3 as the physical markings were gone. To get a good approximation I had to think about what the goal of this circuit is: we're maintaining battery voltage at ~12VDC.
-      I measured 16VDC coming into the rail. The op-amp should draw only a few mA and most 12v Zeners I found had a knee current spec of 0.25 mA. Leaving some room for other components downstream, I decided a 100 ohm
-        resistor would be best to use. Since the circuit wasn't operational, I couldn't reasonably measure the draw of each component on this branch.
-        So, instead, I researched all the specs I could find for each part and estimated a total draw of ~40mA. Per Ohm's Law, a 100 ohm resistor would have roughly a 4 volt drop across it, with enough current flow to properly bias my Zener.
-      
+  With a complete circuit diagram, I could now begin to determine the correct replacement value for the resistor.
+  R11 is the series resistor responsible for supplying the op-amp's Vcc, Z3 bias current, and our non-inverting input. I could not
+  get a model number off Z3, so I had to do some inference and math to find the right value. It was also found that the series diode (D6) failed shorted (likely due to thermal runaway) and
+  the inverting input decoupling capacitor (C5) measured below 40uF putting it out of the +/- 10% spec.
+
     </p>
+    <p>The equation R1=VS−VZ/IZT+IL is used to determine a Zener diode's series resistor value. I consulted datasheets for the circuits components
+      and some generic 12V Zeners to get the most accurate estimate of each value. R1=16-12/0.02+0.02, R1=100 ohms. With this identified, I created a 
+      parts list and began installing the new components. 
+     </p>
   </div>
 
   <h2>Trace Repair</h2>
 <div class="intro">
   <p>
-    There was quite a bit of damage along the path of the series resistor, so I used a small piece of jumper wire to bridge everything across the bad trace and
-    compensate for the destroyed pads. The series diode (D6) was shorted likely due to thermal runaway and op-amp supply filter (C5) measured out of spec, so I replaced these as well.  
+    A significant section of the trace leading to the op-amp supply was found to be lifted, so I used a piece of jumper wire to recreate the path. I
+    sealed all my new connections with UV resin to protect and isolate them. I cleaned all the corrosion off and reflowed any questionable solder joints as needed.
+      
   </p>
 </div> <!-- ✅ close intro cleanly -->
 
@@ -210,12 +211,9 @@
 <h2>Testing</h2>
   <div class="intro">
     <p>
-    Now that I had all the new components installed, I could now hook it up to my bench supply for testing. 
-    Under proper operation, the charger should blink the LED as the battery approaches a full charge. 
-    So I hooked the leads up to my DC supply and adjusted the voltage
-    to replicate different charge levels.
-    Through this, I verified that the charger runs and stops at the correct voltages, meaning my calculations for the Zener series diode were more or less correct. If needed, 
-    I could adjust the VR pot that supplies the op-amp's V- input to get it perfect. 
+    I tested the unit with my power supply's constant current output mode. I verified that the maintainer would output at the correct threshold (just below 12VDC) which
+    could be fine tuned further by adjusting the VR potentiometer on the inverting input. 
+
     </p>
   
  <div class="image-container">
@@ -228,18 +226,6 @@
     </div>
   </div> <!-- close .image-row -->
 </div>   <!-- close .image-container -->
-
-<p>
-  Repairing this board allowed me to go deeper into some components and
-  topics I hadn't come across yet. I was able to gain an understanding
-  of Zener diode characteristics in a DC circuit and some basic op-amp circuit design characteristics. The HA17741 is essentially just a comparator,
-  so it was very helpful for me conceptually to assess its function in the application of a battery charger.
-   We are sampling battery volts from the B+ rail into V- and tapping our V+ from the op-amp's output in order to
- keep the voltage in the correct range. 
-
-</p>
-
-</div>
 
 
 
