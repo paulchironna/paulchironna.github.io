@@ -1,1 +1,267 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Floor Grinder Overload Fault</title>
+  <style>
+    .video-row {
+      display: flex;
+      justify-content: center;
+      gap: 20px; /* spacing between videos */
+      flex-wrap: wrap; /* stack vertically on narrow screens */
+      margin: 20px auto;
+      max-width: 900px;
+    }
+
+    .video-row .video-container {
+      flex: 1 1 48%;   /* each video ~half width */
+      aspect-ratio: 16/9;
+      background: #000;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+      text-align: center;
+    }
+
+    a.back {
+      display: inline-block;
+      margin-bottom: 20px;
+      color: #0066cc;
+      text-decoration: none;
+    }
+
+    h1 { margin-bottom: 10px; }
+    h2 { margin-top: 40px; font-size: 24px; }
+
+    .intro {
+      max-width: 700px;
+      margin: 0 auto 30px;
+      text-align: left;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    .image-container {
+      max-width: 50%;
+      margin: 0 auto 40px;
+    }
+
+    .image-row {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .image-row .image-block {
+      flex: 1 1 0;
+    }
+
+    .image-single img,
+    .image-row img {
+      width: 100%;
+      border: 1px solid #ccc;
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .image-row img:hover,
+    .image-single img:hover {
+      transform: scale(1.02);
+    }
+
+    .crop-uniform {
+      height: 300px !important;
+      object-fit: cover !important;
+      object-position: center center !important;
+    }
+
+    .caption {
+      margin-top: 5px;
+      font-style: italic;
+      text-align: center; /* center captions */
+    }
+
+    /* Unified video container */
+    .video-container {
+      width: 50%;
+      max-width: 900px;
+      margin: 20px auto;
+      aspect-ratio: 16/9;
+      background: #000;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+    .video-container iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    .centered {
+      text-align: center;
+    }
+
+    /* Lightbox overlay styling */
+    .lightbox-overlay {
+      display: none; /* hidden by default */
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.8);
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+
+    .lightbox-overlay img,
+    .lightbox-overlay video {
+      max-width: 90%;
+      max-height: 90%;
+      box-shadow: 0 0 20px #000;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <a class="back" href="index.html">← Back to Portfolio</a>
+  <h1>Motor Overload Fault Troubleshooting</h1>
+ 
+  <div class="intro">
+    <p>
+      Upon inspection of this Husqvarna PG280 floor grinder, I found that the motor did not run and the thermal
+      overload relay would trip after a few moments.   
+    </p>
+  </div>
+
+  <div class="image-container">
+    <div class="image-row">
+      <div class="image-block">
+        <img src="controls.jpg" class="crop-uniform" onclick="openLightbox(this.src)">
+      </div>
+    </div>
+  </div>
+  
+ 
+
+  <div class="video-container">
+      <iframe src="https://drive.google.com/file/d/1OwNCP39BCepYT9Wvmlmg9Bw9MoRYlqWa/preview" 
+              allow="autoplay" allowfullscreen></iframe>
+    </div>
+
+  <h2>Measurements</h2>
+  <div class="intro">
+    <p> I quickly verified that the motor wasn't mechanically seized. With this ruled out, I needed to
+        determine whether this was a motor-side or control-side fault. To do this, I took a current reading
+        on the motor hot feed after the overload.
+     </p>
+     </div>
+
+       <div class="video-container">
+      <iframe src="https://drive.google.com/file/d/1VWZqieLrpivh2lzad7IXvKpJzqG168xj/preview" 
+              allow="autoplay" allowfullscreen></iframe>
+    </div>
+<div class="intro">
+    <p>
+        The motor was drawing ~45 amps consistently until the overload tripped. This implied
+        to me that the fault lay in the start winding cutoff, run capacitor, or possibly the windings.
+        The next step was to open the terminal box for a visual inspection and some more measurements. 
+    </p>
+</div>
+<h2>Findings</h2>
+<div class="image-container">
+  <div class="image-row">
+    <div class="image-block">
+      <img src="burntspade.jpg" alt="Burnt Cap Spade" class="crop-uniform" onclick="openLightbox(this.src)">
+      <div class="caption">Failed connection a run cap. terminal</div>
+    </div>
+    <div class="image-block">
+      <img src="damagedsw.jpg" alt="Damaged Switch" class="crop-uniform" onclick="openLightbox(this.src)">
+      <div class="caption">Damaged insulation on cutoff switch wiring</div>
+    </div>
+  </div>
+</div>
+<div class="intro">
+    <p>
+        Inspection of the motor starting components revealed catastrophic
+        thermal damage to a run capacitor terminal and the capacitor itself. I also found that each one
+        of the start winding cutoff device's wires had damaged insulation. 
+    </p>
+    <p> This is a very common failure mode for electrical construction equipment, especially floor grinders and saws.
+        The constant harsh vibration causes the spade terminals to loosen up, the added contact resistance creates excessive heat loss,
+         and soon the connection is ruined.
+
+    </p>
+    </div>
+    <div class="video-container">
+      <iframe src="https://drive.google.com/file/d/1oZWopdwSTThcLZrjNI8DyWDOETgltxg6/preview" 
+              allow="autoplay" allowfullscreen></iframe>
+    </div>
+    <div class="intro">
+        <p>
+            Before ordering parts and for the sake of thoroughness, I decided to quickly verify all the
+            control components were functioning properly as well. For such testing, I install an extension cord 
+            with a known-good load of equivalent operating current to the original equipment. In this case I used
+            a 10 amp heat gun. Testing revealed no control issues under load.
+        
+        </p>
+    </div>
+</div> 
+<h2>Verifying the Repair</h2>
+<div class="video-container">
+      <iframe src="https://drive.google.com/file/d/1J2qV7Hs2PIafwsLuOS1jTsZN9TUIiDuw/preview" 
+              allow="autoplay" allowfullscreen></iframe>
+    </div>
+<div class="intro">
+    <p>
+       I replaced both capacitors and the modular auxilliary winding cutoff. While it would have been possible
+       to apply heat shrink or liquid electrical tape and reterminate the module wires, the circuitry was potted and 
+       verifying with any certainty no internal damage had occured from intermittent shorting was impossible. I also redid all of the wiring
+       with new spade connectors to prevent any premature repeat failures.
+    </p>
+    <p>
+        I verified the motor now properly disengages the start winding and runs smoothly below its max rated current of 13.4 amps.
+    </p>
+</div>
+
+  <!-- Lightbox -->
+  <div id="lightbox" class="lightbox-overlay" onclick="closeLightbox()">
+    <img id="lightbox-img" src="" alt="">
+    <video id="lightbox-video" controls style="display:none;"></video>
+  </div>
+
+  <script>
+    function openLightbox(src) {
+      const img = document.getElementById('lightbox-img');
+      const video = document.getElementById('lightbox-video');
+      const overlay = document.getElementById('lightbox');
+
+      // Simple type check: show video only for direct .mp4 links
+      if (src.toLowerCase().endsWith('.mp4')) {
+        img.style.display = 'none';
+        video.style.display = 'block';
+        video.src = src;
+      } else {
+        video.style.display = 'none';
+        video.pause();
+        img.style.display = 'block';
+        img.src = src;
+      }
+      overlay.style.display = 'flex';
+    }
+
+    function closeLightbox() {
+      const overlay = document.getElementById('lightbox');
+      const video = document.getElementById('lightbox-video');
+      overlay.style.display = 'none';
+      video.pause();
+      video.src = "";
+    }
+  </script>
+</body>
+</html>
+
 
