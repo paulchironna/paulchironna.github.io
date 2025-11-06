@@ -114,7 +114,8 @@
   <div class="intro">
     <p>
       A brand-new Wacker Neuson generator came into the shop with a no-crank no-start condition. It was found that there was no voltage present on the starter
-      output pin during crank attempts. The DSE 73110 Mk II controller was replaced under warranty, but I was fortunate enough to be able to keep the old one to bring home and try to fix! 
+      output pin of the controller during crank attempts. The DSE 73110 Mk II controller was replaced under warranty, 
+      but I was fortunate enough to be able to keep the old one to bring home and try to repair it. 
     </p>
   </div>
 
@@ -129,8 +130,9 @@
   <h2>Verification</h2>
   <div class="intro">
     <p>
-     To begin, I started with the cardinal first step of the diagnostic process: verify the complaint. To do this, I just had to get my hands on a schematic to verify pinout, hook up 14-24VDC to the supply pins, and jumper out the E-Stop signal pin to B+ voltage. 
-     The case was easy to get apart, so I exposed the board as I set up for testing so I could simultaneously do a visual inspection of the circuit as well. 
+    I sourced a schematic to verify pinout so that I could properly get the unit to start a crank attempt on the bench.
+    After reviewing the diagram, I supplied 14-24VDC to the supply pins and jumpered out the E-Stop signal pin to B+ voltage. 
+    
     </p>
   </div>
 
@@ -164,10 +166,12 @@
   <h2>Diagnostic Strategy</h2>
   <div class="intro">
     <p>
-     Now that I had verified that there truly was no output present on pin 5, it was time to start following the output
-     path upstream. I noted that I could hear the relay contacts clicking, so I was not very worried about anything on the control side. Being that this was a brand new controller, I began to
-     heavily suspect that we had a cold solder joint either on the relay output pin itself or on the joint for the pin header. I couldn't yet rule out that possibly the power input to the contact side 
-     was missing but this could quickly be ruled out after taking some basic measurements.
+    With the condition verified, it was time to start following the output
+     path upstream. Visual inspection revealed no clues. I noted that I could hear the relay contacts click during cranking, so I was not very worried about the control side of the relay.
+      Being that this was a brand new controller, I began to heavily suspect a cold solder joint either 
+      on the relay output pin itself or on the joint for the pin header. I couldn't yet rule out that 
+      possibly the power input to the contact side 
+     was missing but this could quickly be ruled out after taking some basic measurements with my meter.
     </p>
   </div>
 
@@ -175,10 +179,10 @@
   <div class="intro">
     <p> Without a block diagram of the board, I had to physically feel for which relay was clicking when the starter was comamnded on. 
       I verified that power was present on the contact side input, which only left testing for power on the output. This is when
-      something interesting happened: I had no output at first and wondered if I just didn't have good contact with my probe. So I 
-      scratched up the top of the solder joint with my fiber glass pen and remeasured. I still didn't get anything at first,
-      but when I pushed down a little harder with my probe I suddenly had 12 volts present. I repeated the startup procedure and retested at the pin header 
-      to find that I now had power here too! 
+      something interesting happened: I had no output and wondered if I just didn't have good contact with my probe. So I 
+      scratched up the top of the solder joint with my fiberglass pen and remeasured. I still didn't get anything at first,
+      but when I pushed down a little harder with my probe, I suddenly had 12 volts present. I repeated the startup procedure and retested at the pin header 
+      to find that I now had the starter signal present.
     </p>
   </div>
 
@@ -190,7 +194,7 @@
   <div class="intro"><p>It seems as though there was a cold solder joint on the output pin of the relay, and just the pressure
     from pushing on it with my meter probe recreated a connection. I quickly reflowed all the joints on that relay
     to be thorough, and then decided I wanted to put the circuit under some load to verify the repair. To do this, I 
-    used a large 12V work light that draws ~3 amps. 3 amps is considerably less than the pull-in/holding current of
+    used a large 12 volt work light that draws ~3 amps. 3 amps is considerably less than the pull-in/holding current of
     the starter solenoid but still enough that it would expose any additional poor connections or issues.
   </p>
   </div>
@@ -200,14 +204,10 @@
   </div>
   <div class="caption">Incandescent light wired into starter output</div>
 
-  <h2>Final Thoughts</h2>
-  <div class="intro"><p> This was the first time I had a brand new device with a board level issue.
-    Before I got to looking at it, I was concerned it would be some kind of software or firmware level
-    issue I wasn't equipped to properly diagnose. However, I decided not to think that hard into it
-    and just take it as far as I could with what I have. Sure enough, I was able to figure it out rather 
-    quickly! A good exercise in keeping things simple, I'm glad I got to get the controller
-    back into working order and reinforce some of the core troubleshooting skills I've developed
-    through my experience thus far.
+  
+  <div class="intro"><p> The light shone brightly during crank attempts, verifying that the
+    starter output circuit was now complete and capable of carrying a load. These controllers are
+    very expensive, so this unit will make a great spare to keep at the shop for a rainy day.
   </p>
   </div>
 
