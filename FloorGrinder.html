@@ -132,7 +132,7 @@
  
   <div class="intro">
     <p>
-      Upon inspection of this Husqvarna PG280 floor grinder, I found that the motor did not run and the thermal
+      Upon inspection of this Husqvarna PG280 floor grinder, I found that the 110V CSCR motor did not run and the thermal
       overload relay would trip after a few moments.   
     </p>
   </div>
@@ -167,8 +167,8 @@
 <div class="intro">
     <p>
         The motor was drawing ~45 amps consistently until the overload tripped. This implied
-        to me that the fault lay in the start winding cutoff, run capacitor, or possibly the windings.
-        The next step was to open the terminal box for a visual inspection and some more measurements. 
+        to me that there was likely a bad start capacitor or loose connection.
+        My next step was to open the terminal box for a visual inspection and some more measurements. 
     </p>
 </div>
 <h2>Findings</h2>
@@ -176,7 +176,7 @@
   <div class="image-row">
     <div class="image-block">
       <img src="burntspade.jpg" alt="Burnt Cap Spade" class="crop-uniform" onclick="openLightbox(this.src)">
-      <div class="caption">Failed connection a run cap. terminal</div>
+      <div class="caption">Failed connection a start cap. terminal</div>
     </div>
     <div class="image-block">
       <img src="damagedsw.jpg" alt="Damaged Switch" class="crop-uniform" onclick="openLightbox(this.src)">
@@ -187,7 +187,7 @@
 <div class="intro">
     <p>
         Inspection of the motor starting components revealed catastrophic
-        thermal damage to a run capacitor terminal and the capacitor itself. I also found that each one
+        thermal damage to a start capacitor terminal and the capacitor itself. I also found that each one
         of the start winding cutoff device's wires had damaged insulation. 
     </p>
     <p> This is a very common failure mode for electrical construction equipment, especially floor grinders and saws.
@@ -223,7 +223,7 @@
        with new spade connectors to prevent any premature repeat failures.
     </p>
     <p>
-        I verified the motor now properly disengages the start winding and runs smoothly below its max rated current of 13.4 amps.
+        I verified the motor starts, runs, and that the cutoff switch engages once the motor reaches synchronous speed.
     </p>
 </div>
 
