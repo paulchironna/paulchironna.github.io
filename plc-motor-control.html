@@ -1,33 +1,101 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="utf-8">
   <title>PLC Motor Control Project</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&family=Barlow:wght@400;500&display=swap" rel="stylesheet">
   <style>
-    body {
-      font-family: sans-serif;
-      text-align: center;
-      padding: 50px;
+    :root{
+      --void:#04070a;
+      --panel:#081119;
+      --panel-hi:#0d1c26;
+      --trace:#123645;
+      --cyan:#22e1ff;
+      --cyan-dim:#0b7f97;
+      --text:#bfd9e2;
+      --text-dim:#6d8b98;
     }
 
+    *{box-sizing:border-box;}
+
+    body {
+      font-family:'Barlow',sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(1100px 620px at 50% -8%, #0b2a36 0%, rgba(11,42,54,0) 62%),
+        radial-gradient(760px 520px at 50% 108%, #08202b 0%, rgba(8,32,43,0) 60%),
+        var(--void);
+      margin:0;
+      text-align: center;
+      padding: 24px 20px 90px;
+      min-height:100vh;
+      overflow-x:hidden;
+    }
+
+    /* circuit grid backdrop */
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      background-image:
+        linear-gradient(rgba(34,225,255,.055) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(34,225,255,.055) 1px, transparent 1px),
+        linear-gradient(rgba(34,225,255,.028) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(34,225,255,.028) 1px, transparent 1px);
+      background-size:180px 180px,180px 180px,36px 36px,36px 36px;
+      mask-image:radial-gradient(ellipse 80% 70% at 50% 20%, #000 30%, transparent 100%);
+      -webkit-mask-image:radial-gradient(ellipse 80% 70% at 50% 20%, #000 30%, transparent 100%);
+      pointer-events:none;
+      z-index:0;
+    }
+
+    body > *{position:relative; z-index:1;}
+
     h1 {
+      font-family:'Chakra Petch',sans-serif;
+      font-weight:700;
+      font-size:clamp(26px,5vw,44px);
+      letter-spacing:.1em;
+      text-transform:uppercase;
+      color:#eaffff;
+      text-shadow:0 0 18px rgba(34,225,255,.5), 0 0 54px rgba(34,225,255,.2);
+      margin-top:14px;
       margin-bottom: 10px;
     }
 
     h2.subheader {
-      font-weight: normal;
-      color: #777;
-      font-style: italic;
-      font-size: 18px;   /* smaller like LCD quiz game */
-      margin-top: 0;
-      margin-bottom: 30px;
+      font-family:'Barlow',sans-serif;
+      font-weight: 400;
+      color: var(--text-dim);
+      font-style: normal;
+      font-size: 18px;
+      line-height:1.6;
+      max-width:640px;
+      margin: 0 auto 30px;
     }
 
     h3.section-title {
-      margin-top: 50px;
-      margin-bottom: 20px;
-      font-size: 22px;
-      color: #333;
+      margin: 50px auto 20px;
+      max-width:700px;
+      font-family:'Chakra Petch',sans-serif;
+      font-weight:600;
+      font-size: 20px;
+      letter-spacing:.22em;
+      text-transform:uppercase;
+      color: var(--cyan);
+      text-align:left;
+      display:flex;
+      align-items:center;
+      gap:16px;
+    }
+    h3.section-title::after{
+      content:"";
+      flex:1;
+      height:1px;
+      background:linear-gradient(90deg,var(--cyan),rgba(34,225,255,0));
     }
 
     .media-block {
@@ -36,13 +104,20 @@
 
     img.media, video.media {
       display: block;
-      margin: 0 auto 20px auto;
+      margin: 0 auto 24px auto;
       width: 100%;
       max-width: 520px;
       height: auto;
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-      cursor: pointer; /* clickable like quiz game */
+      border:1px solid var(--trace);
+      background:var(--panel);
+      box-shadow: 0 0 0 1px rgba(34,225,255,.06), 0 18px 50px rgba(0,0,0,.8);
+      cursor: pointer;
+      transition:.2s ease;
+    }
+
+    img.media:hover, video.media:hover {
+      border-color:rgba(34,225,255,.55);
+      box-shadow:0 0 24px rgba(34,225,255,.28);
     }
 
     /* Larger ladder diagram */
@@ -53,13 +128,14 @@
     p {
       max-width: 700px;
       margin: 0 auto 20px auto;
-      line-height: 1.6em;
-      font-size: 18px;
-      color: #000; /* solid black text */
+      text-align:left;
+      line-height: 1.75;
+      font-size: 17px;
+      color: var(--text-dim);
     }
 
     a {
-      color: #0066cc;
+      color: var(--cyan);
       text-decoration: none;
       font-size: 18px;
     }
@@ -69,37 +145,59 @@
     }
 
     .top-link {
-      display: block;
+      display: inline-block;
       margin-bottom: 30px;
-      font-size: 18px;
+      font-family:'IBM Plex Mono',monospace;
+      font-size: 11px;
+      letter-spacing:.2em;
+      text-transform:uppercase;
+      border:1px solid var(--trace);
+      padding:8px 14px;
+      transition:border-color .2s ease, box-shadow .2s ease;
+    }
+    .top-link:hover, .top-link:focus-visible {
+      text-decoration:none;
+      border-color:rgba(34,225,255,.6);
+      box-shadow:0 0 14px rgba(34,225,255,.25);
+      outline:none;
     }
 
-    /* Lightbox modal (copied from quiz game) */
+    /* Lightbox modal */
     .modal {
       display: none;
       position: fixed;
       z-index: 9999;
       left: 0; top: 0;
       width: 100%; height: 100%;
-      background-color: rgba(0,0,0,0.9);
+      background-color: rgba(2,6,9,0.94);
       align-items: center;
       justify-content: center;
     }
     .modal img {
       max-width: 90%;
       max-height: 90%;
-      border-radius: 8px;
+      border:1px solid rgba(34,225,255,.45);
+      box-shadow:0 0 60px rgba(34,225,255,.25);
     }
     .modal:target { display: flex; }
     .modal-close {
       position: absolute;
       top: 20px;
       right: 30px;
-      color: white;
+      color: var(--cyan);
       font-size: 30px;
       text-decoration: none;
       font-weight: bold;
       cursor: pointer;
+      line-height:1;
+    }
+
+    @media (max-width:760px){
+      h3.section-title{max-width:100%;}
+    }
+
+    @media (prefers-reduced-motion:reduce){
+      *{transition:none !important;}
     }
   </style>
 </head>
