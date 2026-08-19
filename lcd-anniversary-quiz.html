@@ -1,19 +1,74 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="utf-8">
   <title>LCD Anniversary Quiz Game</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&family=Barlow:wght@400;500&display=swap" rel="stylesheet">
   <style>
-    body { font-family: sans-serif; text-align: center; padding: 50px; }
+    :root{
+      --void:#04070a;
+      --panel:#081119;
+      --panel-hi:#0d1c26;
+      --trace:#123645;
+      --cyan:#22e1ff;
+      --cyan-dim:#0b7f97;
+      --text:#bfd9e2;
+      --text-dim:#6d8b98;
+    }
+
+    *{box-sizing:border-box;}
+
+    body {
+      font-family:'Barlow',sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(1100px 620px at 50% -8%, #0b2a36 0%, rgba(11,42,54,0) 62%),
+        radial-gradient(760px 520px at 50% 108%, #08202b 0%, rgba(8,32,43,0) 60%),
+        var(--void);
+      margin:0;
+      text-align: center;
+      padding: 24px 20px 90px;
+      min-height:100vh;
+      overflow-x:hidden;
+    }
+
+    /* circuit grid backdrop */
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      background-image:
+        linear-gradient(rgba(34,225,255,.055) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(34,225,255,.055) 1px, transparent 1px),
+        linear-gradient(rgba(34,225,255,.028) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(34,225,255,.028) 1px, transparent 1px);
+      background-size:180px 180px,180px 180px,36px 36px,36px 36px;
+      mask-image:radial-gradient(ellipse 80% 70% at 50% 20%, #000 30%, transparent 100%);
+      -webkit-mask-image:radial-gradient(ellipse 80% 70% at 50% 20%, #000 30%, transparent 100%);
+      pointer-events:none;
+      z-index:0;
+    }
+
+    body > *{position:relative; z-index:1;}
 
     /* Single media items (photos/videos/cover) */
     img.cover, .media img, .media video {
       width: 100%;
       max-width: 520px;
       height: auto;
-      border-radius: 8px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      border:1px solid var(--trace);
+      background:var(--panel);
+      box-shadow: 0 0 0 1px rgba(34,225,255,.06), 0 18px 50px rgba(0,0,0,.8);
       cursor: pointer;
+      transition:.2s ease;
+    }
+
+    img.cover:hover, .media img:hover, .media video:hover {
+      border-color:rgba(34,225,255,.55);
+      box-shadow:0 0 24px rgba(34,225,255,.28);
     }
 
     /* Triple image grid */
@@ -23,16 +78,23 @@
       gap: 12px; 
       align-items: start; 
       justify-items: center; 
-      margin: 14px 0; 
+      margin: 14px auto; 
+      max-width: 940px;
     }
     /* Uniform height for final assembly images */
     .triple img { 
       width: 100%; 
       height: 260px;
       object-fit: contain; /* avoid cropping */
-      border-radius: 8px; 
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2); 
+      border:1px solid var(--trace);
+      background:var(--panel);
+      box-shadow: 0 0 0 1px rgba(34,225,255,.06), 0 18px 50px rgba(0,0,0,.8);
       cursor: pointer;
+      transition:.2s ease;
+    }
+    .triple img:hover{
+      border-color:rgba(34,225,255,.55);
+      box-shadow:0 0 24px rgba(34,225,255,.28);
     }
 
     /* Mobile scaling */
@@ -56,49 +118,122 @@
     }
 
     /* Collapsible code block */
-    details { max-width: 940px; margin: 0 auto; text-align: left; }
-    summary { cursor: pointer; font-weight: bold; margin-bottom: 10px; }
+    details {
+      max-width: 940px;
+      margin: 0 auto;
+      text-align: left;
+      border:1px solid var(--trace);
+      background:rgba(8,17,25,.6);
+      padding:14px 16px;
+    }
+    summary {
+      cursor: pointer;
+      font-family:'IBM Plex Mono',monospace;
+      font-size:12px;
+      letter-spacing:.2em;
+      text-transform:uppercase;
+      color:var(--cyan);
+      font-weight: 500;
+      margin-bottom: 10px;
+    }
+    summary::marker{color:var(--cyan-dim);}
     pre.code {
-      background: #0d1117;
-      color: #c9d1d9;
+      background: var(--void);
+      color: var(--text);
+      border:1px solid var(--trace);
       padding: 16px;
-      border-radius: 8px;
       overflow-x: auto;
-      font-size: 14px;
-      line-height: 1.4;
+      font-family:'IBM Plex Mono',monospace;
+      font-size: 13px;
+      line-height: 1.55;
+      margin:0;
     }
 
-    h1 { margin-bottom: 10px; }
+    hr{
+      border:0;
+      height:1px;
+      max-width:940px;
+      margin:48px auto;
+      background:linear-gradient(90deg,rgba(34,225,255,0),var(--trace),rgba(34,225,255,0));
+    }
+
+    h1 {
+      font-family:'Chakra Petch',sans-serif;
+      font-weight:700;
+      font-size:clamp(26px,5vw,44px);
+      letter-spacing:.1em;
+      text-transform:uppercase;
+      color:#eaffff;
+      text-shadow:0 0 18px rgba(34,225,255,.5), 0 0 54px rgba(34,225,255,.2);
+      margin-top:14px;
+      margin-bottom: 10px;
+    }
     /* Subheader: smaller and centered */
     h2.subheader { 
-      font-weight: normal; 
-      color: #555; 
+      font-family:'Barlow',sans-serif;
+      font-weight: 400; 
+      color: var(--text-dim); 
       font-size: 16px; 
-      line-height: 1.4;
+      line-height: 1.6;
       max-width: 780px; 
       margin: 4px auto 22px; 
       text-align: center;
     }
     /* Section headers for Schematic / Prototype / Assembly / Final product */
-    h3 { 
-      margin: 28px auto 8px; 
+    h2, h3 { 
+      margin: 44px auto 14px; 
+      max-width: 800px;
+      font-family:'Chakra Petch',sans-serif;
       font-size: 20px; 
       font-weight: 600; 
+      letter-spacing:.22em;
+      text-transform:uppercase;
+      color:var(--cyan);
+      text-align:left;
+      display:flex;
+      align-items:center;
+      gap:16px;
     }
+    h2::after, h3::after{
+      content:"";
+      flex:1;
+      height:1px;
+      background:linear-gradient(90deg,var(--cyan),rgba(34,225,255,0));
+    }
+    h2.subheader{display:block; letter-spacing:normal; text-transform:none;}
+    h2.subheader::after{content:none;}
 
-    p { max-width: 800px; margin: 12px auto 18px; line-height: 1.5; }
+    p {
+      max-width: 800px;
+      margin: 12px auto 18px;
+      text-align:left;
+      line-height: 1.75;
+      color:var(--text-dim);
+    }
+    p a{color:var(--cyan); text-decoration:none;}
+    p a:hover{text-decoration:underline;}
+
     .media { margin: 16px 0; }
 
     /* Back to Portfolio link */
     .top-link {
-      display: block;
+      display: inline-block;
       margin-bottom: 30px;
-      font-size: 18px;
-      color: #0066cc;
+      font-family:'IBM Plex Mono',monospace;
+      font-size: 11px;
+      letter-spacing:.2em;
+      text-transform:uppercase;
+      color: var(--cyan);
       text-decoration: none;
+      border:1px solid var(--trace);
+      padding:8px 14px;
+      transition:border-color .2s ease, box-shadow .2s ease;
     }
-    .top-link:hover {
-      text-decoration: underline;
+    .top-link:hover, .top-link:focus-visible {
+      text-decoration: none;
+      border-color:rgba(34,225,255,.6);
+      box-shadow:0 0 14px rgba(34,225,255,.25);
+      outline:none;
     }
 
     /* Lightbox modal */
@@ -108,25 +243,35 @@
       z-index: 9999;
       left: 0; top: 0;
       width: 100%; height: 100%;
-      background-color: rgba(0,0,0,0.9);
+      background-color: rgba(2,6,9,0.94);
       align-items: center;
       justify-content: center;
     }
     .modal img {
       max-width: 90%;
       max-height: 90%;
-      border-radius: 8px;
+      border:1px solid rgba(34,225,255,.45);
+      box-shadow:0 0 60px rgba(34,225,255,.25);
     }
     .modal:target { display: flex; }
     .modal-close {
       position: absolute;
       top: 20px;
       right: 30px;
-      color: white;
+      color: var(--cyan);
       font-size: 30px;
       text-decoration: none;
       font-weight: bold;
       cursor: pointer;
+      line-height:1;
+    }
+
+    @media (max-width:860px){
+      h2, h3{max-width:100%;}
+    }
+
+    @media (prefers-reduced-motion:reduce){
+      *{transition:none !important;}
     }
   </style>
 </head>
@@ -172,8 +317,8 @@
   </p>
   <details>
     <summary>Show Arduino Code</summary>
-    <pre class="code"><code>#include <Wire.h>
-#include <LiquidCrystal_I2C.h>
+    <pre class="code"><code>#include &lt;Wire.h&gt;
+#include &lt;LiquidCrystal_I2C.h&gt;
 
 // I²C LCD: 20×4 display
 LiquidCrystal_I2C lcd(0x27, 20, 4);
@@ -242,7 +387,7 @@ void setup() {
 
 void loop() {
   unsigned long now = millis();
-  if (currentState == WELCOME && now - previousMillis >= blinkInterval) {
+  if (currentState == WELCOME &amp;&amp; now - previousMillis &gt;= blinkInterval) {
     previousMillis = now;
     textVisible = !textVisible;
     if (textVisible) lcd.display();
@@ -262,16 +407,16 @@ void showWelcomeSequence() {
   lcd.setCursor(4, 0);  lcd.print("Hey Claire!");
   
   // LED fill animation during "Hey Claire!" message
-  for (int i = 0; i < 24; i++) {
+  for (int i = 0; i &lt; 24; i++) {
     uint32_t mask = 0;
     // Light up all LEDs from 0 to current position
-    for (int j = 0; j <= i; j++) {
-      mask |= ((uint32_t)1 << j);
+    for (int j = 0; j &lt;= i; j++) {
+      mask |= ((uint32_t)1 &lt;&lt; j);
     }
     
-    byte hb = (mask >> 16) & 0xFF;
-    byte mb = (mask >> 8) & 0xFF;
-    byte lb = mask & 0xFF;
+    byte hb = (mask &gt;&gt; 16) &amp; 0xFF;
+    byte mb = (mask &gt;&gt; 8) &amp; 0xFF;
+    byte lb = mask &amp; 0xFF;
     digitalWrite(latchPin, LOW);
     shiftOut(dataPin, clockPin, MSBFIRST, hb);
     shiftOut(dataPin, clockPin, MSBFIRST, mb);
@@ -297,7 +442,7 @@ void showWelcomeSequence() {
   unsigned long flashStart = millis();
   bool buttonPressed = false;
   while (!buttonPressed) {
-    if (millis() - flashStart >= 500) {  // Flash every 500ms
+    if (millis() - flashStart &gt;= 500) {  // Flash every 500ms
       flashStart = millis();
       textVisible = !textVisible;
       if (textVisible) {
@@ -419,7 +564,7 @@ void processAnswer(char answer) {
         correctAnswerBlinks();
         delay(1000);
         lcd.setCursor(0,2);
-        lcd.print("You rock <3");
+        lcd.print("You rock &lt;3");
       } else {
         lcd.print("Nice... lol");
       }
@@ -443,7 +588,7 @@ void processAnswer(char answer) {
   delay(2000);
   currentQuestion++;
 
-  if (currentQuestion < totalQuestions) {
+  if (currentQuestion &lt; totalQuestions) {
     showQuestion();
   } else {
     // Quiz complete
@@ -456,14 +601,14 @@ void processAnswer(char answer) {
     lcd.print("I love you");
 
     // New animation sequence: 3 cycles of (circle + dancing)
-    for (int cycle = 0; cycle < 3; cycle++) {
+    for (int cycle = 0; cycle &lt; 3; cycle++) {
       // Circle animation (3 times)
-      for (int circleRound = 0; circleRound < 3; circleRound++) {
-        for (int i = 0; i < 24; i++) {
-          uint32_t mask = (uint32_t)1 << i;
-          byte hb = (mask >> 16) & 0xFF;
-          byte mb = (mask >> 8) & 0xFF;
-          byte lb = mask & 0xFF;
+      for (int circleRound = 0; circleRound &lt; 3; circleRound++) {
+        for (int i = 0; i &lt; 24; i++) {
+          uint32_t mask = (uint32_t)1 &lt;&lt; i;
+          byte hb = (mask &gt;&gt; 16) &amp; 0xFF;
+          byte mb = (mask &gt;&gt; 8) &amp; 0xFF;
+          byte lb = mask &amp; 0xFF;
           digitalWrite(latchPin, LOW);
           shiftOut(dataPin, clockPin, MSBFIRST, hb);
           shiftOut(dataPin, clockPin, MSBFIRST, mb);
@@ -474,7 +619,7 @@ void processAnswer(char answer) {
       }
       
       // Dancing animation - alternating odds/evens (3 times)
-      for (int danceRound = 0; danceRound < 3; danceRound++) {
+      for (int danceRound = 0; danceRound &lt; 3; danceRound++) {
         // Show odd LEDs (bits 0, 2, 4, 6, ...)
         digitalWrite(latchPin, LOW);
         shiftOut(dataPin, clockPin, MSBFIRST, 0xAA); // 10101010
@@ -505,7 +650,7 @@ void processAnswer(char answer) {
     textVisible = true;  // Reset text visibility
     
     while (!buttonPressed) {
-      if (millis() - flashStart >= 500) {  // Flash every 500ms
+      if (millis() - flashStart &gt;= 500) {  // Flash every 500ms
         flashStart = millis();
         textVisible = !textVisible;
         if (textVisible) {
@@ -541,7 +686,7 @@ void startupAnimation() {
 
 void correctAnswerBlinks() {
   // 3 fast blinks on all LEDs
-  for (int blink = 0; blink < 3; blink++) {
+  for (int blink = 0; blink &lt; 3; blink++) {
     // All LEDs on
     digitalWrite(latchPin, LOW);
     shiftOut(dataPin, clockPin, MSBFIRST, 0xFF);
@@ -567,8 +712,7 @@ void singleBlink() {
   
   clearLeds();
   delay(150);
-}
-</code></pre>
+}</code></pre>
   </details>
 
   <!-- Section 4: Final product -->
