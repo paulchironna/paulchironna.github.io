@@ -214,9 +214,9 @@
   </div>
 
   <!-- Intro paragraph -->
-  <p>My goal going into this project was to strengthen my limited knowledge of industrial controls and ladder logic programming.
-     The motor starter is a basic yet crucial circuit that exists in so many different applications, 
-     so it seemed like a great place to start.</p>
+  <p>My goal going into this project was to build competency with industrial control wiring practices and ladder logic programming.
+     A motor starter can be found in virtually every cabinet in every plant, is simple to start with, and easily scalable to start integrating more advanced logic throughout the course of a learning project.
+  I scoped the build around basic I/O, interlocking, and program design rather than going for a full NEMA cabinet off the bat. </p>
 
   <!-- Schematic -->
   <h3 class="section-title">Schematic</h3>
@@ -225,11 +225,11 @@
     <p>I began by sketching out different versions of the circuit and considered what kind of 
       features I would want to implement beyond just simply starting and stopping the motor. 
       An E-Stop and thermal overload immediately came to mind as two safety features I could easily 
-      integrate with both hardware and software. </p>
+      integrate with both hardware and software for two layers of protection. </p>
 
       <p>The key detail in best utilizing both components was to place the E-Stop 
       and overload NC contacts in series with the contactor coil for redundancy and reliable physical protection.
-       I also decided adding indicators tied to the status of the motor would be a nice touch as well.</p>
+       I assigned bits to the contactor coil output and used these to energize indicator lamps for motor status.</p>
   </div>
 
   <!-- Ladder Logic -->
@@ -260,9 +260,11 @@
       The program works exactly as intended to control the motor and ensure safe operation.
        Since this overload's NO contacts will only close if there is enough current flowing to bend the
         bimetallic strip inside it, I simulated this condition by manually jumping the PLC side to +24VDC.
-        I am currently working on integrating analog inputs and displaying them on a virtual HMI via MODBUS
-        for a mock tank level monitor and automatic pump circuit.
+      The only issue worth correcting is that I am driving the contactor coil directly via its physical output address
+      rather than using a dedicated bit and rung. For this small program, it isn't a problem. However, I have added onto this
+      project and this was a change I had to make to scale the project up to include more inputs and logic. 
       </p>
+    <p>I have integrated an analog input card, 4-20mA signal generator, and MODBUS RTU HMI to this circuit which I will be writing up and posting here soon. </p>
   </div>
 
   <!-- Lightbox modal -->
