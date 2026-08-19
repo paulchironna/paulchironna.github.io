@@ -265,8 +265,8 @@
        BANNER  —  title + one-line description
        ============================================================ -->
   <a class="back" href="index.html">← Back to Portfolio</a>
-  <h1>4-20mA Automated Tank Fill</h1>
-  <h2 class="subheader">PLC-controlled tank level system using a 4-20mA analog input, automatic pump control, and a MODBUS HMI</h2>
+  <h1>4-20mA Automated Tank Fill Build</h1>
+  <h2 class="subheader">PLC controlled pump system with 4-20mA level input, automatic fill control, fault monitoring and interlocking, and MODBUS RTU HMI status display</h2>
 
 
   <!-- ============================================================
@@ -284,6 +284,13 @@
   <!-- ============================================================
        SECTION TYPE A  —  heading + paragraph + image + caption
        ============================================================ -->
+
+  <div class="intro">
+    <p>
+      This project builds on my basic PLC motor control project, expanding from discrete logic to analog process control. I integrated an analog input card, which gave me experience setting up 4-20mA field wiring and scaling inputs inside the software. I also incorporated an HMI that pulled data from the PLC's registers over MODBUS RTU to display fault messages and statuses using AdvancedHMI software.</p> <p> My goal was to make the project as scalable as possible. I used hardware capable of accepting 120 or 240V input power, and created subroutines within the program to accommodate additional I/O. I also added extra relays for physical status indicator availability and extra registers for supervisory or PID control inputs for future versions.
+    
+    </p>
+  </div>
   <h2>Section Heading</h2>
   <div class="intro">
     <p>
