@@ -175,6 +175,12 @@
       object-position: center center !important;
     }
 
+    /* taller box for the cover photo — more vertical room for 4:3 shots.
+       Adjust the height value to taste. */
+    .cover-shot {
+      height: 440px !important;
+    }
+
     /* use on schematics / diagrams so they aren't cropped to fill */
     .diagram {
       object-fit: contain !important;
@@ -275,22 +281,34 @@
   <div class="image-container">
     <div class="image-row">
       <div class="image-block">
-        <img src="controlpanel.jpg" alt="Project overview" class="crop-uniform" onclick="openLightbox(this.src)">
+        <img src="controlpanel.jpg" alt="Control panel overview" class="crop-uniform cover-shot" onclick="openLightbox(this.src)">
       </div>
     </div>
   </div>
 
 
   <!-- ============================================================
-       SECTION TYPE A  —  heading + paragraph + image + caption
+       INTRODUCTION
        ============================================================ -->
-
   <div class="intro">
     <p>
-      This project builds on my basic PLC motor control project, expanding from discrete logic to analog process control. I integrated an analog input card, which gave me experience setting up 4-20mA field wiring and scaling inputs inside the software. I also incorporated an HMI that pulled data from the PLC's registers over MODBUS RTU to display fault messages and statuses using AdvancedHMI software.</p> <p> My goal was to make the project as scalable as possible. I used hardware capable of accepting 120 or 240V input power, and created subroutines within the program to accommodate additional I/O. I also added extra relays for physical status indicator availability and extra registers for supervisory or PID control inputs for future versions.
-    
+      This project builds on my basic PLC motor control project, expanding from discrete logic to analog
+      process control. I integrated an analog input card, which gave me experience setting up 4-20mA field
+      wiring and scaling inputs inside the software. I also incorporated an HMI that pulled data from the
+      PLC's registers over MODBUS RTU to display fault messages and statuses using AdvancedHMI software.
+    </p>
+    <p>
+      My goal was to make the project as scalable as possible. I used hardware capable of accepting 120 or
+      240V input power, and created subroutines within the program to accommodate additional I/O. I also
+      added extra relays for physical status indicator availability and extra registers for supervisory or
+      PID control inputs for future versions.
     </p>
   </div>
+
+
+  <!-- ============================================================
+       SECTION TYPE A  —  heading + paragraph + image + caption
+       ============================================================ -->
   <h2>Section Heading</h2>
   <div class="intro">
     <p>
@@ -366,6 +384,18 @@
       <div class="image-block">
         <img src="RIGHT.jpg" alt="Alt text" class="crop-uniform" onclick="openLightbox(this.src)">
         <div class="caption">Right caption</div>
+      </div>
+    </div>
+  </div>
+  -->
+
+  <!-- ---- TALL COVER PHOTO ----
+       Add .cover-shot alongside .crop-uniform for a 440px-tall box
+       instead of the standard 300px. Good for 4:3 or portrait photos.
+  <div class="image-container">
+    <div class="image-row">
+      <div class="image-block">
+        <img src="FILE.jpg" alt="Alt text" class="crop-uniform cover-shot" onclick="openLightbox(this.src)">
       </div>
     </div>
   </div>
