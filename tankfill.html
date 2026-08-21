@@ -213,13 +213,21 @@
       padding: 10px;
     }
 
-    .deck-frame img {
-      display: block;
-      width: 100%;
-      height: 480px;
-      object-fit: contain;
+    /* scrollable viewport — the image inside can be wider/taller than this box */
+    .deck-view {
+      height: 560px;
+      overflow: auto;
       background: #fff;   /* ladder pages are white; keeps them legible */
-      cursor: pointer;
+      cursor: grab;
+    }
+    .deck-view.dragging { cursor: grabbing; }
+
+    .deck-view img {
+      display: block;
+      width: 100%;        /* JS overrides this when zoomed */
+      height: auto;
+      user-select: none;
+      -webkit-user-drag: none;
     }
 
     .deck-nav {
@@ -249,6 +257,15 @@
     }
     .deck-btn:disabled { opacity: .3; cursor: default; }
 
+    .deck-zoom {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+
     .deck-count {
       font-family:'IBM Plex Mono',monospace;
       font-size: 11px;
@@ -269,7 +286,7 @@
     }
 
     @media (max-width:760px){
-      .deck-frame img{ height: 300px; }
+      .deck-view{ height: 340px; }
     }
 
     /* Google Drive video embeds — left unstyled so the Drive player
@@ -422,19 +439,36 @@
   <h2>Ladder Logic</h2>
   <div class="intro">
     <p>
-      Body paragraph introducing the program — overall structure, how the routines are organized,
-      what a reader should look for as they page through.
+      The program was the most challenging part of this project for me. Rung order and the use of subroutines became critical rather than just helpful. I have no subroutine or direct monitoring for hand mode outside
+      of the contact for the indicator. This was to allow the motor to be run in case of a program loss or error. The auto subroutine could have just lived on the main page, but I wanted to set it up so that I could easily add more
+      instruments down the road as the build gets more complex. Not shown is my input scaling, which simply just set 4-20mA to a 0-100% scale. 4mA being 0% allows me to detect an open circuit reliably if the reading is ever lower than 0.
+      The biggest challenge in the programming, however, came with fault handling and communication with the HMI software.
+    </p>
+    <p>
+      Setting up the MODBUS RTU settings so that baud rate, parity, stop bit, etc. matched was straight forward and it took some research to match up the addressing formats between programs. Once I had these communication
+      sorted, I developed my fault logic for my eight distinct faults: CH1 Short Circuit, CH1 Open Circuit, Thermal Overload Tripped, E-Stop Pressed, Contactor Failure, HOA Switch Malfunction, IO Module Failure, and IO Module Missing 24V.
+      I added timers and deadbands where needed for hysteresis and if all conditions for a given fault were met, an assigned bit would be turned on. The status of these bits were packed into a register which was copied and sent to the
+      HMI each scan.
     </p>
   </div>
 
   <div class="deck">
     <div class="deck-frame">
-      <img id="deck-img" src="" alt="Ladder logic page" onclick="openLightbox(this.src)">
+      <div class="deck-view" id="deck-view">
+        <img id="deck-img" src="" alt="Ladder logic page">
+      </div>
     </div>
     <div class="deck-nav">
       <button class="deck-btn" id="deck-prev" onclick="deckStep(-1)">← Prev</button>
       <span class="deck-count" id="deck-count"></span>
       <button class="deck-btn" id="deck-next" onclick="deckStep(1)">Next →</button>
+    </div>
+    <div class="deck-zoom">
+      <button class="deck-btn" onclick="deckZoom(-1)">− Zoom</button>
+      <span class="deck-count" id="deck-zoomlevel"></span>
+      <button class="deck-btn" onclick="deckZoom(1)">+ Zoom</button>
+      <button class="deck-btn" onclick="deckZoomReset()">Fit</button>
+      <button class="deck-btn" onclick="openLightbox(document.getElementById('deck-img').src)">Full size</button>
     </div>
     <div class="deck-caption" id="deck-caption"></div>
   </div>
@@ -545,11 +579,44 @@
     const LADDER_SLIDES = [
       { src: "LadderProgram-1.png", caption: "Main routine: mode selection, data out to HMI, calls for subroutines" },
       { src: "LadderProgram-2.png", caption: "Auto Subroutine: setpoints to latch the contactor coil" },
-      { src: "ladderprogram-3.png", caption: "Faults Subroutine: Fault setpoints with hysteresis and interlocking" },
-      { src: "ladderprogram-4.png", caption: "Faults cont'd" }
+      { src: "LadderProgram-3.png", caption: "Faults Subroutine: Fault setpoints with hysteresis and interlocking" },
+      { src: "LadderProgram-4.png", caption: "Faults cont'd" }
     ];
 
+    /* zoom steps, as a multiple of "fits the frame width" */
+    const DECK_ZOOMS = [1, 1.5, 2, 3, 4, 6];
+
     let deckIndex = 0;
+    let deckZoomIdx = 0;
+
+    function deckApplyZoom() {
+      const z = DECK_ZOOMS[deckZoomIdx];
+      document.getElementById('deck-img').style.width = (z * 100) + "%";
+      document.getElementById('deck-zoomlevel').textContent = Math.round(z * 100) + "%";
+    }
+
+    function deckZoom(n) {
+      const view = document.getElementById('deck-view');
+      /* keep whatever is in the middle of the frame roughly centred */
+      const cx = (view.scrollLeft + view.clientWidth  / 2) / Math.max(view.scrollWidth, 1);
+      const cy = (view.scrollTop  + view.clientHeight / 2) / Math.max(view.scrollHeight, 1);
+
+      deckZoomIdx = Math.min(Math.max(deckZoomIdx + n, 0), DECK_ZOOMS.length - 1);
+      deckApplyZoom();
+
+      requestAnimationFrame(function () {
+        view.scrollLeft = cx * view.scrollWidth  - view.clientWidth  / 2;
+        view.scrollTop  = cy * view.scrollHeight - view.clientHeight / 2;
+      });
+    }
+
+    function deckZoomReset() {
+      deckZoomIdx = 0;
+      deckApplyZoom();
+      const view = document.getElementById('deck-view');
+      view.scrollLeft = 0;
+      view.scrollTop = 0;
+    }
 
     function deckRender() {
       const slide = LADDER_SLIDES[deckIndex];
@@ -559,12 +626,36 @@
         (deckIndex + 1) + " / " + LADDER_SLIDES.length;
       document.getElementById('deck-prev').disabled = (deckIndex === 0);
       document.getElementById('deck-next').disabled = (deckIndex === LADDER_SLIDES.length - 1);
+      deckZoomReset();
     }
 
     function deckStep(n) {
       deckIndex = Math.min(Math.max(deckIndex + n, 0), LADDER_SLIDES.length - 1);
       deckRender();
     }
+
+    /* click-and-drag to pan when zoomed in */
+    (function () {
+      const view = document.getElementById('deck-view');
+      let down = false, startX = 0, startY = 0, startL = 0, startT = 0;
+
+      view.addEventListener('mousedown', function (e) {
+        down = true;
+        startX = e.pageX; startY = e.pageY;
+        startL = view.scrollLeft; startT = view.scrollTop;
+        view.classList.add('dragging');
+        e.preventDefault();
+      });
+      window.addEventListener('mouseup', function () {
+        down = false;
+        view.classList.remove('dragging');
+      });
+      view.addEventListener('mousemove', function (e) {
+        if (!down) return;
+        view.scrollLeft = startL - (e.pageX - startX);
+        view.scrollTop  = startT - (e.pageY - startY);
+      });
+    })();
 
     document.addEventListener('keydown', function (e) {
       if (document.getElementById('lightbox').style.display === 'flex') return;
