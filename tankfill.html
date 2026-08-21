@@ -437,22 +437,7 @@
        the page — one entry per exported page. Nothing else to change.
        ============================================================ -->
   <h2>Ladder Logic</h2>
-  <div class="intro">
-    <p>
-      The program was the most challenging part of this project for me. Rung order and the use of subroutines became critical rather than just helpful. I have no subroutine or direct monitoring for hand mode outside
-      of the contact for the indicator. This was to allow the motor to be run in case of a program loss or error. The auto subroutine could have just lived on the main page, but I wanted to set it up so that I could easily add more
-      instruments down the road as the build gets more complex. Not shown is my input scaling, which simply just set 4-20mA to a 0-100% scale. 4mA being 0% allows me to detect an open circuit reliably if the reading is ever lower than 0.
-      The biggest challenge in the programming, however, came with fault handling and communication with the HMI software.
-    </p>
-    <p>
-      Setting up the MODBUS RTU settings so that baud rate, parity, stop bit, etc. matched was straight forward and it took some research to match up the addressing formats between programs. Once I had these communication
-      sorted, I developed my fault logic for my eight distinct faults: CH1 Short Circuit, CH1 Open Circuit, Thermal Overload Tripped, E-Stop Pressed, Contactor Failure, HOA Switch Malfunction, IO Module Failure, and IO Module Missing 24V.
-      I added timers and deadbands where needed for hysteresis and if all conditions for a given fault were met, an assigned bit would be turned on. The status of these bits were packed into a register which was copied and sent to the
-      HMI each scan.
-    </p>
-  </div>
-
-  <div class="deck">
+    <div class="deck">
     <div class="deck-frame">
       <div class="deck-view" id="deck-view">
         <img id="deck-img" src="" alt="Ladder logic page">
@@ -472,6 +457,22 @@
     </div>
     <div class="deck-caption" id="deck-caption"></div>
   </div>
+
+  <div class="intro">
+    <p>
+      The program was the most challenging part of this project for me. Rung order and the use of subroutines became critical rather than just helpful. I have no subroutine or direct monitoring for hand mode outside
+      of the contact for the indicator. This was to allow the motor to be run in case of a program loss or error. The auto subroutine could have just lived on the main page, but I wanted to set it up so that I could easily add more
+      instruments down the road as the build gets more complex. The biggest challenge in the programming, however, came with fault handling and communication with the HMI software.
+    </p>
+    <p>
+      Setting up the MODBUS RTU settings so that baud rate, parity, stop bit, etc. matched was straight forward and it took some research to match up the addressing formats between programs. Once I had these communication
+      sorted, I developed my fault logic for my eight distinct faults: CH1 Short Circuit, CH1 Open Circuit, Thermal Overload Tripped, E-Stop Pressed, Contactor Failure, HOA Switch Malfunction, IO Module Failure, and IO Module Missing 24V.
+      Not shown is my input scaling, which simply just set 4-20mA to a 0-100% scale. 4mA being 0% allows me to detect an open circuit reliably if the reading is ever lower than 0.
+      I added timers and deadbands where needed for hysteresis and if all conditions for a given fault were met, an assigned bit would be turned on. The status of these bits were packed into a register which was copied and sent to the
+      HMI each scan. 
+    </p>
+  </div>
+
 
 
   <!-- ============================================================
