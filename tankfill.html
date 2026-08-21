@@ -419,14 +419,14 @@
       to break the coil circuit on a detected fault. Faults latch until reset by cycling the HOA switch.
     </p>
     <p>
-      Critical safety functions are handled exclusively in hardware. The E-Stop and overload contacts are
-      de-energize-to-trip and are in series with the coil independently of the PLC, so an open circuit will
-      always stop the motor. The auxiliary relay covers process and diagnostic faults like loop failure or
+      Fault handling and fail-safes are always process dependent, and I scoped my layers of protection accordingly.
+      Critical safety functions in this system are handled exclusively in hardware. The E-Stop and overload contacts are
+      de-energize-to-trip and are in series with the contactor coil independently of the PLC. An overheating motor, pressed E-Stop, or open field wiring in a safety circuit will
+      always de-energize the coil and stop the motor. The auxiliary relay covers process and diagnostic faults like loop failure or
       feedback loss, which aren't safety critical in this application. It sits in the same series string as the
-      safety contacts, so a diagnostic fault interrupts the coil in hand mode as well as auto. Fault handling
-      and fail-safes are always process dependent, and I scoped my layers of protection accordingly. One
+      safety contacts, so a diagnostic fault interrupts the coil in hand mode as well as auto. One
       revision I would make is adding feedback to the auxiliary relay so that it will alarm if it fails to
-      energize or break the circuit in a fault state.
+      energize or break the circuit in a fault state. 
     </p>
   </div>
 
