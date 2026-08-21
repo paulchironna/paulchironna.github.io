@@ -345,7 +345,9 @@
 
     @media (max-width:760px){
       .image-container{max-width:92%;}
-      .video-container{width:100%;}
+      /* Drive's mobile control bar is a fixed height, so a short 16:9 box
+         leaves almost no picture. Floor the height on small screens. */
+      .video-container{width:100%; min-height:260px;}
       h2{max-width:92%;}
       h2.subheader{max-width:100%;}
     }
@@ -421,12 +423,12 @@
     <p>
       Fault handling and fail-safes are always process dependent, and I scoped my layers of protection accordingly.
       Critical safety functions in this system are handled exclusively in hardware. The E-Stop and overload contacts are
-      de-energize-to-trip and are in series with the contactor coil independently of the PLC. An overheating motor, pressed E-Stop, or open field wiring in a safety circuit will
-      always de-energize the coil and stop the motor. The auxiliary relay covers process and diagnostic faults like loop failure or
-      feedback loss, which aren't safety critical in this application. It sits in the same series string as the
-      safety contacts, so a diagnostic fault interrupts the coil in hand mode as well as auto. One
-      revision I would make is adding feedback to the auxiliary relay so that it will alarm if it fails to
-      energize or break the circuit in a fault state. 
+      de-energize-to-trip and are in series with the contactor coil independently of the PLC. An overheating motor, pressed
+      E-Stop, or open field wiring in a safety circuit will always de-energize the coil and stop the motor. The auxiliary
+      relay covers process and diagnostic faults like loop failure or feedback loss, which aren't safety critical in this
+      application. It sits in the same series string as the safety contacts, so a diagnostic fault interrupts the coil in
+      hand mode as well as auto. One revision I would make is adding feedback to the auxiliary relay so that it will alarm
+      if it fails to energize or break the circuit in a fault state.
     </p>
   </div>
 
@@ -437,7 +439,8 @@
        the page — one entry per exported page. Nothing else to change.
        ============================================================ -->
   <h2>Ladder Logic</h2>
-    <div class="deck">
+
+  <div class="deck">
     <div class="deck-frame">
       <div class="deck-view" id="deck-view">
         <img id="deck-img" src="" alt="Ladder logic page">
@@ -460,62 +463,97 @@
 
   <div class="intro">
     <p>
-      The program was the most challenging part of this project for me. This is a project that could not all fit on one main program page, so the full sequence of events had to be planned up front through subroutines. 
-      I have no subroutine or direct monitoring for hand mode outside of the contact for the indicator to allow the motor to run in case of a program issue. The small auto subroutine could have just lived on the main page, but I wanted to set it up so that I could easily add more
-      instruments and control down the road without major program changes. Not shown is my input scaling setup, which simply just set 4-20mA to a 0-100% scale. 4mA being 0% allows me to detect an open circuit reliably if the reading is ever lower than 0.
-      The biggest challenge writing this, however, came from fault handling and communication with the HMI software.
+      The program was the most challenging part of this project for me. This is a project that could not all fit on one main
+      program page, so the full sequence of events had to be planned up front through subroutines. I have no subroutine or
+      direct monitoring for hand mode outside of the contact for the indicator to allow the motor to run in case of a program
+      issue. The small auto subroutine could have just lived on the main page, but I wanted to set it up so that I could easily
+      add more instruments and control down the road without major program changes. Not shown is my input scaling setup, which
+      simply sets 4-20mA to a 0-100% scale. 4mA being 0% allows me to detect an open circuit reliably if the reading is ever
+      lower than 0. The biggest challenge writing this, however, came from fault handling and communication with the HMI software.
     </p>
     <p>
-      Setting up the MODBUS RTU settings so that baud rate, parity, stop bit, etc. matched was straightforward but it took some research to match up the addressing formats between programs. Once I had the communication
-      sorted, I developed fault logic for my seven distinct faults: CH1 Short Circuit, CH1 Open Circuit, Thermal Overload Tripped, E-Stop Pressed, Contactor Failure, HOA Switch Malfunction, and IO Module Missing 24V.
-      I added timers and deadbands where needed for hysteresis and if all conditions for a given fault were met, an assigned bit would be turned on. The status of these bits were packed into a register which was copied and sent to the
-      HMI each scan. The individual fault bits are paralleled into a master fault bit that energizes the auxiliary relay and reset the contactor coil output latch if active.
+      Setting up the MODBUS RTU settings so that baud rate, parity, stop bit, etc. matched was straightforward but it took some
+      research to match up the addressing formats between programs. Once I had the communication sorted, I developed fault logic
+      for my seven distinct faults: CH1 Short Circuit, CH1 Open Circuit, Thermal Overload Tripped, E-Stop Pressed, Contactor
+      Failure, HOA Switch Malfunction, and IO Module Missing 24V. I added timers and deadbands where needed for hysteresis and
+      if all conditions for a given fault were met, an assigned bit would be turned on. The status of these bits were packed into
+      a register which was copied and sent to the HMI each scan. The individual fault bits are paralleled into a master fault bit
+      that energizes the auxiliary relay and resets the contactor coil output latch if active.
     </p>
   </div>
- <h2>HMI Operation</h2>
+
+
+  <!-- ============================================================
+       HMI OPERATION
+       ============================================================ -->
+  <h2>HMI Operation</h2>
   <div class="intro">
-    <p>Here is a quick demo of the HMI displaying tank level, pilot lights, and alarms</p>'
+    <p>Here is a quick demo of the HMI displaying tank level, pilot lights, and alarms.</p>
   </div>
-   <div class="video-container">
+  <div class="video-container">
     <iframe src="https://drive.google.com/file/d/1yo7-V8rJ4_PQxDwHXnEi5XkmNatF8hqg/preview"
             allow="autoplay" allowfullscreen></iframe>
   </div>
-  
- <h2>HMI Fault Demo</h2>
-   <div class="intro">
-    <p>In this video, I induce each individual fault and show the resulting alarm on the HMI</p>'
+
+
+  <!-- ============================================================
+       HMI FAULT DEMO
+       ============================================================ -->
+  <h2>HMI Fault Demo</h2>
+  <div class="intro">
+    <p>In this video, I induce each individual fault and show the resulting alarm on the HMI.</p>
   </div>
-   <div class="video-container">
+  <div class="video-container">
     <iframe src="https://drive.google.com/file/d/1MoBnrNTUUsw7a4_orFiLtvyltY-x6iz6/preview"
             allow="autoplay" allowfullscreen></iframe>
   </div>
-    <h2>Normal Operation</h2>
-     <div class="intro">
-       <p> This is the system running a motor at my desk operating both in hand mode and between setpoints in auto mode</p>
-       </div>
-   <div class="video-container">
+
+
+  <!-- ============================================================
+       NORMAL OPERATION
+       ============================================================ -->
+  <h2>Normal Operation</h2>
+  <div class="intro">
+    <p>This is the system running a motor at my desk operating both in hand mode and between setpoints in auto mode.</p>
+  </div>
+  <div class="video-container">
     <iframe src="https://drive.google.com/file/d/1RgHWuAjZAZTQmGB7H3458AHMHfMXYo1u/preview"
             allow="autoplay" allowfullscreen></iframe>
-   </div>
-         
-         <h2>Field Use as a Test Rig</h2>
-     <div class="intro">
-       <p>I used the panel as a test rig to bench a 240V single phase CSCR motor off a table saw that was suspected of being failed. I performed basic winding resistance checks and an insulation test to ground 
-         at 500VDC to verify the motor was safe to energize. Since the megger test passed, I checked the capacitors, which measured within spec. A standard multimeter cannot measure ESR, a
-         common failure mode in motor capacitors, so since I had spares of the correct value I installed them as my next step in testing. The motor started right up and reached synchronous speed at a healthy 
-         amperage, verifying the capacitors as the root cause of the failure.
-       </p>
-       <p>
-With additional instrumentation for speed, current, and power balance, plus some changes to the input power circuit, this could make an excellent universal motor test rig. </p>
-     </div>
-   <div class="video-container">
+  </div>
+
+
+  <!-- ============================================================
+       FIELD USE AS A TEST RIG
+       ============================================================ -->
+  <h2>Field Use as a Test Rig</h2>
+  <div class="intro">
+    <p>
+      I used the panel as a test rig to bench a 240V single phase CSCR motor off a table saw that was suspected of being failed.
+      I performed basic winding resistance checks and an insulation test to ground at 500VDC to verify the motor was safe to
+      energize. Since the megger test passed, I checked the capacitors, which measured within spec. A standard multimeter cannot
+      measure ESR, a common failure mode in motor capacitors, so since I had spares of the correct value I installed them as my
+      next step in testing. The motor started right up and reached synchronous speed at a healthy amperage, verifying the
+      capacitors as the root cause of the failure.
+    </p>
+    <p>
+      With additional instrumentation for speed, current, and power balance, plus some changes to the input power circuit, this
+      could make an excellent universal motor test rig.
+    </p>
+  </div>
+  <div class="video-container">
     <iframe src="https://drive.google.com/file/d/1d1ZftdsdMtFbW8FCaMHmn8ScYWhSqqsc/preview"
             allow="autoplay" allowfullscreen></iframe>
-   </div>
-         
-  
-  
+  </div>
 
+  <h2>Final Thoughts</h2>
+  <div class="intro">
+    <p> This project was one of the most valuable experiences in my development as a technician and aspiring engineer. It tested my core circuit skills while pushing me to learn
+      the analog and communications skills needed to bring the whole system together the way I envisioned it. 4-20mA loops, MODBUS RTU, and ladder logic interpretation are skills 
+      I can carry across a wide range of technologies and applications.</p>
+
+    <p> At the beginning of the project, I said I wanted to make this build as scalable as possible. 
+    I followed through by building it in such a way that I could easily add three more motors and transmitters with only a few added lines to the program,
+      or repurpose it entirely as a test rig to bench motors and collect data at scale which I proved with the saw motor. The project was a success, and I plan to keep building on it.</p>
 
   <!-- ============================================================
        COPY-PASTE BLOCKS  —  everything below is commented out.
