@@ -170,13 +170,14 @@
     }
 
     .crop-uniform {
-      height: 300px !important;
+      height: 440px !important;
       object-fit: cover !important;
       object-position: center center !important;
     }
 
-    /* taller box for the cover photo — more vertical room for 4:3 shots.
-       Adjust the height value to taste. */
+    /* All image boxes share one height. Change the value in .crop-uniform
+       above to resize every image on the page at once. .cover-shot is kept
+       as a separate hook in case you want the lead photo taller later. */
     .cover-shot {
       height: 440px !important;
     }
@@ -197,6 +198,78 @@
       color:var(--cyan-dim);
       font-style: normal;
       text-align:center;
+    }
+
+    /* ---------- ladder logic slide deck ---------- */
+    .deck {
+      max-width: 900px;
+      margin: 0 auto 40px;
+    }
+
+    .deck-frame {
+      position: relative;
+      border: 1px solid var(--trace);
+      background: var(--panel);
+      padding: 10px;
+    }
+
+    .deck-frame img {
+      display: block;
+      width: 100%;
+      height: 480px;
+      object-fit: contain;
+      background: #fff;   /* ladder pages are white; keeps them legible */
+      cursor: pointer;
+    }
+
+    .deck-nav {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
+      margin-top: 12px;
+    }
+
+    .deck-btn {
+      font-family:'IBM Plex Mono',monospace;
+      font-size: 11px;
+      letter-spacing:.2em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      background: transparent;
+      border: 1px solid var(--trace);
+      padding: 8px 16px;
+      cursor: pointer;
+      transition: border-color .2s ease, box-shadow .2s ease, opacity .2s ease;
+    }
+    .deck-btn:hover:not(:disabled), .deck-btn:focus-visible:not(:disabled) {
+      border-color: rgba(34,225,255,.6);
+      box-shadow: 0 0 14px rgba(34,225,255,.25);
+      outline: none;
+    }
+    .deck-btn:disabled { opacity: .3; cursor: default; }
+
+    .deck-count {
+      font-family:'IBM Plex Mono',monospace;
+      font-size: 11px;
+      letter-spacing:.18em;
+      color: var(--text-dim);
+      min-width: 68px;
+      text-align: center;
+    }
+
+    .deck-caption {
+      max-width: 700px;
+      margin: 16px auto 0;
+      text-align: left;
+      font-size: 15px;
+      line-height: 1.7;
+      color: var(--text-dim);
+      min-height: 3.4em;   /* keeps layout from jumping between slides */
+    }
+
+    @media (max-width:760px){
+      .deck-frame img{ height: 300px; }
     }
 
     /* Google Drive video embeds — left unstyled so the Drive player
@@ -307,49 +380,64 @@
 
 
   <!-- ============================================================
-       SECTION TYPE A  —  heading + paragraph + image + caption
+       SYSTEM OVERVIEW: WIRING
        ============================================================ -->
   <h2>System Overview: Wiring</h2>
-   <div class="image-container">
+
+  <div class="image-container">
     <div class="image-row">
       <div class="image-block">
         <img src="circuitdiagram.jpg" alt="Circuit Diagram" class="crop-uniform" onclick="openLightbox(this.src)">
-        <div class="caption">Simplified circuit diagram of the system a</div>
+        <div class="caption"></div>
       </div>
     </div>
-  </div> 
-  
-  <div class="intro">
-  <p> I created a simplified schematic to plan power distribution, control wiring, and fault signals. Incoming 120 or 240V power feeds the contactor, power monitor, and 24V power supply. I used an HOA switch for
-    operator control, with signal wiring sent to the PLC and HMI for status display. The E-Stop and overload NC contacts are wired in series with the contactor coil, as well as an auxiliary relay the PLC 
-    energizes to break the coil circuit on a detected fault. Faults latch until reset by cycling the HOA switch.
-</p>
-<p>Critical safety functions are handled exclusively in hardware. The E-Stop and overload contacts are de-energize-to-trip and are in series with the coil independently of the PLC, so an open circuit will 
-  always stop the motor. The auxiliary relay covers process and diagnostic faults like loop failure or feedback loss, which aren't safety critical in this application. It sits in the same series string as the
-  safety contacts, so a diagnostic fault interrupts the coil in hand mode as well as auto. Fault handling and fail-safes are always process dependent, and I scoped my layers of protection accordingly. One revision
-  I would make is adding feedback to the auxiliary relay so that it will alarm if it fails to energize or break the circuit in a fault state.
- </p> 
   </div>
 
-
-
-
-  <!-- ============================================================
-       SECTION TYPE B  —  heading + paragraph + Drive video + caption
-       ============================================================ -->
-  <h2>Section Heading</h2>
   <div class="intro">
     <p>
-      Body paragraph goes here. Set up what the viewer is about to watch so the video has context
-      before it plays.
+      I created a simplified schematic to plan power distribution, control wiring, and fault signals. Incoming
+      120 or 240V power feeds the contactor, power monitor, and 24V power supply. I used an HOA switch for
+      operator control, with signal wiring sent to the PLC and HMI for status display. The E-Stop and overload
+      NC contacts are wired in series with the contactor coil, as well as an auxiliary relay the PLC energizes
+      to break the coil circuit on a detected fault. Faults latch until reset by cycling the HOA switch.
+    </p>
+    <p>
+      Critical safety functions are handled exclusively in hardware. The E-Stop and overload contacts are
+      de-energize-to-trip and are in series with the coil independently of the PLC, so an open circuit will
+      always stop the motor. The auxiliary relay covers process and diagnostic faults like loop failure or
+      feedback loss, which aren't safety critical in this application. It sits in the same series string as the
+      safety contacts, so a diagnostic fault interrupts the coil in hand mode as well as auto. Fault handling
+      and fail-safes are always process dependent, and I scoped my layers of protection accordingly. One
+      revision I would make is adding feedback to the auxiliary relay so that it will alarm if it fails to
+      energize or break the circuit in a fault state.
     </p>
   </div>
 
-  <div class="video-container">
-    <iframe src="https://drive.google.com/file/d/REPLACE-FILE-ID/preview"
-            allow="autoplay" allowfullscreen></iframe>
+
+  <!-- ============================================================
+       LADDER LOGIC SLIDE DECK
+       Edit the LADDER_SLIDES array in the script at the bottom of
+       the page — one entry per exported page. Nothing else to change.
+       ============================================================ -->
+  <h2>Ladder Logic</h2>
+  <div class="intro">
+    <p>
+      Body paragraph introducing the program — overall structure, how the routines are organized,
+      what a reader should look for as they page through.
+    </p>
   </div>
-  <div class="caption">Caption for this video</div>
+
+  <div class="deck">
+    <div class="deck-frame">
+      <img id="deck-img" src="" alt="Ladder logic page" onclick="openLightbox(this.src)">
+    </div>
+    <div class="deck-nav">
+      <button class="deck-btn" id="deck-prev" onclick="deckStep(-1)">← Prev</button>
+      <span class="deck-count" id="deck-count"></span>
+      <button class="deck-btn" id="deck-next" onclick="deckStep(1)">Next →</button>
+    </div>
+    <div class="deck-caption" id="deck-caption"></div>
+  </div>
 
 
   <!-- ============================================================
@@ -450,6 +538,42 @@
   </div>
 
   <script>
+    /* ============================================================
+       LADDER LOGIC SLIDE DECK
+       One entry per page. Caption may be an empty string.
+       ============================================================ */
+    const LADDER_SLIDES = [
+      { src: "ladder-01.png", caption: "Main routine — HOA mode selection and call to the fill subroutine." },
+      { src: "ladder-02.png", caption: "Analog scaling: raw counts from the 4-20mA input converted to engineering units." },
+      { src: "ladder-03.png", caption: "Fill control — start and stop setpoints with deadband." },
+      { src: "ladder-04.png", caption: "Fault detection and latching, including the auxiliary trip relay output." }
+    ];
+
+    let deckIndex = 0;
+
+    function deckRender() {
+      const slide = LADDER_SLIDES[deckIndex];
+      document.getElementById('deck-img').src = slide.src;
+      document.getElementById('deck-caption').textContent = slide.caption || "";
+      document.getElementById('deck-count').textContent =
+        (deckIndex + 1) + " / " + LADDER_SLIDES.length;
+      document.getElementById('deck-prev').disabled = (deckIndex === 0);
+      document.getElementById('deck-next').disabled = (deckIndex === LADDER_SLIDES.length - 1);
+    }
+
+    function deckStep(n) {
+      deckIndex = Math.min(Math.max(deckIndex + n, 0), LADDER_SLIDES.length - 1);
+      deckRender();
+    }
+
+    document.addEventListener('keydown', function (e) {
+      if (document.getElementById('lightbox').style.display === 'flex') return;
+      if (e.key === 'ArrowLeft')  deckStep(-1);
+      if (e.key === 'ArrowRight') deckStep(1);
+    });
+
+    deckRender();
+
     function openLightbox(src) {
       const img = document.getElementById('lightbox-img');
       const video = document.getElementById('lightbox-video');
