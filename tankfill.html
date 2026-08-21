@@ -309,25 +309,28 @@
   <!-- ============================================================
        SECTION TYPE A  —  heading + paragraph + image + caption
        ============================================================ -->
-  <h2>Section Heading</h2>
-  <div class="intro">
-    <p>
-      Body paragraph goes here. Describe what you set out to do, what you measured, or what you found.
-      Two or three sentences per paragraph reads best in this column width.
-    </p>
-    <p>
-      Add a second paragraph inside the same .intro block whenever you need one — no extra wrapper required.
-    </p>
-  </div>
-
-  <div class="image-container">
+  <h2>System Overview: Wiring</h2>
+   <div class="image-container">
     <div class="image-row">
       <div class="image-block">
-        <img src="REPLACE-image.jpg" alt="Describe the image" class="crop-uniform" onclick="openLightbox(this.src)">
-        <div class="caption">Caption for this image</div>
+        <img src="circuitdiagram.jpg" alt="Circuit Diagram" class="crop-uniform" onclick="openLightbox(this.src)">
+        <div class="caption">Simplified circuit diagram of the system a</div>
       </div>
     </div>
+  </div> 
+  
+  <div class="intro">
+  <p> I created a simplified schematic to plan power distribution, control wiring, and fault signals. Incoming 120 or 240V power feeds the contactor, power monitor, and 24V power supply. I used an HOA switch for
+    operator control, with signal wiring sent to the PLC and HMI for status display. The E-Stop and overload NC contacts are wired in series with the contactor coil, as well as an auxiliary relay the PLC 
+    energizes to break the coil circuit on a detected fault. Faults latch until reset by cycling the HOA switch.
+</p>
+<p>Critical safety functions are handled exclusively in hardware. The E-Stop and overload contacts are de-energize-to-trip and are in series with the coil independently of the PLC, so an open circuit will 
+  always stop the motor. The auxiliary relay covers process and diagnostic faults like loop failure or feedback loss, which aren't safety critical in this application. It sits in the same series string as the
+  safety contacts, so a diagnostic fault interrupts the coil in hand mode as well as auto. Fault handling and fail-safes are process dependent, and I scoped my layers of protection accordingly.
+ </p> 
   </div>
+
+
 
 
   <!-- ============================================================
