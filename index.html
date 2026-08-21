@@ -102,6 +102,73 @@
   .bracket.bl{bottom:-2px;left:-2px;border-right:0;border-top:0;}
   .bracket.br{bottom:-2px;right:-2px;border-left:0;border-top:0;}
 
+  /* --- viewport slide deck --- */
+  .viewport-slides{
+    position:relative;
+    width:100%;
+    aspect-ratio: 4 / 3;
+    overflow:hidden;
+    background:var(--panel);
+  }
+  .viewport-slides img{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    filter:saturate(1.05) contrast(1.05);
+    opacity:0;
+    transition:opacity .9s ease;
+  }
+  .viewport-slides img.active{opacity:1;}
+
+  .viewport-dots{
+    position:absolute;
+    left:0; right:0; bottom:14px;
+    display:flex;
+    justify-content:center;
+    gap:8px;
+    z-index:2;
+  }
+  .viewport-dots button{
+    width:7px; height:7px;
+    padding:0;
+    border-radius:50%;
+    border:1px solid rgba(34,225,255,.55);
+    background:rgba(4,7,10,.6);
+    cursor:pointer;
+    transition:.2s ease;
+  }
+  .viewport-dots button.active{
+    background:var(--cyan);
+    box-shadow:0 0 8px rgba(34,225,255,.8);
+  }
+  .viewport-dots button:hover, .viewport-dots button:focus-visible{
+    border-color:var(--cyan);
+    outline:none;
+  }
+
+  .viewport-cap{
+    position:absolute;
+    left:12px; bottom:14px;
+    z-index:2;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:10.5px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--cyan-dim);
+    background:rgba(4,7,10,.7);
+    padding:5px 9px;
+    border:1px solid var(--trace);
+    opacity:0;
+    transition:opacity .4s ease;
+  }
+  .viewport-cap.active{opacity:1;}
+
+  @media (prefers-reduced-motion:reduce){
+    .viewport-slides img{transition:none;}
+  }
+
   /* --- section label --- */
   .section-head{
     display:flex; align-items:center; gap:16px;
@@ -216,7 +283,9 @@
     <div class="viewport">
       <span class="bracket tl"></span><span class="bracket tr"></span>
       <span class="bracket bl"></span><span class="bracket br"></span>
-      <img src="cover.jpg" alt="">
+      <div class="viewport-slides" id="hero-slides"></div>
+      <div class="viewport-cap" id="hero-cap"></div>
+      <div class="viewport-dots" id="hero-dots"></div>
     </div>
   </header>
 
@@ -300,5 +369,73 @@
   </footer>
 
 </div>
+
+<script>
+  /* Cover slide deck — one representative image per case study.
+     Edit this list to swap images or change the order/labels. */
+  const HERO_SLIDES = [
+    { src: "controlpanel.jpg",              label: "4-20mA Tank Fill" },
+    { src: "IMG_3137.jpeg",                 label: "PLC Motor Starter" },
+    { src: "IMG_2077.PNG",                  label: "Rigol Scope Repair" },
+    { src: "controls.jpg",                  label: "Floor Grinder" },
+    { src: "DeepSeaFront.jpeg",             label: "Generator Controller" },
+    { src: "cover1.jpg",                    label: "Agilent Scope" },
+    { src: "Charger.jpeg",                  label: "Battery Maintainer" },
+    { src: "lcd-anniversary-quiz-cover.jpeg", label: "Arduino Quiz Game" }
+  ];
+
+  const HERO_INTERVAL = 4500; // ms between auto-advances
+
+  (function () {
+    const track = document.getElementById('hero-slides');
+    const dots  = document.getElementById('hero-dots');
+    const cap   = document.getElementById('hero-cap');
+    if (!track) return;
+
+    HERO_SLIDES.forEach((slide, i) => {
+      const img = document.createElement('img');
+      img.src = slide.src;
+      img.alt = slide.label || "";
+      if (i === 0) img.classList.add('active');
+      track.appendChild(img);
+
+      const dot = document.createElement('button');
+      dot.setAttribute('aria-label', slide.label || ('Slide ' + (i + 1)));
+      if (i === 0) dot.classList.add('active');
+      dot.addEventListener('click', () => goTo(i));
+      dots.appendChild(dot);
+    });
+
+    let index = 0;
+    let timer = null;
+
+    function render() {
+      [...track.children].forEach((img, i) => img.classList.toggle('active', i === index));
+      [...dots.children].forEach((dot, i) => dot.classList.toggle('active', i === index));
+      cap.textContent = HERO_SLIDES[index].label || "";
+      cap.classList.add('active');
+    }
+
+    function goTo(i) {
+      index = (i + HERO_SLIDES.length) % HERO_SLIDES.length;
+      render();
+      restart();
+    }
+
+    function next() { goTo(index + 1); }
+
+    function restart() {
+      clearInterval(timer);
+      timer = setInterval(next, HERO_INTERVAL);
+    }
+
+    render();
+    restart();
+
+    const viewport = track.closest('.viewport');
+    viewport.addEventListener('mouseenter', () => clearInterval(timer));
+    viewport.addEventListener('mouseleave', restart);
+  })();
+</script>
 </body>
 </html>
