@@ -460,25 +460,36 @@
 
   <div class="intro">
     <p>
-      The program was the most challenging part of this project for me. Rung order and the use of subroutines became critical rather than just helpful. I have no subroutine or direct monitoring for hand mode outside
-      of the contact for the indicator. This was to allow the motor to be run in case of a program loss or error. The auto subroutine could have just lived on the main page, but I wanted to set it up so that I could easily add more
-      instruments down the road as the build gets more complex. The biggest challenge in the programming, however, came with fault handling and communication with the HMI software.
+      The program was the most challenging part of this project for me. This is a project that could not all fit on one main program page, so the full sequence of events had to be planned up front through subroutines. 
+      I have no subroutine or direct monitoring for hand mode outside of the contact for the indicator to allow the motor to run in case of a program issue. The small auto subroutine could have just lived on the main page, but I wanted to set it up so that I could easily add more
+      instruments and control down the road without major program changes. Not shown is my input scaling setup, which simply just set 4-20mA to a 0-100% scale. 4mA being 0% allows me to detect an open circuit reliably if the reading is ever lower than 0.
+      The biggest challenge writing this, however, came from fault handling and communication with the HMI software.
     </p>
     <p>
-      Setting up the MODBUS RTU settings so that baud rate, parity, stop bit, etc. matched was straight forward and it took some research to match up the addressing formats between programs. Once I had these communication
-      sorted, I developed my fault logic for my eight distinct faults: CH1 Short Circuit, CH1 Open Circuit, Thermal Overload Tripped, E-Stop Pressed, Contactor Failure, HOA Switch Malfunction, IO Module Failure, and IO Module Missing 24V.
-      Not shown is my input scaling, which simply just set 4-20mA to a 0-100% scale. 4mA being 0% allows me to detect an open circuit reliably if the reading is ever lower than 0.
+      Setting up the MODBUS RTU settings so that baud rate, parity, stop bit, etc. matched was straightforward but it took some research to match up the addressing formats between programs. Once I had the communication
+      sorted, I developed fault logic for my seven distinct faults: CH1 Short Circuit, CH1 Open Circuit, Thermal Overload Tripped, E-Stop Pressed, Contactor Failure, HOA Switch Malfunction, and IO Module Missing 24V.
       I added timers and deadbands where needed for hysteresis and if all conditions for a given fault were met, an assigned bit would be turned on. The status of these bits were packed into a register which was copied and sent to the
-      HMI each scan. 
+      HMI each scan. The individual fault bits are paralleled into a master fault bit that energizes the auxiliary relay and reset the contactor coil output latch if active.
     </p>
+  </div>
+ <h2>HMI Operation</h2>
+  <div class="intro">
+    <p>Here is a quick demo of the HMI displaying tank level, pilot lights, and alarms</p>'
+  </div>
+   <div class="video-container">
+    <iframe src="https://drive.google.com/file/d/1yo7-V8rJ4_PQxDwHXnEi5XkmNatF8hqg/preview"
+            allow="autoplay" allowfullscreen></iframe>
   </div>
   
  <h2>HMI Fault Demo</h2>
+   <div class="intro">
+    <p>In this video, I induce each individual fault and show the resulting alarm on the HMI</p>'
+  </div>
    <div class="video-container">
     <iframe src="https://drive.google.com/file/d/1MoBnrNTUUsw7a4_orFiLtvyltY-x6iz6/preview"
             allow="autoplay" allowfullscreen></iframe>
   </div>
-  <div class="caption">Caption</div>
+  
   
 
 
@@ -585,10 +596,10 @@
        One entry per page. Caption may be an empty string.
        ============================================================ */
     const LADDER_SLIDES = [
-      { src: "LadderProgram-1.png", caption: "Main routine: mode selection, data out to HMI, calls for subroutines" },
-      { src: "LadderProgram-2.png", caption: "Auto Subroutine: setpoints to latch the contactor coil" },
-      { src: "LadderProgram-3.png", caption: "Faults Subroutine: Fault setpoints with hysteresis and interlocking" },
-      { src: "LadderProgram-4.png", caption: "Faults cont'd" }
+      { src: "LadderProgram-1.png", caption: "" },
+      { src: "LadderProgram-2.png", caption: "" },
+      { src: "LadderProgram-3.png", caption: "" },
+      { src: "LadderProgram-4.png", caption: "" }
     ];
 
     /* zoom steps, as a multiple of "fits the frame width" */
