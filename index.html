@@ -126,46 +126,47 @@
 
   .viewport-dots{
     position:absolute;
-    left:0; right:0; bottom:14px;
+    left:0; right:0; bottom:16px;
     display:flex;
     justify-content:center;
-    gap:8px;
+    align-items:center;
     z-index:2;
+    pointer-events:none;   /* indicator only — use swipe or arrows */
   }
-  .viewport-dots button{
-    width:7px; height:7px;
-    padding:0;
-    border-radius:50%;
-    border:1px solid rgba(34,225,255,.55);
-    background:rgba(4,7,10,.6);
-    cursor:pointer;
-    transition:.2s ease;
-  }
-  .viewport-dots button.active{
-    background:var(--cyan);
-    box-shadow:0 0 8px rgba(34,225,255,.8);
-  }
-  .viewport-dots button:hover, .viewport-dots button:focus-visible{
-    border-color:var(--cyan);
-    outline:none;
+  .viewport-dots .strip{
+    position:relative;
+    display:flex;
+    align-items:center;
+    gap:9px;               /* 5px dot + 9px gap = 14px pitch */
   }
 
-  .viewport-cap{
-    position:absolute;
-    left:12px; bottom:14px;
-    z-index:2;
-    font-family:'IBM Plex Mono',monospace;
-    font-size:10.5px;
-    letter-spacing:.14em;
-    text-transform:uppercase;
-    color:var(--cyan-dim);
-    background:rgba(4,7,10,.7);
-    padding:5px 9px;
-    border:1px solid var(--trace);
-    opacity:0;
-    transition:opacity .4s ease;
+  /* the track: five static slots that fade out toward the edges */
+  .viewport-dots i{
+    display:block;
+    width:5px; height:5px;
+    border-radius:50%;
+    background:var(--cyan);
   }
-  .viewport-cap.active{opacity:1;}
+  .viewport-dots i.d0,
+  .viewport-dots i.d4{ opacity:.10; }
+  .viewport-dots i.d1,
+  .viewport-dots i.d3{ opacity:.28; }
+  .viewport-dots i.d2{ opacity:.28; }
+
+  /* the traveller: the solid dot that slides between slots */
+  .viewport-dots .pip{
+    position:absolute;
+    top:50%;
+    left:27px;             /* centred over slot d2 */
+    width:7px; height:7px;
+    margin-top:-3.5px;
+    border-radius:50%;
+    background:var(--cyan);
+    box-shadow:0 0 9px rgba(34,225,255,.85);
+    opacity:1;
+    transition:opacity .45s ease;
+  }
+  .viewport-dots .pip.gone{ opacity:0; }
 
   @media (prefers-reduced-motion:reduce){
     .viewport-slides img{transition:none;}
@@ -286,7 +287,6 @@
       <span class="bracket tl"></span><span class="bracket tr"></span>
       <span class="bracket bl"></span><span class="bracket br"></span>
       <div class="viewport-slides" id="hero-slides"></div>
-      <div class="viewport-cap" id="hero-cap"></div>
       <div class="viewport-dots" id="hero-dots"></div>
     </div>
   </header>
@@ -409,41 +409,82 @@
   ];
 
 
-  const HERO_INTERVAL = 4500; // ms between auto-advances
+  const HERO_INTERVAL = 5000; // ms between auto-advances
 
   (function () {
     const track = document.getElementById('hero-slides');
     const dots  = document.getElementById('hero-dots');
-    const cap   = document.getElementById('hero-cap');
     if (!track) return;
 
-    HERO_SLIDES.forEach((slide, i) => {
-      const img = document.createElement('img');
-      img.src = slide.src;
-      img.alt = slide.label || "";
-      if (i === 0) img.classList.add('active');
-      track.appendChild(img);
+    /* Two layers only. Images are fetched on demand, not up front, so the
+       page loads one image instead of the whole deck. */
+    const layers = [document.createElement('img'), document.createElement('img')];
+    layers.forEach(img => { img.alt = ""; img.decoding = "async"; track.appendChild(img); });
+    let front = 0;
 
-      const dot = document.createElement('button');
-      dot.setAttribute('aria-label', slide.label || ('Slide ' + (i + 1)));
-      if (i === 0) dot.classList.add('active');
-      dot.addEventListener('click', () => goTo(i));
-      dots.appendChild(dot);
-    });
+    /* five dot slots: the centre one is the current slide, the outer ones
+       fade away to suggest the deck continues in both directions */
+    const strip = document.createElement('div');
+    strip.className = 'strip';
+    for (let i = 0; i < 5; i++) {
+      const d = document.createElement('i');
+      d.className = 'd' + i;
+      strip.appendChild(d);
+    }
+    dots.appendChild(strip);
+
+    const pip = document.createElement('span');
+    pip.className = 'pip';
+    strip.appendChild(pip);
+
+    /* The dot fades out as the photo changes and fades back in as the new
+       one arrives, so the indicator breathes with the crossfade. */
+    let pipTimer = null;
+
+    function pipOut() {
+      clearTimeout(pipTimer);
+      pip.classList.add('gone');
+      /* safety net: if an image load event never arrives (cached image, a
+         swipe mid-load, a failed file) bring the dot back anyway */
+      pipTimer = setTimeout(pipIn, 1200);
+    }
+
+    function pipIn() {
+      clearTimeout(pipTimer);
+      pip.classList.remove('gone');
+    }
 
     let index = 0;
     let timer = null;
 
-    function render() {
-      [...track.children].forEach((img, i) => img.classList.toggle('active', i === index));
-      [...dots.children].forEach((dot, i) => dot.classList.toggle('active', i === index));
-      cap.textContent = HERO_SLIDES[index].label || "";
-      cap.classList.add('active');
+    /* quietly fetch the next image so the crossfade has something ready */
+    function prefetch(i) {
+      const n = HERO_SLIDES[(i + 1) % HERO_SLIDES.length];
+      if (n) { const p = new Image(); p.src = n.src; }
+    }
+
+    function show(i) {
+      const slide = HERO_SLIDES[i];
+      const back = layers[1 - front];
+
+      back.onload = function () {
+        layers[front].classList.remove('active');
+        back.classList.add('active');
+        front = 1 - front;
+        pipIn();
+        prefetch(i);
+      };
+      back.src = slide.src;
+      /* already cached: onload may not fire in some browsers */
+      if (back.complete) back.onload();
+
     }
 
     function goTo(i) {
-      index = (i + HERO_SLIDES.length) % HERO_SLIDES.length;
-      render();
+      const n = HERO_SLIDES.length;
+      index = (i + n) % n;
+      pipOut();
+      show(index);
       restart();
     }
 
@@ -454,7 +495,7 @@
       timer = setInterval(next, HERO_INTERVAL);
     }
 
-    render();
+    show(0);
     restart();
 
     const viewport = track.closest('.viewport');
@@ -471,7 +512,6 @@
       if (startX === null) { restart(); return; }
       const dx = x - startX, dy = y - startY;
       startX = startY = null;
-      /* ignore mostly-vertical moves so page scrolling still works */
       if (Math.abs(dx) > SWIPE_MIN && Math.abs(dx) > Math.abs(dy)) {
         goTo(index + (dx < 0 ? 1 : -1));
       } else {
