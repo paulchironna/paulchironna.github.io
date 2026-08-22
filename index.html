@@ -105,6 +105,8 @@
   /* --- viewport slide deck --- */
   .viewport-slides{
     position:relative;
+    touch-action:pan-y;   /* vertical page scroll still works over the deck */
+    cursor:grab;
     width:100%;
     aspect-ratio: 4 / 3;
     overflow:hidden;
@@ -374,15 +376,38 @@
   /* Cover slide deck — one representative image per case study.
      Edit this list to swap images or change the order/labels. */
   const HERO_SLIDES = [
-    { src: "controlpanel.jpg",              label: "4-20mA Tank Fill" },
-    { src: "IMG_3137.jpeg",                 label: "PLC Motor Starter" },
-    { src: "IMG_2077.PNG",                  label: "Rigol Scope Repair" },
-    { src: "controls.jpg",                  label: "Floor Grinder" },
-    { src: "DeepSeaFront.jpeg",             label: "Generator Controller" },
-    { src: "cover1.jpg",                    label: "Agilent Scope" },
-    { src: "Charger.jpeg",                  label: "Battery Maintainer" },
-    { src: "lcd-anniversary-quiz-cover.jpeg", label: "Arduino Quiz Game" }
+    { src: "IMG_2137.png", label: "Rigol Scope Repair" },
+    { src: "controlpanel.jpg", label: "Tank Fill" },
+    { src: "IMG_2204.png", label: "Rigol Scope Repair" },
+    { src: "separatedboard.jpg", label: "Agilent Scope" },
+    { src: "Schematic.JPG", label: "Battery Maintainer" },
+    { src: "IMG_2218.png", label: "Rigol Scope Repair" },
+    { src: "cover1.jpg", label: "Agilent Scope" },
+    { src: "BackOfBoard.jpeg", label: "Battery Maintainer" },
+    { src: "IMG_2138.png", label: "Rigol Scope Repair" },
+    { src: "ch2goodjoint.jpg", label: "Agilent Scope" },
+    { src: "BurntResistor.jpeg", label: "Battery Maintainer" },
+    { src: "IMG_2094.png", label: "Rigol Scope Repair" },
+    { src: "Charger.jpeg", label: "Battery Maintainer" },
+    { src: "IMG_2139.png", label: "Rigol Scope Repair" },
+    { src: "ch1badjoint.jpg", label: "Agilent Scope" },
+    { src: "TestSetup.JPG", label: "Generator Controller" },
+    { src: "damagedsw.jpg", label: "Floor Grinder" },
+    { src: "IMG_3137.jpeg", label: "PLC Motor Starter" },
+    { src: "TraceRepairs.jpeg", label: "Battery Maintainer" },
+    { src: "DeepSeaFront.jpeg", label: "Generator Controller" },
+    { src: "IMG_2224.PNG", label: "Rigol Scope Repair" },
+    { src: "ch2bnc.jpg", label: "Agilent Scope" },
+    { src: "controls.jpg", label: "Floor Grinder" },
+    { src: "IMG_8702EF5A-AD10-48AE-ADF3-023240ED44C6.jpeg", label: "Rigol Scope Repair" },
+    { src: "DeepSeaDiagram.PNG", label: "Generator Controller" },
+    { src: "burntspade.jpg", label: "Floor Grinder" },
+    { src: "DiodeCorrosion.jpeg", label: "Battery Maintainer" },
+    { src: "ch2badjoint.jpg", label: "Agilent Scope" },
+    { src: "circuitdiagram.jpg", label: "Tank Fill" },
+    { src: "IMG_3136.jpeg", label: "PLC Motor Starter" }
   ];
+
 
   const HERO_INTERVAL = 4500; // ms between auto-advances
 
@@ -435,6 +460,35 @@
     const viewport = track.closest('.viewport');
     viewport.addEventListener('mouseenter', () => clearInterval(timer));
     viewport.addEventListener('mouseleave', restart);
+
+    /* swipe (touch) and drag (mouse) to change slides */
+    const SWIPE_MIN = 40; // px before it counts as a swipe
+    let startX = null, startY = null;
+
+    function swipeStart(x, y) { startX = x; startY = y; clearInterval(timer); }
+
+    function swipeEnd(x, y) {
+      if (startX === null) { restart(); return; }
+      const dx = x - startX, dy = y - startY;
+      startX = startY = null;
+      /* ignore mostly-vertical moves so page scrolling still works */
+      if (Math.abs(dx) > SWIPE_MIN && Math.abs(dx) > Math.abs(dy)) {
+        goTo(index + (dx < 0 ? 1 : -1));
+      } else {
+        restart();
+      }
+    }
+
+    track.addEventListener('touchstart', e => {
+      swipeStart(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
+    }, { passive: true });
+
+    track.addEventListener('touchend', e => {
+      swipeEnd(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
+    }, { passive: true });
+
+    track.addEventListener('mousedown', e => { swipeStart(e.clientX, e.clientY); e.preventDefault(); });
+    track.addEventListener('mouseup',   e => swipeEnd(e.clientX, e.clientY));
   })();
 </script>
 </body>
