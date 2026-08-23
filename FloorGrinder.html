@@ -198,9 +198,7 @@
       padding-top: 56.25%; /* 16:9 fallback */
     }
 
-    /* Portrait (phone-shot) clips. Drive letterboxes vertical video inside a
-       16:9 frame, leaving a narrow strip of picture that its fixed-size
-       controls then cover. Sizing the frame 9:16 lets the picture fill it. */
+    /* Portrait (phone-shot) clips. */
     .video-container.portrait::before {
       padding-top: 177.78%; /* 9:16 */
     }
@@ -209,6 +207,8 @@
       max-width: 360px; /* cap portrait width to keep height reasonable */
     }
 
+    /* Media inside the container (video or iframe) */
+    .video-container video,
     .video-container iframe {
       position: absolute;
       top: 0;
@@ -216,6 +216,8 @@
       width: 100%;
       height: 100%;
       border: none;
+      object-fit: contain;
+      background: #000;
     }
 
     /* In a row, allow side-by-side only on larger screens */
@@ -245,6 +247,7 @@
       align-items: center;
       justify-content: center;
       background: #000;
+      z-index: 2;
     }
 
     .video-poster img {
@@ -271,7 +274,7 @@
       align-items: center;
       justify-content: center;
       transition: background 0.2s ease, box-shadow 0.2s ease;
-      pointer-events: none; /* so click goes to the poster div */
+      pointer-events: none;
     }
 
     .video-poster:hover .play-button {
@@ -288,9 +291,24 @@
       background: rgba(34, 225, 255, 0.2);
     }
 
-    /* Hide the poster once iframe is injected */
-    .video-container.loaded .video-poster {
+    /* Hide poster after video is loaded */
+    .video-container.playing .video-poster {
       display: none;
+    }
+
+    /* Error message */
+    .video-error {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 12px;
+      background: rgba(0,0,0,0.8);
+      color: #fff;
+      font-family: 'IBM Plex Mono',monospace;
+      font-size: 12px;
+      text-align: center;
+      z-index: 3;
     }
 
     .centered {
@@ -478,36 +496,55 @@
       video.src = "";
     }
 
-    // ---------- Click-to-play for Drive videos ----------
+    // ---------- Click-to-play for Drive videos (native HTML5 video) ----------
     document.querySelectorAll('.video-container[data-video-id]').forEach(container => {
       const fileId = container.dataset.videoId;
       const poster = container.querySelector('.video-poster');
 
-      const loadIframe = () => {
+      const loadVideo = () => {
         // Prevent double loading
-        if (container.classList.contains('loaded')) return;
-        container.classList.add('loaded');
+        if (container.classList.contains('playing')) return;
+        container.classList.add('playing');
 
-        const iframe = document.createElement('iframe');
-        iframe.src = `https://drive.google.com/file/d/${fileId}/preview`;
-        iframe.allow = 'autoplay; fullscreen; encrypted-media; picture-in-picture';
-        iframe.allowFullscreen = true;
-        iframe.loading = 'lazy';
-        iframe.title = 'Google Drive video player';
-        iframe.style.width = '100%';
-        iframe.style.height = '100%';
-        iframe.style.border = 'none';
+        // Create a native video element
+        const video = document.createElement('video');
+        video.controls = true;
+        video.playsInline = true;
+        video.preload = 'auto';
+        video.style.width = '100%';
+        video.style.height = '100%';
+        video.style.objectFit = 'contain';
+        video.style.background = '#000';
+        video.setAttribute('playsinline', ''); // for iOS Safari
+        video.setAttribute('webkit-playsinline', ''); // older iOS
 
-        // Insert iframe after the poster (which will be hidden via CSS)
-        container.appendChild(iframe);
+        // Use Google Drive direct download URL (might trigger scan warning if not scanned)
+        video.src = `https://drive.google.com/uc?export=download&id=${fileId}`;
+
+        // Error handling: show a message if video fails
+        video.addEventListener('error', () => {
+          const errorDiv = document.createElement('div');
+          errorDiv.className = 'video-error';
+          errorDiv.innerHTML = 'Unable to play video directly. <a href="https://drive.google.com/file/d/' + fileId + '/view" target="_blank" rel="noopener" style="color:var(--cyan);">Open in Google Drive</a>';
+          container.appendChild(errorDiv);
+        });
+
+        // Insert video after the poster (poster will be hidden via CSS)
+        container.appendChild(video);
+
+        // Attempt to play
+        video.play().catch(err => {
+          // Autoplay might be blocked; user can press play manually
+          console.log('Autoplay blocked:', err);
+        });
       };
 
       // Click or keyboard activation on poster
-      poster.addEventListener('click', loadIframe);
+      poster.addEventListener('click', loadVideo);
       poster.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
-          loadIframe();
+          loadVideo();
         }
       });
     });
