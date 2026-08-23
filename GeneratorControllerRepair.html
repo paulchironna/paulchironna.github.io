@@ -186,6 +186,22 @@
       border: none;
     }
 
+    /* Portrait (phone-shot) clips. Drive letterboxes vertical video inside a
+       16:9 frame, leaving a narrow strip of picture that its fixed-size
+       controls then cover. Sizing the frame 9:16 lets the picture fill it. */
+    .video-container.portrait {
+      aspect-ratio: 9 / 16;
+      height: min(70vh, 620px);
+      width: auto;
+      max-width: 100%;
+      min-height: 0;
+    }
+    .video-row .video-container.portrait {
+      flex: 0 0 auto;
+      height: min(60vh, 520px);
+    }
+
+
     /* Lightbox overlay styling */
     .lightbox-overlay {
       display: none; /* hidden by default */
@@ -270,7 +286,7 @@
     </p>
   </div>
 
-  <div class="video-container">
+  <div class="video-container portrait">
     <iframe src="https://drive.google.com/file/d/19WMA5tNbNarB_yXGEKVNqLmfXH0iDZiP/preview" allow="autoplay" allowfullscreen></iframe>
   </div>
   <div class="caption">Video taken during crank attempt with 0 output</div>
@@ -298,7 +314,7 @@
     </p>
   </div>
 
-  <div class="video-container">
+  <div class="video-container portrait">
     <iframe src="https://drive.google.com/file/d/1wtBed_1RI4H8gTZXJQH60XvLXtJEeEtL/preview" allow="autoplay" allowfullscreen></iframe>
   </div>
   <div class="caption">Measurements retaken at relay output and pin header</div>
@@ -311,7 +327,7 @@
   </p>
   </div>
 
-  <div class="video-container">
+  <div class="video-container portrait">
     <iframe src="https://drive.google.com/file/d/1JYa_aA95nM31TaAqak0DMaaJ4zB5nrhK/preview" allow="autoplay" allowfullscreen></iframe>
   </div>
   <div class="caption">Incandescent light wired into starter output</div>
