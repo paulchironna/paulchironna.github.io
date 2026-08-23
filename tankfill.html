@@ -308,6 +308,22 @@
       border: none;
     }
 
+    /* Portrait (phone-shot) clips. Drive letterboxes vertical video inside a
+       16:9 frame, leaving a narrow strip of picture that its fixed-size
+       controls then cover. Sizing the frame 9:16 lets the picture fill it. */
+    .video-container.portrait {
+      aspect-ratio: 9 / 16;
+      height: min(70vh, 620px);
+      width: auto;
+      max-width: 100%;
+      min-height: 0;
+    }
+    .video-row .video-container.portrait {
+      flex: 0 0 auto;
+      height: min(60vh, 520px);
+    }
+
+
     .video-row {
       display: flex;
       justify-content: center;
@@ -540,20 +556,11 @@
       could make an excellent universal motor test rig.
     </p>
   </div>
-  <div class="video-container">
+  <div class="video-container portrait">
     <iframe src="https://drive.google.com/file/d/1d1ZftdsdMtFbW8FCaMHmn8ScYWhSqqsc/preview"
             allow="autoplay" allowfullscreen></iframe>
   </div>
 
-  <h2>Final Thoughts</h2>
-  <div class="intro">
-    <p> This project was one of the most valuable experiences in my development as a technician and aspiring engineer. It tested my core circuit skills while pushing me to learn
-      the analog and communications skills needed to bring the whole system together the way I envisioned it. 4-20mA loops, MODBUS RTU, and ladder logic interpretation are skills 
-      I can carry across a wide range of technologies and applications.</p>
-
-    <p> At the beginning of the project, I said I wanted to make this build as scalable as possible. 
-    I followed through by building it in such a way that I could easily add three more motors and transmitters with only a few added lines to the program,
-      or repurpose it entirely as a test rig to bench motors and collect data at scale which I proved with the saw motor. The project was a success, and I plan to keep building on it.</p>
 
   <!-- ============================================================
        COPY-PASTE BLOCKS  —  everything below is commented out.
