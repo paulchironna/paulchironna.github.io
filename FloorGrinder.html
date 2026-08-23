@@ -589,21 +589,18 @@
 
       overlay.classList.add('active');
 
-      // Attempt to enter fullscreen (works on Android Chrome, some others)
-      if (overlay.requestFullscreen) {
-        overlay.requestFullscreen().catch(err => {
-          console.log('Fullscreen request failed, using overlay only:', err);
-        });
-      } else if (overlay.webkitRequestFullscreen) {
-        overlay.webkitRequestFullscreen();
-      }
+      // NOTE: We intentionally DO NOT call requestFullscreen here.
+      // Calling requestFullscreen on the overlay caused the browser to add its own
+      // native video controls on top of Drive's player, resulting in duplicate
+      // scrubbers and pause buttons. The overlay already fills the viewport,
+      // so the user still gets a full-screen experience.
     }
 
     function closeVideoOverlay() {
       overlay.classList.remove('active');
       overlayIframeWrap.innerHTML = ''; // remove iframe to stop playback
 
-      // Exit fullscreen if active
+      // Exit fullscreen if for some reason the user used the iframe's own fullscreen button
       if (document.fullscreenElement) {
         document.exitFullscreen().catch(() => {});
       } else if (document.webkitFullscreenElement) {
