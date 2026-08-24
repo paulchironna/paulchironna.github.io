@@ -177,197 +177,46 @@
 
     .video-row .video-container {
       flex: 1 1 48%;
-      min-width: 0;
-      width: auto;
+      width:auto;
+      aspect-ratio: 16/9;
     }
 
-    /* Unified responsive video container using padding-top */
+    /* Unified video container */
     .video-container {
-      position: relative;
-      width: 100%;
+      width: 50%;
       max-width: 900px;
       margin: 20px auto;
+      aspect-ratio: 16/9;
       background: #000;
       border-radius: 8px;
       overflow: hidden;
+      box-sizing: content-box;
     }
 
-    .video-container::before {
-      content: "";
-      display: block;
-      padding-top: 56.25%; /* 16:9 fallback */
-    }
-
-    /* Portrait (phone-shot) clips. */
-    .video-container.portrait::before {
-      padding-top: 177.78%; /* 9:16 */
-    }
-
-    .video-container.portrait {
-      max-width: 360px; /* cap portrait width to keep height reasonable */
-    }
-
-    /* Media inside the container (iframe) */
     .video-container iframe {
-      position: absolute;
-      top: 0;
-      left: 0;
       width: 100%;
       height: 100%;
       border: none;
     }
 
-    /* In a row, allow side-by-side only on larger screens */
-    @media (max-width: 900px) {
-      .video-row {
-        flex-direction: column;
-      }
-
-      .video-row .video-container {
-        flex: 1 1 auto;
-        width: 100%;
-        max-width: 360px;
-        margin-left: auto;
-        margin-right: auto;
-      }
+    /* Portrait (phone-shot) clips. Drive letterboxes vertical video inside a
+       16:9 frame, leaving a narrow strip of picture that its fixed-size
+       controls then cover. Sizing the frame 9:16 lets the picture fill it. */
+    .video-container.portrait {
+      aspect-ratio: 9 / 16;
+      height: min(70vh, 620px);
+      width: auto;
+      max-width: 100%;
+      min-height: 0;
+    }
+    .video-row .video-container.portrait {
+      flex: 0 0 auto;
+      height: min(60vh, 520px);
     }
 
-    /* ---------- Click-to-play poster styles ---------- */
-    .video-poster {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: #000;
-      z-index: 2;
-    }
-
-    .video-poster img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-
-    .video-poster .play-button {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 70px;
-      height: 70px;
-      border-radius: 50%;
-      background: rgba(0, 0, 0, 0.65);
-      border: 2px solid var(--cyan);
-      color: var(--cyan);
-      font-size: 32px;
-      line-height: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.2s ease, box-shadow 0.2s ease;
-      pointer-events: none;
-    }
-
-    .video-poster:hover .play-button {
-      background: rgba(34, 225, 255, 0.2);
-      box-shadow: 0 0 25px rgba(34, 225, 255, 0.5);
-    }
-
-    .video-poster:focus-visible {
-      outline: 2px solid var(--cyan);
-      outline-offset: -2px;
-    }
-
-    .video-poster:focus-visible .play-button {
-      background: rgba(34, 225, 255, 0.2);
-    }
-
-    /* Hide poster after video is loaded (desktop only) */
-    .video-container.playing .video-poster {
-      display: none;
-    }
-
-    /* Small "open in Drive" fallback link */
-    .video-fallback-link {
-      display: block;
-      margin: -12px auto 20px;
-      max-width: 360px;
-      font-family:'IBM Plex Mono',monospace;
-      font-size: 11px;
-      letter-spacing:.1em;
-      color: var(--cyan-dim);
-      text-align: center;
-    }
-    .video-fallback-link a {
-      color: var(--cyan-dim);
-      text-decoration: none;
-      border-bottom: 1px dotted var(--trace);
-    }
-    .video-fallback-link a:hover {
-      color: var(--cyan);
-      border-bottom-color: var(--cyan);
-    }
 
     .centered {
       text-align: center;
-    }
-
-    /* ---------- Fullscreen overlay for mobile (and desktop fallback) ---------- */
-    .video-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.95);
-      z-index: 10000;
-      display: none;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .video-overlay.active {
-      display: flex;
-    }
-
-    .video-overlay .overlay-iframe-wrap {
-      width: 100%;
-      height: 100%;
-      position: relative;
-    }
-
-    .video-overlay iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-    }
-
-    .video-overlay .close-overlay {
-      position: absolute;
-      top: 16px;
-      right: 16px;
-      z-index: 10001;
-      background: rgba(0,0,0,0.7);
-      border: 1px solid var(--cyan);
-      color: var(--cyan);
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      font-size: 24px;
-      line-height: 1;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    .video-overlay .close-overlay:hover {
-      background: rgba(34,225,255,0.2);
-      box-shadow: 0 0 20px rgba(34,225,255,0.4);
     }
 
     /* Lightbox overlay styling */
@@ -419,14 +268,10 @@
     </div>
   </div>
 
-  <!-- Video 1 -->
-  <div class="video-container portrait" data-video-id="1OwNCP39BCepYT9Wvmlmg9Bw9MoRYlqWa">
-    <div class="video-poster" tabindex="0" role="button" aria-label="Play video: Initial inspection">
-      <img src="https://drive.google.com/thumbnail?sz=w640&id=1OwNCP39BCepYT9Wvmlmg9Bw9MoRYlqWa" alt="Video thumbnail">
-      <div class="play-button">▶</div>
+  <div class="video-container portrait">
+      <iframe src="https://archive.org/embed/img-3396_202608/IMG_3396.mp4" 
+              allow="autoplay" allowfullscreen></iframe>
     </div>
-  </div>
-  <div class="video-fallback-link"><a href="https://drive.google.com/file/d/1OwNCP39BCepYT9Wvmlmg9Bw9MoRYlqWa/preview" target="_blank" rel="noopener">Open in Google Drive</a></div>
 
   <h2>Measurements</h2>
   <div class="intro">
@@ -434,40 +279,33 @@
         determine whether this was a motor-side or control-side fault. To do this, I took a current reading
         on the motor hot feed after the overload.
      </p>
-  </div>
+     </div>
 
-  <!-- Video 2 -->
-  <div class="video-container portrait" data-video-id="1VWZqieLrpivh2lzad7IXvKpJzqG168xj">
-    <div class="video-poster" tabindex="0" role="button" aria-label="Play video: Current measurement">
-      <img src="https://drive.google.com/thumbnail?sz=w640&id=1VWZqieLrpivh2lzad7IXvKpJzqG168xj" alt="Video thumbnail">
-      <div class="play-button">▶</div>
+       <div class="video-container portrait">
+      <iframe src="https://archive.org/embed/img-3396_202608/IMG_3398.mp4" 
+              allow="autoplay" allowfullscreen></iframe>
     </div>
-  </div>
-  <div class="video-fallback-link"><a href="https://drive.google.com/file/d/1VWZqieLrpivh2lzad7IXvKpJzqG168xj/preview" target="_blank" rel="noopener">Open in Google Drive</a></div>
-
-  <div class="intro">
+<div class="intro">
     <p>
         The motor was drawing ~45 amps consistently until the overload tripped. This implied
         to me that there was likely a bad start capacitor or loose connection.
         My next step was to open the terminal box for a visual inspection and some more measurements. 
     </p>
-  </div>
-
-  <h2>Findings</h2>
-  <div class="image-container">
-    <div class="image-row">
-      <div class="image-block">
-        <img src="burntspade.jpg" alt="Burnt Cap Spade" class="crop-uniform" onclick="openLightbox(this.src)">
-        <div class="caption">Failed connection a start cap. terminal</div>
-      </div>
-      <div class="image-block">
-        <img src="damagedsw.jpg" alt="Damaged Switch" class="crop-uniform" onclick="openLightbox(this.src)">
-        <div class="caption">Damaged insulation on cutoff switch wiring</div>
-      </div>
+</div>
+<h2>Findings</h2>
+<div class="image-container">
+  <div class="image-row">
+    <div class="image-block">
+      <img src="burntspade.jpg" alt="Burnt Cap Spade" class="crop-uniform" onclick="openLightbox(this.src)">
+      <div class="caption">Failed connection a start cap. terminal</div>
+    </div>
+    <div class="image-block">
+      <img src="damagedsw.jpg" alt="Damaged Switch" class="crop-uniform" onclick="openLightbox(this.src)">
+      <div class="caption">Damaged insulation on cutoff switch wiring</div>
     </div>
   </div>
-
-  <div class="intro">
+</div>
+<div class="intro">
     <p>
         Inspection of the motor starting components revealed catastrophic
         thermal damage to a start capacitor terminal and the capacitor itself. I also found that each one
@@ -478,38 +316,27 @@
          and soon the connection is ruined.
 
     </p>
-  </div>
-
-  <!-- Video 3 -->
-  <div class="video-container portrait" data-video-id="1oZWopdwSTThcLZrjNI8DyWDOETgltxg6">
-    <div class="video-poster" tabindex="0" role="button" aria-label="Play video: Damaged components">
-      <img src="https://drive.google.com/thumbnail?sz=w640&id=1oZWopdwSTThcLZrjNI8DyWDOETgltxg6" alt="Video thumbnail">
-      <div class="play-button">▶</div>
     </div>
-  </div>
-  <div class="video-fallback-link"><a href="https://drive.google.com/file/d/1oZWopdwSTThcLZrjNI8DyWDOETgltxg6/preview" target="_blank" rel="noopener">Open in Google Drive</a></div>
-
-  <div class="intro">
-    <p>
-        Before ordering parts and for the sake of thoroughness, I decided to quickly verify all the
-        control components were functioning properly as well. For such testing, I install an extension cord 
-        with a known-good load of equivalent operating current to the original equipment. In this case I used
-        a 10 amp heat gun. Testing revealed no control issues under load.
-    </p>
-  </div>
-
-  <h2>Verifying the Repair</h2>
-
-  <!-- Video 4 -->
-  <div class="video-container portrait" data-video-id="1J2qV7Hs2PIafwsLuOS1jTsZN9TUIiDuw">
-    <div class="video-poster" tabindex="0" role="button" aria-label="Play video: Verification">
-      <img src="https://drive.google.com/thumbnail?sz=w640&id=1J2qV7Hs2PIafwsLuOS1jTsZN9TUIiDuw" alt="Video thumbnail">
-      <div class="play-button">▶</div>
+    <div class="video-container portrait">
+      <iframe src="https://archive.org/embed/img-3396_202608/IMG_3401.mp4" 
+              allow="autoplay" allowfullscreen></iframe>
     </div>
-  </div>
-  <div class="video-fallback-link"><a href="https://drive.google.com/file/d/1J2qV7Hs2PIafwsLuOS1jTsZN9TUIiDuw/preview" target="_blank" rel="noopener">Open in Google Drive</a></div>
+    <div class="intro">
+        <p>
+            Before ordering parts and for the sake of thoroughness, I decided to quickly verify all the
+            control components were functioning properly as well. For such testing, I install an extension cord 
+            with a known-good load of equivalent operating current to the original equipment. In this case I used
+            a 10 amp heat gun. Testing revealed no control issues under load.
+        
+        </p>
+    </div>
 
-  <div class="intro">
+<h2>Verifying the Repair</h2>
+<div class="video-container portrait">
+      <iframe src="https://archive.org/embed/img-3396_202608/IMG_3568.mp4" 
+              allow="autoplay" allowfullscreen></iframe>
+    </div>
+<div class="intro">
     <p>
        I replaced both capacitors and the modular auxilliary winding cutoff. While it would have been possible
        to apply heat shrink or liquid electrical tape and reterminate the module wires, the circuitry was potted and 
@@ -519,13 +346,7 @@
     <p>
         I verified the motor starts, runs, and that the cutoff switch engages once the motor reaches synchronous speed.
     </p>
-  </div>
-
-  <!-- Fullscreen video overlay for mobile -->
-  <div id="video-overlay" class="video-overlay">
-    <button class="close-overlay" id="close-overlay-btn" aria-label="Close video">✕</button>
-    <div class="overlay-iframe-wrap" id="overlay-iframe-wrap"></div>
-  </div>
+</div>
 
   <!-- Lightbox -->
   <div id="lightbox" class="lightbox-overlay" onclick="closeLightbox()">
@@ -534,12 +355,12 @@
   </div>
 
   <script>
-    // ---------- Lightbox for images ----------
     function openLightbox(src) {
       const img = document.getElementById('lightbox-img');
       const video = document.getElementById('lightbox-video');
       const overlay = document.getElementById('lightbox');
 
+      // Simple type check: show video only for direct .mp4 links
       if (src.toLowerCase().endsWith('.mp4')) {
         img.style.display = 'none';
         video.style.display = 'block';
@@ -560,109 +381,6 @@
       video.pause();
       video.src = "";
     }
-
-    // ---------- Mobile detection ----------
-    const isMobile = () => {
-      return (
-        /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|Mobile/i.test(navigator.userAgent) ||
-        window.innerWidth <= 768
-      );
-    };
-
-    // ---------- Video overlay handling ----------
-    const overlay = document.getElementById('video-overlay');
-    const overlayIframeWrap = document.getElementById('overlay-iframe-wrap');
-    const closeOverlayBtn = document.getElementById('close-overlay-btn');
-
-    function openVideoOverlay(fileId) {
-      const previewUrl = `https://drive.google.com/file/d/${fileId}/preview`;
-
-      // Clear previous iframe
-      overlayIframeWrap.innerHTML = '';
-
-      const iframe = document.createElement('iframe');
-      iframe.src = previewUrl;
-      iframe.allow = 'autoplay; fullscreen; encrypted-media; picture-in-picture';
-      iframe.allowFullscreen = true;
-      iframe.title = 'Google Drive video player';
-      overlayIframeWrap.appendChild(iframe);
-
-      overlay.classList.add('active');
-
-      // NOTE: We intentionally DO NOT call requestFullscreen here.
-      // Calling requestFullscreen on the overlay caused the browser to add its own
-      // native video controls on top of Drive's player, resulting in duplicate
-      // scrubbers and pause buttons. The overlay already fills the viewport,
-      // so the user still gets a full-screen experience.
-    }
-
-    function closeVideoOverlay() {
-      overlay.classList.remove('active');
-      overlayIframeWrap.innerHTML = ''; // remove iframe to stop playback
-
-      // Exit fullscreen if for some reason the user used the iframe's own fullscreen button
-      if (document.fullscreenElement) {
-        document.exitFullscreen().catch(() => {});
-      } else if (document.webkitFullscreenElement) {
-        document.webkitExitFullscreen();
-      }
-    }
-
-    closeOverlayBtn.addEventListener('click', closeVideoOverlay);
-
-    // Also close overlay if user presses Escape key
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && overlay.classList.contains('active')) {
-        closeVideoOverlay();
-      }
-    });
-
-    // Prevent closing overlay when clicking inside iframe (but allow outside)
-    overlay.addEventListener('click', (e) => {
-      if (e.target === overlay) {
-        closeVideoOverlay();
-      }
-    });
-
-    // ---------- Click-to-play for Drive videos ----------
-    document.querySelectorAll('.video-container[data-video-id]').forEach(container => {
-      const fileId = container.dataset.videoId;
-      const poster = container.querySelector('.video-poster');
-      const previewUrl = `https://drive.google.com/file/d/${fileId}/preview`;
-
-      const handlePlay = () => {
-        if (isMobile()) {
-          // Use the fullscreen overlay (stays on page)
-          openVideoOverlay(fileId);
-          return;
-        }
-
-        // Desktop: load iframe inline
-        if (container.classList.contains('playing')) return;
-        container.classList.add('playing');
-
-        const iframe = document.createElement('iframe');
-        iframe.src = previewUrl;
-        iframe.allow = 'autoplay; fullscreen; encrypted-media; picture-in-picture';
-        iframe.allowFullscreen = true;
-        iframe.loading = 'lazy';
-        iframe.title = 'Google Drive video player';
-        iframe.style.width = '100%';
-        iframe.style.height = '100%';
-        iframe.style.border = 'none';
-
-        container.appendChild(iframe);
-      };
-
-      // Click or keyboard activation on poster
-      poster.addEventListener('click', handlePlay);
-      poster.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          handlePlay();
-        }
-      });
-    });
   </script>
 </body>
 </html>
