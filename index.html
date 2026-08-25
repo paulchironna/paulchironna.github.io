@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Paul Chironna — Electronics Portfolio</title>
+<title>Paul Chironna — Technical Portfolio</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="Documented case studies in control system design, bench test equipment repair, and component-level diagnostics across industrial, electromechanical, and embedded systems.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -311,7 +311,7 @@
       <span class="node"></span>
       <div class="tag">Industrial Controls · PLC</div>
       <h2>PLC Motor Starter — Design &amp; Ladder Logic</h2>
-      <p>Designed and programmed a PLC motor starter with E-Stop and thermal overload contacts hardwired in series with the contactor coil, backed by latch logic that blocks restart on reset. Covers schematic development, I/O assignment, and run/fault status indication verified on live hardware.</p>
+      <p>Designed and programmed a simple PLC controlled latching motor starter circuit. Covers schematic development, I/O assignment, and run/fault status indication verified on live hardware.</p>
       <span class="open">View case study</span>
     </a>
 
@@ -319,23 +319,23 @@
       <span class="node"></span>
       <div class="tag">Test Equipment Repair</div>
       <h2>Rigol DS1054Z — Four-Channel Input Failure</h2>
-      <p>Signal injection at the BNC center pin isolated open series resistors in the input path on all four channels. Repaired with 82Ω 1% SMD rework and verified against a 1 kHz square wave.</p>
+      <p>Benchtop oscilloscope unable to capture a waveform on all 4 channels. Full diagnosis and rework process documentation.</p>
       <span class="open">View case study</span>
     </a>
 
     <a class="tile" href="FloorGrinder.html">
       <span class="node"></span>
-      <div class="tag">Motor Control · Field Service</div>
+      <div class="tag">Motor Diagnostics · Field Service</div>
       <h2>Husqvarna PG280 — Motor Overload Fault</h2>
-      <p>A ~45 A current reading downstream of the overload isolated a tripping 110V CSCR motor to the motor side rather than the controls. Teardown found thermal damage at a start capacitor terminal; replaced the capacitors and cutoff module, re-terminated the harness, and confirmed the cutoff engaged at speed.</p>
+      <p>Diagnosing a surface prepping machine that presented with a no-start and tripping thermal overload condiion.</p>
       <span class="open">View case study</span>
     </a>
 
-    <a class="tile" href="GroundedMotorDiagnosis.html">
+    <a class="tile" href="GroundedMotor.html">
       <span class="node"></span>
       <div class="tag">Motor Diagnostics · Field Service</div>
-      <h2>Masonry Saw Motor — Insulation Fault Isolation</h2>
-      <p>Insulation resistance testing on a no-start motor traced the leakage to the power cord rather than the windings, avoiding an unnecessary motor replacement. Follow-up diagnosis uncovered two independent faults — a failed-open capacitor and a worn bearing — resolved and verified back in service.</p>
+      <h2>Masonry Saw Motor — Insulation Testing and Diagnosis</h2>
+      <p>Insulation resistance testing on a no-start motor unveiled leakage to ground prompting further diagnostic testing. Follow-up diagnosis uncovered multiple faults needing repair before returning to service.</p>
       <span class="open">View case study</span>
     </a>
 
@@ -343,7 +343,7 @@
       <span class="node"></span>
       <div class="tag">Controls · Bench Test</div>
       <h2>DSE 73110 MkII — No Starter Output</h2>
-      <p>Recreated a no-crank generator controller on the bench from its wiring diagram and reproduced the missing starter output. Traced the fault upstream to a cold solder joint on the relay output pin, reflowed it, and verified the circuit under load.</p>
+      <p>Diagnosed and repaired a failed generator controller circuit board that would not output voltage to the starter solenoid.</p>
       <span class="open">View case study</span>
     </a>
 
@@ -351,7 +351,7 @@
       <span class="node"></span>
       <div class="tag">Test Equipment Repair</div>
       <h2>Agilent U1602B — Intermittent Signal Integrity</h2>
-      <p>Induced an intermittent signal integrity fault on demand with a controlled mechanical stress test against a known-good reference. Microscope inspection confirmed cracked BNC solder joints; reworked both channels, recalibrated, and re-verified.</p>
+      <p>Purchased a handheld oscilloscope for repair that had issues with waveforms dropping out during use. Full diagnosis, rework, and validation performed.</p>
       <span class="open">View case study</span>
     </a>
 
@@ -359,7 +359,7 @@
       <span class="node"></span>
       <div class="tag">Power Electronics</div>
       <h2>12V Battery Maintainer — Board-Level Rebuild</h2>
-      <p>Reverse-engineered a full schematic from an undocumented board to calculate the replacement value for a failed Zener series resistor feeding op-amp Vcc. Repaired a lifted pad and trace, replaced a shorted diode and out-of-spec capacitor, then verified the regulation threshold on a constant-current bench supply.</p>
+      <p>Reverse-engineered a full schematic from an undocumented board to bench repair a failed battery maintainer.</p>
       <span class="open">View case study</span>
     </a>
 
@@ -374,7 +374,7 @@
   </div>
 
   <footer>
-    <span>Paul Chironna — Electronics Portfolio</span>
+    <span>Paul Chironna — Technical Portfolio</span>
     <span>Hosted on GitHub Pages</span>
   </footer>
 
