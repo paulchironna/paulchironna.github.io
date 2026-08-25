@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Grounded Motor Diagnosis</title>
+  <title>Grounded Motor Case Study</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -347,7 +347,8 @@
 
   <div class="intro">
     <p>
-      The instrument injects a test voltage across the leads and monitors current to determine the resistance. This is similar to normal resistance tests, however, a Megger test occurs at hundreds or even thousands of volts in order to stress test potentially weak insulation in a way that mimics real transient power spikes in application. The Fluke 1587FC I use has a current limit of 1mA, so if the circuit under test has enough leakage to pass more than 1mA, the meter will drop the voltage until current is back below the threshold.</p><p>L1 and L2 quickly hit the 1mA limit well before 500V, measuring 0.1 and 0.2 Megohms to ground respectively. Anything less than 10 Megohms is typically too low and a reading less than 1 Megohm is severe degradation. This indicaties significant leakage to ground through cord wiring, terminal leads, or the windings. The next step was to test directly at the
+      The instrument injects a test voltage across the leads and monitors current to determine the resistance. This is similar to normal resistance tests; however, a Megger test occurs at hundreds or even thousands of volts in order to stress test potentially weak insulation in a way that mimics real transient power spikes in application. The Fluke 1587FC I use has a current limit of 1mA, so if the circuit under test has enough leakage to pass more than 1mA, the meter will drop the voltage until current is back below the threshold.</p>
+    <p>L1 and L2 quickly hit the 1mA limit well before 500V, measuring 0.1 and 0.2 Megohms to ground respectively. Anything less than 10 Megohms is typically too low and a reading less than 1 Megohm is severe degradation. This indicates significant leakage to ground through cord wiring, terminal leads, or the windings. The next step was to test directly at the
 motor leads inside the terminal box to eliminate the incoming power cord as a potential root cause.
     </p>
   </div>
@@ -371,11 +372,11 @@ motor leads inside the terminal box to eliminate the incoming power cord as a po
 
   <div class="intro">
     <p>
-      Megger tests of the motor leads at the terminal box resulted in readings of > 550 Megohms to ground, condemning the power cord as the source of the leakage. If I hadn't isolated further, I may have
-unnecessarily replaced the motor under the pretense that the winding itself was grounded.</p>
-<p> Degraded insulation on the cord was a significant finding that likely prevented a future failure, however, it was certainly not causing the initial complaint of humming and not starting. 
- 
- </div>
+      Megger tests of the motor leads at the terminal box resulted in readings of &gt; 550 Megohms to ground, condemning the power cord as the source of the leakage. If I hadn't isolated further, I may have
+unnecessarily replaced the motor under the assumption that the winding itself was grounded.</p>
+    <p>Degraded insulation on the cord was a significant finding that likely prevented a future failure; however, it was certainly not causing the initial complaint of humming and not starting.
+    </p>
+  </div>
 
 
   <!-- ============================================================
@@ -388,7 +389,7 @@ unnecessarily replaced the motor under the pretense that the winding itself was 
       <div class="image-block">
         <img src="https://github.com/paulchironna/paulchironna.github.io/releases/download/media/deadcapacitor.jpg"
              alt="Failed capacitor" class="crop-uniform" onclick="openLightbox(this.src)">
-        <div class="caption">Shorted capacitor measuring 0uF</div>
+        <div class="caption">Failed open capacitor measuring 0uF</div>
       </div>
     </div>
   </div>
@@ -396,7 +397,7 @@ unnecessarily replaced the motor under the pretense that the winding itself was 
   <div class="intro">
     <p>
     I used a power resistor to slowly discharge the start and run capacitors, then verified charge was no longer present with my meter. Capacitance measurement at the start capacitor revealed 0uF, meaning it
-had shorted and was causing the no-start condition. The run capacitor measured in spec at 40uF but was in poor physical condition. I decided to replace both capacitors and retest.
+had failed open and was causing the no-start condition. The run capacitor measured in spec at 40uF but was in poor physical condition. I decided to replace both capacitors and retest.
     </p>
   </div>
 
@@ -421,7 +422,6 @@ had shorted and was causing the no-start condition. The run capacitor measured i
     <p>
       The new capacitors resolved the no-start condition. Once running, I observed a high pitched noise coming from the drive end behind the sheave. Teardown and inspection revealed a severely worn output
 shaft bearing which would need to be replaced before returning to service. 
- 
     </p>
   </div>
 
@@ -458,6 +458,7 @@ with no further issues.
   <div class="intro">
     <p>
       This case was a cautionary tale in test methodology during diagnostics. No technician or customer would have argued with replacing a motor that 'hums but doesn't start' with a bad Megger reading. In this case, taking the extra time to assess how I was performing my test and what confounding variables might affect the reading got the customer their saw back the next day. If I hadn't proceeded, the saw could have been down for weeks to months waiting for a new motor and it only took me another 5 minutes to perform the definitive test that put me on the right path.
+    </p>
   </div>
 
 
