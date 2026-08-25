@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Grounded Motor Diagnosis</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&family=Barlow:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --void:#04070a;
+      --panel:#081119;
+      --panel-hi:#0d1c26;
+      --trace:#123645;
+      --cyan:#22e1ff;
+      --cyan-dim:#0b7f97;
+      --text:#bfd9e2;
+      --text-dim:#6d8b98;
+    }
+
+    *{box-sizing:border-box;}
+
+    body {
+      font-family:'Barlow',sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(1100px 620px at 50% -8%, #0b2a36 0%, rgba(11,42,54,0) 62%),
+        radial-gradient(760px 520px at 50% 108%, #08202b 0%, rgba(8,32,43,0) 60%),
+        var(--void);
+      margin:0;
+      padding: 24px 20px 90px;
+      text-align: center;
+      min-height:100vh;
+      overflow-x:hidden;
+    }
+
+    /* circuit grid backdrop */
+    body::before{
+      content:"";
+      position:fixed;
+      inset:0;
+      background-image:
+        linear-gradient(rgba(34,225,255,.055) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(34,225,255,.055) 1px, transparent 1px),
+        linear-gradient(rgba(34,225,255,.028) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(34,225,255,.028) 1px, transparent 1px);
+      background-size:180px 180px,180px 180px,36px 36px,36px 36px;
+      mask-image:radial-gradient(ellipse 80% 70% at 50% 20%, #000 30%, transparent 100%);
+      -webkit-mask-image:radial-gradient(ellipse 80% 70% at 50% 20%, #000 30%, transparent 100%);
+      pointer-events:none;
+      z-index:0;
+    }
+
+    body > *{position:relative; z-index:1;}
+
+    a.back {
+      display: inline-block;
+      margin-bottom: 20px;
+      font-family:'IBM Plex Mono',monospace;
+      font-size:11px;
+      letter-spacing:.2em;
+      text-transform:uppercase;
+      color: var(--cyan);
+      text-decoration: none;
+      border:1px solid var(--trace);
+      padding:8px 14px;
+      transition:border-color .2s ease, box-shadow .2s ease;
+    }
+    a.back:hover, a.back:focus-visible{
+      border-color:rgba(34,225,255,.6);
+      box-shadow:0 0 14px rgba(34,225,255,.25);
+      outline:none;
+    }
+
+    h1 {
+      font-family:'Chakra Petch',sans-serif;
+      font-weight:700;
+      font-size:clamp(26px,5vw,44px);
+      letter-spacing:.1em;
+      text-transform:uppercase;
+      color:#eaffff;
+      text-shadow:0 0 18px rgba(34,225,255,.5), 0 0 54px rgba(34,225,255,.2);
+      margin-bottom: 10px;
+      margin-top:14px;
+    }
+
+    /* one-line description under the title */
+    h2.subheader {
+      font-family:'Barlow',sans-serif;
+      font-weight:400;
+      font-size:16px;
+      line-height:1.6;
+      color:var(--text-dim);
+      max-width:700px;
+      margin:0 auto 30px;
+      display:block;
+      letter-spacing:normal;
+      text-transform:none;
+      text-align:center;
+    }
+    h2.subheader::after{content:none;}
+
+    /* section headings */
+    h2 {
+      margin: 56px auto 22px;
+      max-width:700px;
+      font-family:'Chakra Petch',sans-serif;
+      font-weight:600;
+      font-size: 20px;
+      letter-spacing:.22em;
+      text-transform:uppercase;
+      color:var(--cyan);
+      text-align:left;
+      display:flex;
+      align-items:center;
+      gap:16px;
+    }
+    h2::after{
+      content:"";
+      flex:1;
+      height:1px;
+      background:linear-gradient(90deg,var(--cyan),rgba(34,225,255,0));
+    }
+
+    .intro {
+      max-width: 700px;
+      margin: 0 auto 30px;
+      text-align: left;
+      font-size: 16px;
+      line-height: 1.75;
+      color:var(--text-dim);
+    }
+    .intro p{margin:0 0 16px;}
+    .intro p:last-child{margin-bottom:0;}
+
+    .image-container {
+      max-width: 50%;
+      margin: 0 auto 40px;
+    }
+
+    .image-row {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .image-row + .image-row{ margin-top: 15px; }
+
+    .image-row .image-block {
+      flex: 1 1 0;
+    }
+
+    .image-single img,
+    .image-row img {
+      width: 100%;
+      display:block;
+      border: 1px solid var(--trace);
+      background:var(--panel);
+      cursor: pointer;
+      transition: 0.2s ease;
+    }
+
+    .image-row img:hover,
+    .image-single img:hover {
+      transform: scale(1.02);
+      border-color:rgba(34,225,255,.55);
+      box-shadow:0 0 22px rgba(34,225,255,.28);
+    }
+
+    .crop-uniform {
+      height: 440px !important;
+      object-fit: cover !important;
+      object-position: center center !important;
+    }
+
+    /* taller / shorter box hook — change the value here to resize every
+       image using .crop-uniform at once. */
+    .cover-shot {
+      height: 440px !important;
+    }
+
+    /* use on schematics / diagrams so they aren't cropped to fill */
+    .diagram {
+      object-fit: contain !important;
+      background:#081119;
+      padding:6px;
+    }
+
+    .caption {
+      margin-top: 8px;
+      font-family:'IBM Plex Mono',monospace;
+      font-size:11px;
+      letter-spacing:.1em;
+      line-height:1.5;
+      color:var(--cyan-dim);
+      font-style: normal;
+      text-align:center;
+    }
+
+    /* ---------- video ----------
+       Native <video> tags sourced from Dropbox direct links (share link with
+       ?dl=0 changed to ?raw=1). No iframe, no third-party chrome — this is
+       the same element already used successfully elsewhere on the site. */
+    .video-container {
+      width: 70%;
+      max-width: 900px;
+      margin: 20px auto;
+      aspect-ratio: 16/9;
+      background: #000;
+      border-radius: 8px;
+      overflow: hidden;
+      box-sizing: content-box;
+    }
+
+    .video-container video {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+      object-fit: contain;
+      background: #000;
+    }
+
+    /* portrait (phone-shot, 9:16) clips — add this class alongside
+       .video-container so the frame matches the footage instead of
+       letterboxing it inside a 16:9 box. */
+    .video-container.portrait {
+      aspect-ratio: 9 / 16;
+      height: min(70vh, 620px);
+      width: auto;
+      max-width: 100%;
+      min-height: 0;
+    }
+
+    .video-row {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin: 20px auto;
+      max-width: 900px;
+    }
+
+    .video-row .video-container {
+      flex: 1 1 48%;
+      width: auto;
+      margin: 0;
+      aspect-ratio: 16/9;
+    }
+
+    /* portrait clips inside a side-by-side row need to be driven by width,
+       not height — a height-driven box collapses to zero width in a flex
+       row. Keep both rules; only .portrait applies at a time. */
+    .video-row .video-container.portrait {
+      flex: 0 1 300px;
+      width: auto;
+      height: auto;
+      max-width: 100%;
+      aspect-ratio: 9 / 16;
+    }
+
+    /* Lightbox overlay */
+    .lightbox-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(2,6,9,0.92);
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+
+    .lightbox-overlay img,
+    .lightbox-overlay video {
+      max-width: 90%;
+      max-height: 90%;
+      border:1px solid rgba(34,225,255,.45);
+      box-shadow: 0 0 60px rgba(34,225,255,.25);
+    }
+
+    @media (max-width:760px){
+      .image-container{max-width:92%;}
+      .video-container{width:100%;}
+      .video-row .video-container.portrait{ flex:0 1 100%; max-width:300px; }
+      h2{max-width:92%;}
+      h2.subheader{max-width:100%;}
+    }
+
+    @media (prefers-reduced-motion:reduce){
+      *{transition:none !important;}
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============================================================
+       BANNER  —  title + one-line description
+       ============================================================ -->
+  <a class="back" href="index.html">← Back to Portfolio</a>
+  <h1>Grounded motor case study</h1>
+  <h2 class="subheader">Using a Fluke Insulation Multimeter to diagnose an electric masonry saw motor that would not start</h2>
+
+
+  <!-- ============================================================
+       COVER IMAGE  —  full-width lead photo
+       ============================================================ -->
+  <div class="image-container">
+    <div class="image-row">
+      <div class="image-block">
+        <img src="REPLACE-cover.jpg" alt="Project overview" class="crop-uniform cover-shot" onclick="openLightbox(this.src)">
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ============================================================
+       INTRODUCTION
+       ============================================================ -->
+  <div class="intro">
+    <p>
+     A 120V brick saw presented with an operator complaint of a 'hum and no start'. They stated that they tried multiple extension cords and power sources to no avail. My first plan for a complaint like this is to perform a basic winding resistance check with my meter, and then perform an insulation (Megger) test to ground to verify the motor is safe to energize. </p> <p>It is critical to discharge and remove capacitors from single phase motors before performing a Megger test in order to protect myself and prevent the high test voltage from damaging the capacitor. I perform the insulation tests at 2x nominal operating voltage as a rule of thumb although this can vary depending on the equipment and its insulation ratings. Although this is a 120V motor, its wiring is rated for 600V; so I tested at 500VDC to start. A lot of techs will often test directly at the terminal box rather from the cord or field wiring, and this case is a good example of how doing so may lead to a misdiagnosis.
+   
+  </div>
+
+
+  <!-- ============================================================
+       SECTION TYPE A  —  heading + image + paragraph
+       ============================================================ -->
+  <h2>Megger Results</h2>
+
+  <div class="image-container">
+    <div class="image-row">
+      <div class="image-block">
+        <img src="REPLACE-image.jpg" alt="Describe the image" class="crop-uniform" onclick="openLightbox(this.src)">
+        <div class="caption">Caption for this image</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="intro">
+    <p>
+      A Megger test to ground at 500VDC on both legs showed substantially low readings. 
+    </p>
+  </div>
+
+
+  <!-- ============================================================
+       SECTION TYPE B  —  heading + paragraph + video (Dropbox)
+       ============================================================ -->
+  <h2>Section Heading</h2>
+  <div class="intro">
+    <p>
+      Body paragraph goes here. Set up what the viewer is about to watch so the video has context
+      before it plays.
+    </p>
+  </div>
+
+  <div class="video-container">
+    <video controls playsinline preload="metadata"
+           src="https://www.dropbox.com/scl/fi/REPLACE/REPLACE.mp4?rlkey=REPLACE&raw=1"></video>
+  </div>
+  <div class="caption">Caption for this video</div>
+
+
+  <!-- ============================================================
+       COPY-PASTE BLOCKS  —  everything below is commented out.
+       Duplicate what you need and move it up into the page.
+       ============================================================ -->
+
+  <!-- ---- HEADING ----
+  <h2>Section Heading</h2>
+  -->
+
+  <!-- ---- PARAGRAPH ----
+  <div class="intro">
+    <p>Text.</p>
+  </div>
+  -->
+
+  <!-- ---- ONE IMAGE + CAPTION ----
+  <div class="image-container">
+    <div class="image-row">
+      <div class="image-block">
+        <img src="FILE.jpg" alt="Alt text" class="crop-uniform" onclick="openLightbox(this.src)">
+        <div class="caption">Caption</div>
+      </div>
+    </div>
+  </div>
+  -->
+
+  <!-- ---- TWO IMAGES SIDE BY SIDE ----
+  <div class="image-container">
+    <div class="image-row">
+      <div class="image-block">
+        <img src="LEFT.jpg" alt="Alt text" class="crop-uniform" onclick="openLightbox(this.src)">
+        <div class="caption">Left caption</div>
+      </div>
+      <div class="image-block">
+        <img src="RIGHT.jpg" alt="Alt text" class="crop-uniform" onclick="openLightbox(this.src)">
+        <div class="caption">Right caption</div>
+      </div>
+    </div>
+  </div>
+  -->
+
+  <!-- ---- TALL COVER PHOTO ----
+       Add .cover-shot alongside .crop-uniform for a 440px-tall box.
+       Change the height in .crop-uniform to resize every image at once.
+  <div class="image-container">
+    <div class="image-row">
+      <div class="image-block">
+        <img src="FILE.jpg" alt="Alt text" class="crop-uniform cover-shot" onclick="openLightbox(this.src)">
+      </div>
+    </div>
+  </div>
+  -->
+
+  <!-- ---- SCHEMATIC / DIAGRAM (not cropped) ----
+       Add the .diagram class so the whole drawing stays visible.
+  <div class="image-container">
+    <div class="image-row">
+      <div class="image-block">
+        <img src="SCHEMATIC.png" alt="Alt text" class="crop-uniform diagram" onclick="openLightbox(this.src)">
+        <div class="caption">Caption</div>
+      </div>
+    </div>
+  </div>
+  -->
+
+  <!-- ---- ONE VIDEO (LANDSCAPE, DROPBOX) ----
+       1. Upload the file to Dropbox and copy its share link.
+       2. Change the ending from ?dl=0 to ?raw=1 — this makes Dropbox
+          serve the file directly instead of its own preview page.
+       3. Drop the session token (&st=xxxxxxxx) if present; keep &rlkey=.
+       4. Test the raw link by itself in an incognito window before
+          publishing — it should play or download, not open a Dropbox page.
+  <div class="video-container">
+    <video controls playsinline preload="metadata"
+           src="https://www.dropbox.com/scl/fi/FILE/NAME.mp4?rlkey=KEY&raw=1"></video>
+  </div>
+  <div class="caption">Caption</div>
+  -->
+
+  <!-- ---- ONE VIDEO (PORTRAIT / PHONE-SHOT, DROPBOX) ----
+       Add .portrait alongside .video-container so the frame matches a
+       9:16 clip instead of letterboxing it inside a 16:9 box.
+  <div class="video-container portrait">
+    <video controls playsinline preload="metadata"
+           src="https://www.dropbox.com/scl/fi/FILE/NAME.mp4?rlkey=KEY&raw=1"></video>
+  </div>
+  <div class="caption">Caption</div>
+  -->
+
+  <!-- ---- TWO VIDEOS SIDE BY SIDE (DROPBOX) ----
+       Add .portrait to each .video-container only if that clip is 9:16.
+       Mixing one landscape and one portrait in the same row is fine —
+       each container sizes itself independently.
+  <div class="video-row">
+    <div class="video-container">
+      <video controls playsinline preload="metadata"
+             src="https://www.dropbox.com/scl/fi/FILE1/NAME1.mp4?rlkey=KEY1&raw=1"></video>
+    </div>
+    <div class="video-container">
+      <video controls playsinline preload="metadata"
+             src="https://www.dropbox.com/scl/fi/FILE2/NAME2.mp4?rlkey=KEY2&raw=1"></video>
+    </div>
+  </div>
+  <div class="caption">Left video (left) and right video (right)</div>
+  -->
+
+  <!-- ---- LADDER LOGIC / MULTI-PAGE SLIDE DECK ----
+       Not included in this template — it's a larger self-contained
+       component (prev/next, zoom, pan, keyboard nav). If a project needs
+       it, copy the "LADDER LOGIC SLIDE DECK" block, its CSS, and its
+       script from tankfill.html rather than rebuilding it here.
+  -->
+
+
+  <!-- Lightbox -->
+  <div id="lightbox" class="lightbox-overlay" onclick="closeLightbox()">
+    <img id="lightbox-img" src="" alt="">
+    <video id="lightbox-video" controls style="display:none;"></video>
+  </div>
+
+  <script>
+    function openLightbox(src) {
+      const img = document.getElementById('lightbox-img');
+      const video = document.getElementById('lightbox-video');
+      const overlay = document.getElementById('lightbox');
+
+      if (src.toLowerCase().endsWith('.mp4') || src.toLowerCase().endsWith('.mov')) {
+        img.style.display = 'none';
+        video.style.display = 'block';
+        video.src = src;
+      } else {
+        video.style.display = 'none';
+        video.pause();
+        img.style.display = 'block';
+        img.src = src;
+      }
+      overlay.style.display = 'flex';
+    }
+
+    function closeLightbox() {
+      const overlay = document.getElementById('lightbox');
+      const video = document.getElementById('lightbox-video');
+      overlay.style.display = 'none';
+      video.pause();
+      video.src = "";
+    }
+  </script>
+</body>
+</html>
