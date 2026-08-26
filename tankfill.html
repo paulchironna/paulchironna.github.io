@@ -238,7 +238,7 @@
     }
 
     table.faults tbody tr:last-child td { border-bottom: 0; }
-    table.faults tbody tr:nth-child(even) { background: rgba(34,225,255,.025); }
+    table.faults tbody tr:nth-child(even):not(.master) { background: rgba(34,225,255,.025); }
 
     /* fault name column reads as a label, not body copy */
     table.faults td.name {
@@ -254,6 +254,17 @@
       color: var(--cyan-dim);
       white-space: nowrap;
     }
+
+    /* the master permissive is a summary of the rows above it, not another
+       fault — separated by a heavier rule and tinted to read as a total */
+    table.faults tr.master td {
+      border-top: 1px solid rgba(34,225,255,.35);
+      background: rgba(34,225,255,.06);
+      color: var(--text);
+      padding-top: 14px;
+      padding-bottom: 14px;
+    }
+    table.faults tr.master td.name { color: var(--cyan); }
 
     table.faults tr.deferred td {
       color: var(--cyan-dim);
@@ -594,12 +605,12 @@
         <tr>
           <td class="name">CH1 Open Circuit</td>
           <td>Scaled input <code>DF1</code> reads below −1%, indicating loop current under 4&nbsp;mA</td>
-          <td>Automatic once <code>DF1</code> returns to range for ></td>
+          <td>Automatic once <code>DF1</code> returns to range</td>
         </tr>
         <tr>
           <td class="name">E-Stop Pressed</td>
           <td><code>XIO X001</code> — auxiliary E-Stop contact opens</td>
-          <td>Pull out E-Stop and Cycle HOA through off</td>
+          <td>Pull out E-Stop and cycle HOA through off</td>
         </tr>
         <tr>
           <td class="name">Thermal Overload Tripped</td>
@@ -626,6 +637,11 @@
           <td>Both operator modes selected at the same time, aimed toward alternative control methods in future versions</td>
           <td>—</td>
         </tr>
+        <tr class="master">
+          <td class="name">Master Fault Permissive</td>
+          <td>Any active fault parallels into the Master Fault Permissive which energizes the auxiliary interrupt relay and unlatches the contactor coil enable bit.</td>
+          <td>Every fault cleared and HOA cycled through off before operation can continue</td>
+        </tr>
       </tbody>
     </table>
   </div>
@@ -636,19 +652,25 @@
 
   <div class="intro">
     <p>
-      The last two rows are rungs I added while working through the fault logic but aren't published to the current running version of the program. Both faults are staged to be deployed once the logic and hardware develop in a way
-      that allows me to better integrate them without bugs. One future fix I identified while reviewing is that as the open circuit fault is written, it has no hysteresis. A loose connection that
-      chatters the input would flood the HMI with open circuit alarms. Adding a short timer and latching with reset logic like I did with the short circuit timer would make the logic around the fault much more robust despite it 
-      working correctly in a coarse sense. 
+      The last two rows are rungs I added while working through the fault logic but aren't published to the current running
+      version of the program. Both faults are staged to be deployed once the logic and hardware develop in a way that allows me
+      to better integrate them without bugs. One future fix I identified while reviewing is that as the open circuit fault is written,
+      it has no hysteresis. A loose connection that chatters the input would flood the HMI with open circuit alarms. Adding a
+      short timer and latching with reset logic like I did with the short circuit timer would make the logic around the fault
+      much more robust despite it working correctly in a coarse sense.
     </p>
   </div>
 
   <div class="intro">
     <p>
-      Each individual fault has its own bit that turns on if the conditions in the table are met. The status of these bits are packed into
-      a register which is copied and sent to the HMI each scan. The individual fault bits are paralleled into a master fault bit
-      that energizes the auxiliary relay coil and resets the contactor coil output latch if active. Setting up the communication to send the information between PLC and HMI was straightforward but required some research to convert addressing formats between programs.
-      Once addressing was characterized, all that was needed was to declare the COM port, match baud rate, parity, and stop bit settings to allow the two devices to talk over the network.
+      Each individual fault has its own bit that turns on if the conditions in the table are met. The status of these bits are
+      packed into a register which is copied and sent to the HMI each scan. The individual fault bits are paralleled into a
+      master fault bit that energizes the auxiliary relay coil and resets the contactor coil output latch if active.
+    </p>
+    <p>
+      Setting up the communication to send the information between PLC and HMI was straightforward but required some research to
+      convert addressing formats between programs. Once addressing was characterized, all that was needed was to declare the COM
+      port, match baud rate, parity, and stop bit settings to allow the two devices to talk over the network.
     </p>
   </div>
 
@@ -930,4 +952,4 @@
     }
   </script>
 </body>
-</html>
+</html>per
