@@ -200,6 +200,78 @@
       text-align:center;
     }
 
+    /* ---------- fault table ---------- */
+    .table-wrap {
+      max-width: 900px;
+      margin: 0 auto 34px;
+      overflow-x: auto;              /* narrow screens scroll instead of squashing */
+      border: 1px solid var(--trace);
+      background: rgba(8,17,25,.55);
+    }
+
+    table.faults {
+      width: 100%;
+      min-width: 620px;             /* below this the columns stop being readable */
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 14px;
+    }
+
+    table.faults thead th {
+      font-family:'IBM Plex Mono',monospace;
+      font-size: 10.5px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      background: var(--panel-hi);
+      border-bottom: 1px solid rgba(34,225,255,.35);
+      padding: 11px 14px;
+      white-space: nowrap;
+    }
+
+    table.faults td {
+      padding: 12px 14px;
+      vertical-align: top;
+      line-height: 1.6;
+      color: var(--text-dim);
+      border-bottom: 1px solid var(--trace);
+    }
+
+    table.faults tbody tr:last-child td { border-bottom: 0; }
+    table.faults tbody tr:nth-child(even) { background: rgba(34,225,255,.025); }
+
+    /* fault name column reads as a label, not body copy */
+    table.faults td.name {
+      color: var(--text);
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    /* addresses and tags in mono so they're scannable against prose */
+    table.faults code {
+      font-family:'IBM Plex Mono',monospace;
+      font-size: 12.5px;
+      color: var(--cyan-dim);
+      white-space: nowrap;
+    }
+
+    table.faults tr.deferred td {
+      color: var(--cyan-dim);
+      opacity: .72;
+      font-style: italic;
+    }
+
+    .table-note {
+      max-width: 900px;
+      margin: -22px auto 34px;
+      font-family:'IBM Plex Mono',monospace;
+      font-size: 10.5px;
+      letter-spacing: .1em;
+      line-height: 1.6;
+      color: var(--cyan-dim);
+      text-align: left;
+    }
+
     /* ---------- ladder logic slide deck ---------- */
     .deck {
       max-width: 900px;
@@ -443,7 +515,8 @@
       120 or 240V power feeds the contactor, power monitor, and 24V power supply. I used an HOA switch for
       operator control, with signal wiring sent to the PLC and HMI for status display. The E-Stop and overload
       NC contacts are wired in series with the contactor coil, as well as an auxiliary relay the PLC energizes
-      to break the coil circuit on a detected fault. Faults latch until reset by cycling the HOA switch.
+      to break the coil circuit on a detected fault. Discrete faults latch and are cleared deliberately by cycling
+      the HOA switch through off, while analog faults clear on their own once the input returns to a valid range.
     </p>
     <p>
       Fault handling and fail-safes are always process dependent, and I scoped my layers of protection accordingly.
@@ -497,13 +570,85 @@
       lower than 0. The biggest challenge writing this, however, came from fault handling and communication with the HMI software.
     </p>
     <p>
-      Setting up the MODBUS RTU settings so that baud rate, parity, stop bit, etc. matched was straightforward but it took some
-      research to match up the addressing formats between programs. Once I had the communication sorted, I developed fault logic
-      for my seven distinct faults: CH1 Short Circuit, CH1 Open Circuit, Thermal Overload Tripped, E-Stop Pressed, Contactor
-      Failure, HOA Switch Malfunction, and IO Module Missing 24V. I added timers and deadbands where needed for hysteresis and
-      if all conditions for a given fault were met, an assigned bit would be turned on. The status of these bits were packed into
+      The table below lists each fault, trigger parameters, and how each fault clears. The thresholds and timer values were chosen
+      to easily demonstrate the logic. In a real installation, these values are determined
+      from transmitter and process specifications.
+    </p>
+  </div>
+
+  <div class="table-wrap">
+    <table class="faults">
+      <thead>
+        <tr>
+          <th>Fault</th>
+          <th>Trigger Condition</th>
+          <th>Reset</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="name">CH1 Short Circuit</td>
+          <td>Scaled input <code>DF1</code> reads above 100.6% for longer than 500&nbsp;ms</td>
+          <td>Automatic once <code>DF1</code> reads below 100% for longer than 1&nbsp;s</td>
+        </tr>
+        <tr>
+          <td class="name">CH1 Open Circuit</td>
+          <td>Scaled input <code>DF1</code> reads below −1%, indicating loop current under 4&nbsp;mA</td>
+          <td>Automatic once <code>DF1</code> returns to range</td>
+        </tr>
+        <tr>
+          <td class="name">E-Stop Pressed</td>
+          <td><code>XIO X001</code> — auxiliary E-Stop contact opens</td>
+          <td>Pull out E-Stop and Cycle HOA through off</td>
+        </tr>
+        <tr>
+          <td class="name">Thermal Overload Tripped</td>
+          <td><code>XIC X003</code> — overload NO contact closes</td>
+          <td>Cycle HOA through off</td>
+        </tr>
+        <tr>
+          <td class="name">Contactor Failure</td>
+          <td>Coil commanded on <code>Y001</code> or hand mode <code>X006</code> active for 500&nbsp;ms while the contactor auxiliary NO contact stays open <code>XIO X002</code></td>
+          <td>Cycle HOA through off — <code>XIO X005</code> and <code>XIO X006</code></td>
+        </tr>
+        <tr>
+          <td class="name">IO Module Missing 24V</td>
+          <td><code>XIC X102</code> dedicated module status bit from the manufacturer</td>
+          <td>Automatic once supply is restored</td>
+        </tr>
+        <tr class="deferred">
+          <td class="name">IO Module Failure</td>
+          <td>24V present, no communication with IO module. Developing integration.</td>
+          <td>—</td>
+        </tr>
+        <tr class="deferred">
+          <td class="name">HOA Switch Malfunction</td>
+          <td>Both operator modes selected at the same time, aimed toward alternative control methods in future versions</td>
+          <td>—</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="table-note">
+    Italicised rows are staged in the program but not yet deployed in the HMI fault word.
+  </div>
+
+  <div class="intro">
+    <p>
+      The last two rows are rungs I added while working through the fault logic but aren't published to the current running version of the program. Both faults are staged to be deployed once the logic and hardware develop in a way
+      that allows me to better integrate them without bugs. One future fix I identified while reviewing is that as the open circuit fault is written, it has no hysteresis. A loose connection that
+      chatters the input would flood the HMI with open circuit alarms. Adding a short timer and latching with reset logic like I did with the short circuit timer would make the logic around the fault much more robust despite it 
+      working correctly in a coarse sense. 
+    </p>
+  </div>
+
+  <div class="intro">
+    <p>
+      Each individual fault has its own bit that turns on if the conditions in the table are met. The status of these bits were packed into
       a register which was copied and sent to the HMI each scan. The individual fault bits are paralleled into a master fault bit
-      that energizes the auxiliary relay and resets the contactor coil output latch if active.
+      that energizes the auxiliary relay coil and resets the contactor coil output latch if active. Setting up the communication to send the information between PLC and HMI was straightforward but required some research to convert addressing formats between programs.
+      Once addressing was characterized, all that was needed was to declare the COM port, match baud rate, parity, and stop bit settings to allow the two devices to talk over the network.
     </p>
   </div>
 
