@@ -646,7 +646,7 @@
   <div class="intro">
     <p>
       Each individual fault has its own bit that turns on if the conditions in the table are met. The status of these bits were packed into
-      a register which was copied and sent to the HMI each scan. The individual fault bits are paralleled into a master fault bit
+      a register which is copied and sent to the HMI each scan. The individual fault bits are paralleled into a master fault bit
       that energizes the auxiliary relay coil and resets the contactor coil output latch if active. Setting up the communication to send the information between PLC and HMI was straightforward but required some research to convert addressing formats between programs.
       Once addressing was characterized, all that was needed was to declare the COM port, match baud rate, parity, and stop bit settings to allow the two devices to talk over the network.
     </p>
