@@ -200,10 +200,10 @@
     }
 
     /* ---------- video ----------
-       Native <video> tags sourced from GitHub Release assets — permanent
-       direct file URLs, no iframe, no third-party chrome, no storage
-       ceiling to worry about. Same element already used elsewhere on
-       the site, just a different file host behind it. */
+       YouTube embeds. GitHub Release assets were serving as
+       application/octet-stream with nosniff, which desktop browsers
+       tolerate but iOS Safari refuses to play — hence the move to a
+       host that returns a real player. */
     .video-container {
       width: 70%;
       max-width: 900px;
@@ -213,6 +213,13 @@
       border-radius: 8px;
       overflow: hidden;
       box-sizing: content-box;
+    }
+
+    .video-container iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
     }
 
     .video-container video {
@@ -336,12 +343,16 @@
 
   <div class="video-row">
     <div class="video-container portrait">
-      <video controls playsinline preload="metadata"
-             src="https://github.com/paulchironna/paulchironna.github.io/releases/download/media/failedinsulation1.MOV"></video>
+      <iframe src="https://www.youtube.com/embed/1gM6mZ0sU7Q?rel=0&amp;playsinline=1"
+              title="Grounded motor case study clip" frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
     </div>
     <div class="video-container portrait">
-      <video controls playsinline preload="metadata"
-             src="https://github.com/paulchironna/paulchironna.github.io/releases/download/media/failedinsulation2.MOV"></video>
+      <iframe src="https://www.youtube.com/embed/8FMzt1ylUZk?rel=0&amp;playsinline=1"
+              title="Grounded motor case study clip" frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
     </div>
   </div>
 
@@ -361,12 +372,16 @@ motor leads inside the terminal box to eliminate the incoming power cord as a po
 
   <div class="video-row">
     <div class="video-container portrait">
-      <video controls playsinline preload="metadata"
-             src="https://github.com/paulchironna/paulchironna.github.io/releases/download/media/goodinsulation1.MOV"></video>
+      <iframe src="https://www.youtube.com/embed/1K3pUG7U7tw?rel=0&amp;playsinline=1"
+              title="Grounded motor case study clip" frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
     </div>
     <div class="video-container portrait">
-      <video controls playsinline preload="metadata"
-             src="https://github.com/paulchironna/paulchironna.github.io/releases/download/media/goodinsulation2.MOV"></video>
+      <iframe src="https://www.youtube.com/embed/2ft4naiysOk?rel=0&amp;playsinline=1"
+              title="Grounded motor case study clip" frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
     </div>
   </div>
 
@@ -409,12 +424,16 @@ had failed open and was causing the no-start condition. The run capacitor measur
 
   <div class="video-row">
     <div class="video-container portrait">
-      <video controls playsinline preload="metadata"
-             src="https://github.com/paulchironna/paulchironna.github.io/releases/download/media/runswithnoise.MOV"></video>
+      <iframe src="https://www.youtube.com/embed/TUu0o6CEFlg?rel=0&amp;playsinline=1"
+              title="Grounded motor case study clip" frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
     </div>
     <div class="video-container portrait">
-      <video controls playsinline preload="metadata"
-             src="https://github.com/paulchironna/paulchironna.github.io/releases/download/media/badbearing.MOV"></video>
+      <iframe src="https://www.youtube.com/embed/2yoD_kK66oo?rel=0&amp;playsinline=1"
+              title="Grounded motor case study clip" frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
     </div>
   </div>
 
@@ -433,12 +452,16 @@ shaft bearing which would need to be replaced before returning to service.
 
   <div class="video-row">
     <div class="video-container portrait">
-      <video controls playsinline preload="metadata"
-             src="https://github.com/paulchironna/paulchironna.github.io/releases/download/media/newswitchandbearing.MOV"></video>
+      <iframe src="https://www.youtube.com/embed/nxdsPAWyHMI?rel=0&amp;playsinline=1"
+              title="Grounded motor case study clip" frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
     </div>
     <div class="video-container portrait">
-      <video controls playsinline preload="metadata"
-             src="https://github.com/paulchironna/paulchironna.github.io/releases/download/media/backtogether.MOV"></video>
+      <iframe src="https://www.youtube.com/embed/Ja08LB7DPOA?rel=0&amp;playsinline=1"
+              title="Grounded motor case study clip" frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
     </div>
   </div>
 
@@ -527,43 +550,46 @@ with no further issues.
   </div>
   -->
 
-  <!-- ---- ONE VIDEO (LANDSCAPE, GITHUB RELEASE) ----
-       1. Publish (or re-open) a Release on the repo, tag it e.g. "media".
-       2. Drag the file into the "Attach binaries" drop zone (NOT the
-          text box above it — that one caps video at 10MB).
-       3. Click the uploaded filename to get its permanent URL:
-          https://github.com/USER/REPO/releases/download/TAG/FILE
-       4. Test that URL alone in an incognito window before publishing —
-          it should play or download directly, not show a GitHub page.
+  <!-- ---- ONE VIDEO (LANDSCAPE, YOUTUBE) ----
+       1. Upload to YouTube, set to Unlisted.
+       2. Take the ID from the share link — the part after youtu.be/
+          or after watch?v=  (drop any ?si= tracking parameter).
+       3. rel=0 keeps end-screen suggestions to your own channel.
   <div class="video-container">
-    <video controls playsinline preload="metadata"
-           src="https://github.com/USER/REPO/releases/download/TAG/FILE.mp4"></video>
+    <iframe src="https://www.youtube.com/embed/VIDEO_ID?rel=0&amp;playsinline=1"
+            title="Clip title" frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
   </div>
   <div class="caption">Caption</div>
   -->
 
-  <!-- ---- ONE VIDEO (PORTRAIT / PHONE-SHOT, GITHUB RELEASE) ----
+  <!-- ---- ONE VIDEO (PORTRAIT / PHONE-SHOT, YOUTUBE) ----
        Add .portrait alongside .video-container so the frame matches a
        9:16 clip instead of letterboxing it inside a 16:9 box.
   <div class="video-container portrait">
-    <video controls playsinline preload="metadata"
-           src="https://github.com/USER/REPO/releases/download/TAG/FILE.mp4"></video>
+    <iframe src="https://www.youtube.com/embed/VIDEO_ID?rel=0&amp;playsinline=1"
+            title="Clip title" frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
   </div>
   <div class="caption">Caption</div>
   -->
 
-  <!-- ---- TWO VIDEOS SIDE BY SIDE (GITHUB RELEASE) ----
+  <!-- ---- TWO VIDEOS SIDE BY SIDE (YOUTUBE) ----
        Add .portrait to each .video-container only if that clip is 9:16.
-       Mixing one landscape and one portrait in the same row is fine —
-       each container sizes itself independently.
   <div class="video-row">
-    <div class="video-container">
-      <video controls playsinline preload="metadata"
-             src="https://github.com/USER/REPO/releases/download/TAG/FILE1.mp4"></video>
+    <div class="video-container portrait">
+      <iframe src="https://www.youtube.com/embed/VIDEO_ID_1?rel=0&amp;playsinline=1"
+              title="Left clip" frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
     </div>
-    <div class="video-container">
-      <video controls playsinline preload="metadata"
-             src="https://github.com/USER/REPO/releases/download/TAG/FILE2.mp4"></video>
+    <div class="video-container portrait">
+      <iframe src="https://www.youtube.com/embed/VIDEO_ID_2?rel=0&amp;playsinline=1"
+              title="Right clip" frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
     </div>
   </div>
   <div class="caption">Left video (left) and right video (right)</div>
